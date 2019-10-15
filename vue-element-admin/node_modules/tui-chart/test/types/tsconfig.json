@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "noEmit": true,
+    "noImplicitAny": false
+  },
+  "include": [
+    "../../index.d.ts",
+    "./**/*"
+  ]
+}
