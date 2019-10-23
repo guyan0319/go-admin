@@ -53,8 +53,8 @@
       <file leaf-file-name="routes.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/mock/role/routes.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="563">
-              <caret line="108" column="32" selection-start-line="108" selection-start-column="18" selection-end-line="108" selection-end-column="32" />
+            <state relative-caret-position="343">
+              <caret line="98" column="36" lean-forward="true" selection-start-line="98" selection-start-column="36" selection-end-line="98" selection-end-column="36" />
             </state>
           </provider>
         </entry>
@@ -110,6 +110,7 @@
       <find>fetchComments</find>
       <find>首页</find>
       <find>dashboard</find>
+      <find>rolePermission</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -141,7 +142,7 @@
       <path value="$PROJECT_DIR$/package.json" />
     </packageJsonPaths>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds" extendedState="7">
     <option name="x" value="1800" />
     <option name="width" value="1400" />
     <option name="height" value="820" />
@@ -158,34 +159,6 @@
             <path>
               <item name="vue-element-admin" type="b2602c69:ProjectViewProjectNode" />
               <item name="vue-element-admin" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="vue-element-admin" type="b2602c69:ProjectViewProjectNode" />
-              <item name="vue-element-admin" type="462c0819:PsiDirectoryNode" />
-              <item name="mock" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="vue-element-admin" type="b2602c69:ProjectViewProjectNode" />
-              <item name="vue-element-admin" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="vue-element-admin" type="b2602c69:ProjectViewProjectNode" />
-              <item name="vue-element-admin" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="api" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="vue-element-admin" type="b2602c69:ProjectViewProjectNode" />
-              <item name="vue-element-admin" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="lang" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="vue-element-admin" type="b2602c69:ProjectViewProjectNode" />
-              <item name="vue-element-admin" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="router" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -226,15 +199,15 @@
       <updated>1571188633237</updated>
       <workItem from="1571188635981" duration="13747000" />
       <workItem from="1571307940654" duration="1840000" />
-      <workItem from="1571623198885" duration="1657000" />
+      <workItem from="1571623198885" duration="2366000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="17244000" />
+    <option name="totallyTimeSpent" value="17953000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="1592" y="-8" width="1616" height="916" extended-state="6" />
+    <frame x="1592" y="-8" width="1616" height="916" extended-state="7" />
     <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="3" visible="true" weight="0.21564886" />
@@ -625,8 +598,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/mock/role/routes.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="563">
-          <caret line="108" column="32" selection-start-line="108" selection-start-column="18" selection-end-line="108" selection-end-column="32" />
+        <state relative-caret-position="343">
+          <caret line="98" column="36" lean-forward="true" selection-start-line="98" selection-start-column="36" selection-end-line="98" selection-end-column="36" />
         </state>
       </provider>
     </entry>
