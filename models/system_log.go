@@ -15,3 +15,5 @@ type SystemLog struct {
 	Url           string    `json:"url" xorm:"not null default '' VARCHAR(500)"`
 	Ctime         time.Time `json:"ctime" xorm:"not null default '0000-00-00 00:00:00' comment('时间') index DATETIME"`
 }
+
+

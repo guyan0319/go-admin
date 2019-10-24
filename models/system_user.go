@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"time"
 )
 
@@ -16,4 +17,14 @@ type SystemUser struct {
 	LastLoginTime time.Time `json:"last_login_time" xorm:"not null default '0000-00-00 00:00:00' comment('上次登录时间') DATETIME"`
 	LastLoginIp   string    `json:"last_login_ip" xorm:"not null default '' comment('最近登录IP') VARCHAR(50)"`
 	Ctime         time.Time `json:"ctime" xorm:"not null comment('注册时间') DATETIME"`
+}
+
+func(u *SystemUser) GetOne()  {
+
+	has, err := mEngine.Where("nickname = ?", u.Nickname).Desc("id").Get(u)
+	if err!=nil {
+		fmt.Print(err)
+	}
+	fmt.Print(has)
+	fmt.Print(u)
 }
