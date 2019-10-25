@@ -5,7 +5,7 @@ import (
 )
 
 type Config struct {
-	language string
+	Language string
 }
 var (
 	Cfg  Config
@@ -15,7 +15,7 @@ var (
 
 func  Set(cfg Config) {
 	mutex.Lock()
-	Cfg.language=setDefault(cfg.language,"","cn")
+	Cfg.Language=setDefault(cfg.Language,"","cn")
 
 	mutex.Unlock()
 }
