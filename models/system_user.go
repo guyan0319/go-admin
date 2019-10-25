@@ -1,7 +1,6 @@
 package models
 
 import (
-	"fmt"
 	"time"
 )
 
@@ -19,12 +18,10 @@ type SystemUser struct {
 	Ctime         time.Time `json:"ctime" xorm:"not null comment('注册时间') DATETIME"`
 }
 
-func(u *SystemUser) GetOne()  {
-
+func(u *SystemUser) GetRowByNickname() bool {
 	has, err := mEngine.Where("nickname = ?", u.Nickname).Desc("id").Get(u)
-	if err!=nil {
-		fmt.Print(err)
+	if err==nil &&  has  {
+		return true
 	}
-	fmt.Print(has)
-	fmt.Print(u)
+	return false
 }

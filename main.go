@@ -12,8 +12,15 @@ import (
  * datetime 2019/10/21 11:53
  */
 func main() {
+	//user :=models.SystemUser{Nickname:"admin"}
+	//user.GetRowByNickname()
+	//fmt.Print(user)
+	//gin.SetMode(gin.DebugMode)//开发环境
+	gin.SetMode(gin.ReleaseMode)//线上环境
 	r := gin.Default()
 	r.Use(Cors())//设置允许跨域中间件
+
+
 
 	r.GET("/",ctrl.Index)
 	r.GET("/ping", func(c *gin.Context) {

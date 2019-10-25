@@ -6,7 +6,6 @@
 package common
 
 import (
-	"ados/conf"
 	"crypto/md5"
 	"crypto/sha1"
 	"encoding/hex"
@@ -326,27 +325,7 @@ func ParseFile(path string) map[string]interface{} {
 	CheckErr(err)
 	return data
 }
-func GetStringByPath(path string) string {
-	if path == "" {
-		return ""
-	}
-	if IsFile(path) {
-		content, err := ioutil.ReadFile(path)
-		CheckErr(err)
 
-		return string(content)
-	}
-	gopath := os.Getenv("GOPATH")
-	reg := regexp.MustCompile(`;`)
-	paths := reg.Split(gopath, -1)
-	path = paths[0] + "/src/ados/conf/" + path
-	if IsFile(path) {
-		content, err := ioutil.ReadFile(path)
-		CheckErr(err)
-		return string(content)
-	}
-	return ""
-}
 
 //是否是文件
 func IsFile(f string) bool {
@@ -377,33 +356,4 @@ func LoadPackage(p string) error {
 	}
 	return nil
 }
-func WriteFileAfter(path, str string) {
 
-}
-func WriteFileImport(path, oldstr, newstr string) {
-
-}
-func GetWebPath(config *map[string]interface{}) string {
-	if conf.WebPath != "" {
-		return conf.WebPath
-	}
-	_, ok := (*config)["path"]
-	if !ok {
-		ShowMsg("No path")
-	}
-	path := (*config)["path"].(string)
-	if !IsDir(path) {
-		gopath := os.Getenv("GOPATH")
-		reg := regexp.MustCompile(`;`)
-		paths := reg.Split(gopath, -1)
-		folderPath := filepath.Join(paths[0], "src")
-		path = filepath.Join(folderPath, path)
-	}
-	err := os.MkdirAll(path, os.ModePerm) //os.ModePerm the same 0777
-	CheckErr(err)
-	conf.WebPath = path
-	return path
-}
-func GetItemPath(itemId int64) {
-
-}
