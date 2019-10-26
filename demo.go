@@ -10,6 +10,8 @@ import (
 
 var globalSessions *session.Manager
 
+
+
 func init() {
 	var err error
 	globalSessions, err = session.NewSessionManager("memory", "goSessionid", 3600)
