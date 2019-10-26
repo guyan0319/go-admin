@@ -3,13 +3,14 @@ package user
 import (
 	"github.com/gin-gonic/gin"
 	"go-admin/models"
+	"go-admin/modules/cookie"
 	"go-admin/modules/response"
 	"go-admin/public/common"
 )
 
 func Login(c *gin.Context){
-	nickname :=c.Query("nickname")
-	passwd :=c.Query("passwd")
+	nickname :=c.PostForm("nickname")
+	passwd :=c.PostForm("passwd")
 	if nickname=="" || passwd=="" {
 		response.ShowError(c,"fail")
 		return
@@ -24,7 +25,11 @@ func Login(c *gin.Context){
 		response.ShowError(c,"fail")
 		return
 	}
+	err :=cookie.SetCacheCookie(c,user.Id)
+	if err!=nil {
+		response.ShowError(c,"fail")
+		return
+	}
 	response.ShowSuccess(c,"success")
 	return
-
 }

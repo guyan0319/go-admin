@@ -1,28 +1,24 @@
 package models
 
 import (
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/go-xorm/xorm"
 	"go-admin/conf"
-	_ "github.com/go-sql-driver/mysql"
 	"log"
-	"strconv"
 )
 var mEngine *xorm.Engine
 
 func init() {
-
 	if mEngine == nil {
 		var err error
-		mEngine, err = xorm.NewEngine(conf.Db["db1"]["driverName"], conf.Db["db1"]["dsn"])
+		mEngine, err = xorm.NewEngine(conf.Db["db1"].DriverName ,conf.Db["db1"].Dsn)
 		if err != nil {
 			log.Fatal(err)
 		}
-		n, _ := strconv.Atoi(conf.Db["db1"]["maxIdle"])
-		mEngine.SetMaxIdleConns(n) //空闲连接
-		n, _ = strconv.Atoi(conf.Db["db1"]["maxOpen"])
-		mEngine.SetMaxOpenConns(n) //最大连接数
-		mEngine.ShowSQL(true)
-		mEngine.ShowExecTime(true)
+		mEngine.SetMaxIdleConns(conf.Db["db1"].MaxIdle) //空闲连接
+		mEngine.SetMaxOpenConns(conf.Db["db1"].MaxOpen) //最大连接数
+		mEngine.ShowSQL(conf.Cfg.ShowSql)
+		mEngine.ShowExecTime(conf.Cfg.ShowExecTime)
 	}
 }
 

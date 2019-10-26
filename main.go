@@ -20,9 +20,9 @@ func main() {
 	gin.SetMode(gin.ReleaseMode) //线上环境
 	r := gin.Default()
 	r.Use(Cors()) //设置允许跨域中间件
-
 	r.GET("/", ctrl.Index)
-	r.GET("/login", user.Login)
+	r.POST("/login", user.Login)
+	r.POST("/reg", user.Reg)
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"message": "pong",

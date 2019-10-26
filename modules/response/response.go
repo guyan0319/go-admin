@@ -23,7 +23,7 @@ func ShowSuccess(c *gin.Context, msg string){
 func ShowData(c *gin.Context, data interface{}){
 	c.JSON(http.StatusOK, gin.H{
 		"code": 200,
-		"msg":  data,
+		"data":  data,
 	})
 }
 

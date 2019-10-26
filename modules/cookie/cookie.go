@@ -33,7 +33,7 @@ func GetCacheCookie(c *gin.Context) (int64, error) {
 }
 
 //设置cookie
-func SetCacheCookie(c *gin.Context, id int64) (err error) {
+func SetCacheCookie(c *gin.Context, id int) (err error) {
 	// 从池里获取连接
 	rc := cache.RedisClient.Get()
 	// 用完后将连接放回连接池
