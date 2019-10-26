@@ -26,12 +26,13 @@ func init() {
 func sayHelloHandler(w http.ResponseWriter, r *http.Request) {
 
 	cookie, err := r.Cookie("name")
+	fmt.Println(cookie)
 	if err == nil {
 		fmt.Println(cookie.Value)
 		fmt.Println(cookie.Domain)
 		fmt.Println(cookie.Expires)
 	}
-	//fmt.Fprintf(w, "Hello world!\n") //这个写入到w的是输出到客户端的
+	fmt.Fprintf(w, "Hello world!\n") //这个写入到w的是输出到客户端的
 }
 func login(w http.ResponseWriter, r *http.Request) {
 	sess := globalSessions.SessionStart(w, r)
