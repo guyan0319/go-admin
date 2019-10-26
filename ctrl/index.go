@@ -6,5 +6,6 @@ import (
 )
 
 func Index(c *gin.Context)  {
+	panic("ok")
 	c.String(http.StatusOK, "hello world")
 }
