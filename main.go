@@ -1,10 +1,13 @@
 package main
 
 import (
+	"github.com/gin-contrib/sessions"
+	"github.com/gin-contrib/sessions/redis"
 	"github.com/gin-gonic/gin"
 	"go-admin/conf"
 	"go-admin/ctrl"
 	"go-admin/ctrl/user"
+	"go-admin/modules/cache"
 	"net/http"
 )
 
@@ -19,6 +22,8 @@ func main() {
 	//gin.SetMode(gin.DebugMode)//开发环境
 	gin.SetMode(gin.ReleaseMode) //线上环境
 	r := gin.Default()
+	store, _ := 	redis.NewStoreWithPool(cache.RedisClient,[]byte("secret"))
+	r.Use(sessions.Sessions("gosession", store))
 	r.Use(Cors()) //设置允许跨域中间件
 	r.GET("/", ctrl.Index)
 	r.POST("/login", user.Login)

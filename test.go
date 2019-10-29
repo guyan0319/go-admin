@@ -28,5 +28,18 @@ func main() {
 		session.Save()
 		c.JSON(200, gin.H{"count": count})
 	})
+	r.GET("/count", func(c *gin.Context) {
+		session := sessions.Default(c)
+		var count int
+		v := session.Get("count")
+		if v == nil {
+			count = 0
+		} else {
+			count = v.(int)
+			count++
+		}
+		c.JSON(200, gin.H{"count": count})
+	})
+
 	r.Run(":8000")
 }
