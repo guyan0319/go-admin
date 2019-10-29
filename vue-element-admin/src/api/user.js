@@ -2,8 +2,9 @@ import request from '@/utils/request'
 
 export function login(data) {
   return request({
-    url: '/user/login',
+    url: '',
     method: 'post',
+    baseURL: 'http://localhost:8090/login',
     data
   })
 }
