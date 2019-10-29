@@ -1,7 +1,7 @@
 package cache
 
 import (
-	"github.com/garyburd/redigo/redis"
+	"github.com/gomodule/redigo/redis"
 	. "go-admin/conf"
 	"time"
 )
@@ -23,7 +23,7 @@ func init() {
 			}
 			if Redis["auth"] != "" {
 				if _, err := c.Do("AUTH", Redis["auth"]); err != nil {
-					c.Close()
+					_ = c.Close()
 					return nil, err
 				}
 			}
