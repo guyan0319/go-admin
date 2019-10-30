@@ -36,7 +36,7 @@ func Login(c *gin.Context) {
 		times := strconv.FormatInt(timestamps, 10)
 		v = common.Md5En(common.GetRandomString(16) + times)
 		session.Set("token", v)
-		session.Save()
+		_=session.Save()
 	}
 	data["token"] = v
 	response.ShowData(c, data)
