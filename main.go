@@ -23,9 +23,11 @@ func main() {
 	r := gin.Default()
 	store, _ := redis.NewStoreWithPool(cache.RedisClient, []byte("secret"))
 	r.Use(sessions.Sessions("gosession", store))
-	r.Use(cors.New(GetCorsConfig()))
+	r.Use(cors.New(GetCorsConfig()))//跨域
 	//r.Use(cors.Default())//默认跨域
 	r.GET("/", ctrl.Index)
+	r.GET("/info", user.Info)
+	r.GET("/loginout", user.Loginout)
 	r.POST("/login", user.Login)
 	r.POST("/reg", user.Reg)
 	r.GET("/ping", func(c *gin.Context) {
@@ -42,9 +44,9 @@ func Load() {
 }
 func GetCorsConfig() cors.Config {
 	config := cors.DefaultConfig()
-	config.AllowOrigins = []string{"http://localhost"}
+	config.AllowOrigins = []string{"http://localhost:9527","http://localhost"}
 	config.AllowMethods = []string{"POST", "GET", "OPTIONS", "PUT", "DELETE"}
 	config.AllowCredentials = true
-	config.AllowHeaders = []string{"x-requested-with", "Content-Type", "AccessToken", "X-CSRF-Token", "Authorization"}
+	config.AllowHeaders = []string{"x-requested-with", "Content-Type", "AccessToken", "X-CSRF-Token", "Authorization","token"}
 	return config
 }

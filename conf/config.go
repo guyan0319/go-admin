@@ -6,6 +6,7 @@ import (
 
 type Config struct {
 	Language string
+	Token string
 	ShowSql bool
 	ShowExecTime bool
 }
@@ -18,6 +19,7 @@ var (
 func  Set(cfg Config) {
 	mutex.Lock()
 	Cfg.Language=setDefault(cfg.Language,"","cn")
+	Cfg.Token=setDefault(cfg.Token,"","token")
 	Cfg.ShowSql=cfg.ShowSql
 	Cfg.ShowExecTime=cfg.ShowExecTime
 	mutex.Unlock()

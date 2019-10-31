@@ -1,20 +1,23 @@
 package ctrl
 
 import (
+	"fmt"
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
-	"go-admin/modules/response"
 	"net/http"
 )
 
 func Index(c *gin.Context)  {
-	//uid,err :=cookie.GetCacheCookie(c)
-	//if err!=nil{
-	//	fmt.Println(err)
-	//	response.ShowError(c,"fail")
-	//	return
-	//}
-	uid :=c.Query("username")
-	response.ShowData(c,uid)
+	session := sessions.Default(c)
+	v:=session.Get("token")
+	if v==nil {
+		//fmt.Println("设置成功")
+		//session.Set("token","tokens")
+		//err := session.Save()
+		//fmt.Println(err)
+	}else{
+		fmt.Println("token:",v)
+	}
 	c.String(http.StatusOK, "hello world")
 	return
 }

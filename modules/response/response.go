@@ -16,13 +16,13 @@ func ShowError(c *gin.Context, msg string){
 func ShowSuccess(c *gin.Context, msg string){
 	msg = lang.Get(msg)
 	c.JSON(http.StatusOK, gin.H{
-		"code": 200,
+		"code": 20000,
 		"msg":  msg,
 	})
 }
 func ShowData(c *gin.Context, data interface{}){
 	c.JSON(http.StatusOK, gin.H{
-		"code": 200,
+		"code": 20000,
 		"data":  data,
 	})
 }
