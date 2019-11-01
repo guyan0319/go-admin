@@ -13,6 +13,7 @@ export function getInfo(token) {
   return request({
     url: '/user/info',
     method: 'get',
+    baseURL: 'http://localhost:8090/login',
     params: { token }
   })
 }

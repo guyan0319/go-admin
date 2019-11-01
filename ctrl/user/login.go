@@ -40,7 +40,6 @@ func Login(c *gin.Context) {
 	var data = make(map[string]interface{}, 0)
 
 	v := session.Get(conf.Cfg.Token)
-	fmt.Println(v)
 	if v == nil {
 		cur := time.Now()
 		//纳秒
@@ -50,24 +49,17 @@ func Login(c *gin.Context) {
 		session.Set(conf.Cfg.Token, v)
 		session.Set(v, user.Id)
 		err=session.Save()
-		fmt.Println(err,"存储成功")
+		fmt.Println("设置成功")
 	}
 	data[conf.Cfg.Token] = v
 	response.ShowData(c, data)
 	return
 }
 func Loginout (c *gin.Context){
-
 	session := sessions.Default(c)
-	//v := session.Get(conf.Cfg.Token)
-	//if v !=nil{
-	//	id :=session.Get(v)
-	//	if id!=0 {
-	//		session.Clear()
-	//	}
-	//
-	//}
 	session.Clear()
+	//清除session
+	_=session.Save()
 	response.ShowSuccess(c, "success")
 	return
 
