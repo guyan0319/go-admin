@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: 2019-10-19 05:33:00
+-- Generation Time: 2019-11-01 00:57:49
 -- 服务器版本： 5.5.53
 -- PHP Version: 7.2.1
 
@@ -19,7 +19,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `rbacdb`
+-- Database: `systemdb`
 --
 
 -- --------------------------------------------------------
@@ -107,6 +107,13 @@ CREATE TABLE `system_user` (
   `last_login_ip` varchar(50) NOT NULL DEFAULT '' COMMENT '最近登录IP',
   `ctime` datetime NOT NULL COMMENT '注册时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='管理账户表';
+
+--
+-- 转存表中的数据 `system_user`
+--
+
+INSERT INTO `system_user` (`id`, `name`, `nickname`, `password`, `salt`, `phone`, `status`, `utime`, `last_login_time`, `last_login_ip`, `ctime`) VALUES
+(1, 'admin', 'admin', '297f8efd64f95e37a7d792d926a7b5db47c58403', 'MbBQ', '11111111111', 1, '2019-10-31 07:41:41', '0000-00-00 00:00:00', '', '2019-10-24 20:20:34');
 
 -- --------------------------------------------------------
 
@@ -203,7 +210,7 @@ ALTER TABLE `system_role_menu`
 -- 使用表AUTO_INCREMENT `system_user`
 --
 ALTER TABLE `system_user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键';
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键', AUTO_INCREMENT=2;
 
 --
 -- 使用表AUTO_INCREMENT `system_user_role`
