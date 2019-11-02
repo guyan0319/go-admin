@@ -8,7 +8,6 @@ import (
 	"go-admin/models"
 	"go-admin/modules/response"
 	"go-admin/public/common"
-	"strconv"
 )
 
 
@@ -25,11 +24,11 @@ func Reg(c *gin.Context){
 	fmt.Println(salt)
 	fmt.Println(passwd)
 }
-type userinfo struct {
-	roles []string
-	introduction string
-	avatar string
-	name string
+type Userinfo struct {
+	Roles []string `json:"roles"`
+	Introduction string `json:"introduction"`
+	Avatar string `json:"avatar"`
+	Name string `json:"name"`
 }
 func Info(c *gin.Context){
 	session := sessions.Default(c)
@@ -40,10 +39,18 @@ func Info(c *gin.Context){
 	}
 	uid:=session.Get(v)
 	user := models.SystemUser{Id:uid.(int)}
-	userRow:=user.GetRowById()
-
-
-	data:="ok"
-	response.ShowData(c, data)
+	has:=user.GetRowById()
+	if !has {
+		response.ShowError(c,"user_error")
+		return
+	}
+	userrole :=models.SystemUserRole{SystemUserId:uid.(int)}
+	role,_ :=userrole.GetRowByUid()
+	var info Userinfo
+	info.Roles = role
+	info.Name=user.Nickname
+	info.Avatar=user.Avatar
+	info.Introduction=user.Introduction
+	response.ShowData(c, info)
 	return
 }

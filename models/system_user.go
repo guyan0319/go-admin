@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"time"
 )
 
@@ -29,6 +30,7 @@ func(u *SystemUser) GetRowByNickname() bool {
 }
 func(u *SystemUser) GetRowById() bool {
 	has, err := mEngine.Where("id = ?", u.Id).Get(u)
+	fmt.Println(has)
 	if err==nil &&  has  {
 		return true
 	}

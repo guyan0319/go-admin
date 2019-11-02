@@ -3,7 +3,7 @@ package models
 import (
 	"time"
 )
-
+var systemrole="system_role"
 type SystemRole struct {
 	Id     int       `json:"id" xorm:"not null pk autoincr comment('主键') INT(11)"`
 	Name   string    `json:"name" xorm:"not null comment('角色名称') VARCHAR(100)"`

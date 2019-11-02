@@ -11,16 +11,17 @@ export function login(data) {
 
 export function getInfo(token) {
   return request({
-    url: '/user/info',
+    url: '',
     method: 'get',
-    baseURL: 'http://localhost:8090/login',
-    params: { token }
+    params: { token },
+    baseURL: 'http://localhost:8090/info'
   })
 }
 
 export function logout() {
   return request({
-    url: '/user/logout',
-    method: 'post'
+    url: '',
+    method: 'post',
+    baseURL: 'http://localhost:8090/logout'
   })
 }

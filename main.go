@@ -27,7 +27,7 @@ func main() {
 	//r.Use(cors.Default())//默认跨域
 	r.GET("/", ctrl.Index)
 	r.GET("/info", user.Info)
-	r.GET("/loginout", user.Loginout)
+	r.POST("/logout", user.Logout)
 	r.POST("/login", user.Login)
 	r.POST("/reg", user.Reg)
 	r.GET("/ping", func(c *gin.Context) {
@@ -38,7 +38,7 @@ func main() {
 	r.Run(":8090") // listen and serve on 0.0.0.0:8080
 }
 func Load() {
-	c := conf.Config{}
+	c := conf.Config{ShowSql:true}
 	conf.Set(c)
 
 }
@@ -47,6 +47,6 @@ func GetCorsConfig() cors.Config {
 	config.AllowOrigins = []string{"http://localhost:9527","http://localhost"}
 	config.AllowMethods = []string{"POST", "GET", "OPTIONS", "PUT", "DELETE"}
 	config.AllowCredentials = true
-	config.AllowHeaders = []string{"x-requested-with", "Content-Type", "AccessToken", "X-CSRF-Token", "Authorization","token"}
+	config.AllowHeaders = []string{"x-requested-with", "Content-Type", "AccessToken", "X-CSRF-Token","X-Token", "Authorization","token"}
 	return config
 }
