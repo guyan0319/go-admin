@@ -6,3 +6,10 @@ type SystemUserRole struct {
 	SystemRoleId int `json:"system_role_id" xorm:"not null comment('角色主键') index(system_user_id) INT(11)"`
 }
 
+func(u *SystemUserRole) GetRowById() bool {
+	has, err := mEngine.Where("id = ?", u.Id).Get(u)
+	if err==nil &&  has  {
+		return true
+	}
+	return false
+}
