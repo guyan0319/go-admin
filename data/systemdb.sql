@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: 2019-11-01 06:17:11
+-- Generation Time: 2019-11-04 01:58:32
 -- 服务器版本： 5.5.53
 -- PHP Version: 7.2.1
 
@@ -71,6 +71,8 @@ CREATE TABLE `system_menu` (
 CREATE TABLE `system_role` (
   `id` int(11) NOT NULL COMMENT '主键',
   `name` varchar(100) NOT NULL COMMENT '角色名称',
+  `alias_name` varchar(50) NOT NULL DEFAULT '' COMMENT '别名',
+  `description` varchar(200) NOT NULL DEFAULT '' COMMENT '描述',
   `status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '角色状态（0无效1有效）',
   `type` int(4) NOT NULL DEFAULT '1' COMMENT '属于哪个应用',
   `ctime` datetime NOT NULL COMMENT '创建时间'
@@ -80,8 +82,9 @@ CREATE TABLE `system_role` (
 -- 转存表中的数据 `system_role`
 --
 
-INSERT INTO `system_role` (`id`, `name`, `status`, `type`, `ctime`) VALUES
-(1, 'admin', 1, 1, '0000-00-00 00:00:00');
+INSERT INTO `system_role` (`id`, `name`, `alias_name`, `description`, `status`, `type`, `ctime`) VALUES
+(1, 'admin', '', '', 1, 1, '0000-00-00 00:00:00'),
+(2, 'senior user', '', '', 1, 1, '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -122,7 +125,7 @@ CREATE TABLE `system_user` (
 --
 
 INSERT INTO `system_user` (`id`, `name`, `nickname`, `password`, `salt`, `phone`, `avatar`, `introduction`, `status`, `utime`, `last_login_time`, `last_login_ip`, `ctime`) VALUES
-(1, 'admin', 'admin', '297f8efd64f95e37a7d792d926a7b5db47c58403', 'MbBQ', '11111111111', '', '', 1, '2019-10-31 07:41:41', '0000-00-00 00:00:00', '', '2019-10-24 20:20:34');
+(1, 'admin', 'admin', '297f8efd64f95e37a7d792d926a7b5db47c58403', 'MbBQ', '11111111111', 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif', '', 1, '2019-11-01 07:02:33', '0000-00-00 00:00:00', '', '2019-10-24 20:20:34');
 
 -- --------------------------------------------------------
 
@@ -141,7 +144,8 @@ CREATE TABLE `system_user_role` (
 --
 
 INSERT INTO `system_user_role` (`id`, `system_user_id`, `system_role_id`) VALUES
-(1, 1, 1);
+(1, 1, 1),
+(2, 1, 2);
 
 --
 -- Indexes for dumped tables
@@ -214,7 +218,7 @@ ALTER TABLE `system_menu`
 -- 使用表AUTO_INCREMENT `system_role`
 --
 ALTER TABLE `system_role`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键', AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键', AUTO_INCREMENT=3;
 
 --
 -- 使用表AUTO_INCREMENT `system_role_menu`
@@ -232,7 +236,7 @@ ALTER TABLE `system_user`
 -- 使用表AUTO_INCREMENT `system_user_role`
 --
 ALTER TABLE `system_user_role`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键', AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键', AUTO_INCREMENT=3;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
