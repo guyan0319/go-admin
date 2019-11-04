@@ -3,7 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-
+	"reflect"
 )
 
 func main()  {
@@ -16,8 +16,22 @@ func main()  {
 	}
 
 	for _,value:=range data{
-		for k,v:=range value.(map[string]interface{}){
-			fmt.Println(k,v)
+		for _,v:=range value.(map[string]interface{}){
+			
+			fmt.Println(reflect.TypeOf(v))
+			switch v.(type) {
+			case bool:
+			case string:
+			case []interface{}:
+			case map[string]interface {}:
+				
+				
+				
+			
+			
+			}
+
+
 		}
 	}
 
