@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: 2019-11-04 01:58:32
+-- Generation Time: 2019-11-05 10:10:48
 -- 服务器版本： 5.5.53
 -- PHP Version: 7.2.1
 
@@ -48,18 +48,21 @@ CREATE TABLE `system_log` (
 
 CREATE TABLE `system_menu` (
   `id` int(11) NOT NULL COMMENT '主键',
-  `name` varchar(100) NOT NULL COMMENT '名称',
-  `type` varchar(100) NOT NULL COMMENT '类型(menu,button)',
-  `url` varchar(200) NOT NULL COMMENT 'url',
-  `nav` tinyint(4) NOT NULL DEFAULT '1' COMMENT '是否在导航显示（0不显示1显示）',
-  `icon` varchar(100) NOT NULL DEFAULT '' COMMENT '菜单图标',
-  `target` varchar(20) NOT NULL DEFAULT '_self' COMMENT '打开方式',
-  `params` varchar(500) NOT NULL DEFAULT '' COMMENT '链接参数',
-  `pid` int(11) NOT NULL COMMENT '父ID',
+  `name` varchar(100) NOT NULL DEFAULT '' COMMENT '名称',
+  `path` varchar(50) NOT NULL DEFAULT '' COMMENT '路径',
+  `component` varchar(100) NOT NULL DEFAULT '' COMMENT '组件',
+  `redirect` varchar(200) NOT NULL DEFAULT '' COMMENT '重定向',
+  `meta_title` varchar(50) NOT NULL DEFAULT '' COMMENT 'meta标题',
+  `meta_icon` varchar(50) NOT NULL DEFAULT '' COMMENT 'meta icon',
+  `meta_nocache` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否缓存（1:是 0:否）',
+  `alwaysshow` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否总是显示（1:是0：否）',
+  `type` tinyint(4) NOT NULL DEFAULT '2' COMMENT '类型(1:固定,2:权限配置)',
+  `hidden` tinyint(4) NOT NULL DEFAULT '1' COMMENT '是否隐藏（0否1是）',
+  `pid` int(11) NOT NULL DEFAULT '0' COMMENT '父ID',
   `sort` int(11) NOT NULL DEFAULT '0' COMMENT '排序',
   `status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '状态（0禁止1启动）',
-  `level` tinyint(4) NOT NULL COMMENT '层级',
-  `ctime` datetime NOT NULL COMMENT '时间'
+  `level` tinyint(4) NOT NULL DEFAULT '0' COMMENT '层级',
+  `ctime` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='权限';
 
 -- --------------------------------------------------------
@@ -166,7 +169,8 @@ ALTER TABLE `system_log`
 --
 ALTER TABLE `system_menu`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `idx_list` (`pid`,`sort`,`status`) USING BTREE;
+  ADD KEY `idx_list` (`pid`,`sort`,`status`) USING BTREE,
+  ADD KEY `path` (`path`);
 
 --
 -- Indexes for table `system_role`
