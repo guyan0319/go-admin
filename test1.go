@@ -1,10 +1,12 @@
 package main
 
-import "go-admin/public/common"
+import (
+	"fmt"
+	"strconv"
+)
 
 func main()  {
-	 var m =  []int{1,2}
-	if common.InArray(*m,1) {
-		
-	}
+	fmt.Println(strconv.FormatBool(0 < 1)) // true
+	fmt.Println(strconv.FormatBool(0 > 1)) // false
+
 }
