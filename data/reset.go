@@ -49,17 +49,24 @@ func add(jsonStr string ,typev int){
 					menu.MetaIcon = v.(map[string]interface{})["icon"].(string)
 					fmt.Println(menu.MetaIcon)
 				}
-
-
-
 				if v.(map[string]interface{})["noCache"]!=nil {
 					if v.(map[string]interface{})["noCache"].(bool){
 						menu.MetaNocache = 1
 					}
 				}
-				if  v.(map[string]interface{})["affix"].(bool){
-					menu.MetaAffix = 1
+				if  v.(map[string]interface{})["affix"]!=nil {
+					if  v.(map[string]interface{})["affix"].(bool){
+						menu.MetaAffix = 1
+					}
 				}
+
+				if  v.(map[string]interface{})["roles"]!=nil {
+
+
+
+				}
+
+
 
 				//menu.MetaTitle = v.(map[string]interface{})["title"].(string)
 			}
