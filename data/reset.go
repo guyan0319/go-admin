@@ -105,7 +105,16 @@ func add(jsonStr string ,typev int){
 					menuChildren.Name = v.(map[string]interface{})["name"].(string)
 				}
 				if  v.(map[string]interface{})["path"]!=nil {
-					menuChildren.Name = v.(map[string]interface{})["path"].(string)
+					menuChildren.Path = v.(map[string]interface{})["path"].(string)
+				}
+				if  v.(map[string]interface{})["meta"]!=nil {
+					meta:=v.(map[string]interface{})["meta"].(map[string]interface{})
+					if meta["title"]!=nil {
+						menuChildren.MetaTitle = meta["title"].(string)
+					}
+					if meta["roles"]!=nil {
+						roles = meta["roles"].([]interface{})
+					}
 				}
 
 
