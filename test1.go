@@ -1,12 +1,11 @@
 package main
 
-import (
-	"fmt"
-	"strconv"
-)
+import "fmt"
 
 func main()  {
-	fmt.Println(strconv.FormatBool(0 < 1)) // true
-	fmt.Println(strconv.FormatBool(0 > 1)) // false
+	var children []interface{}
+	for _,k:=range children{
+		fmt.Println(k)
+	}
 
 }

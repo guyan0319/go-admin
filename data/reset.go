@@ -24,8 +24,13 @@ func add(jsonStr string ,typev int){
 
 	//处理固定地址
 	for _,value:=range data{
+
+		//var children []models.SystemMenu
+		menu :=models.SystemMenu{Type:typev}
+		var roles []interface{}
+		var children []interface{}
+
 		for k,v:=range value.(map[string]interface{}){
-			menu :=models.SystemMenu{Type:1}
 			switch k {
 			case "path":
 				menu.Path=v.(string)
@@ -47,7 +52,7 @@ func add(jsonStr string ,typev int){
 				}
 				if  v.(map[string]interface{})["icon"] !=nil{
 					menu.MetaIcon = v.(map[string]interface{})["icon"].(string)
-					fmt.Println(menu.MetaIcon)
+					//fmt.Println(menu.MetaIcon)
 				}
 				if v.(map[string]interface{})["noCache"]!=nil {
 					if v.(map[string]interface{})["noCache"].(bool){
@@ -59,36 +64,59 @@ func add(jsonStr string ,typev int){
 						menu.MetaAffix = 1
 					}
 				}
-
 				if  v.(map[string]interface{})["roles"]!=nil {
-
-
-
+					roles = v.(map[string]interface{})["roles"].([]interface{})
 				}
-
-
-
-				//menu.MetaTitle = v.(map[string]interface{})["title"].(string)
 			}
-
-			//fmt.Println(menu)
-
-
 			if k=="children" {
-				switch v.(type) {
-				case bool:
-				case string:
-				case []interface{}:
-				case map[string]interface {}:
-				}
+				children=v.([]interface{})
 			}
+		}
+		//插入menu
+		//_,err :=menu.Add()
+		//fmt.Println(menu)
+		//if err!=nil {
+		//	return
+		//}
+		//处理roles
+		if len(roles)>0  {
+			//srm :=models.SystemRoleMenu{SystemMenuId:menu.Id}
+			//for _,r:=range roles {
+			//	role := models.SystemRole{Name:r.(string)}
+			//	res := role.Add()
+			//	if !res {
+			//		return
+			//	}
+			//	srm.SystemRoleId=role.Id
+			//	rmbool:=srm.Add()
+			//	if !rmbool {
+			//		return
+			//	}
+			//}
+		}
+		//处理childen
+		if len(children)>0 {
+			for _,v:=range children{
+				menuChildren:=models.SystemMenu{Type:typev}
+				if  v.(map[string]interface{})["component"]!=nil {
+					menuChildren.Component = v.(map[string]interface{})["component"].(string)
+				}
+				if  v.(map[string]interface{})["name"]!=nil {
+					menuChildren.Name = v.(map[string]interface{})["name"].(string)
+				}
+				if  v.(map[string]interface{})["path"]!=nil {
+					menuChildren.Name = v.(map[string]interface{})["path"].(string)
+				}
 
 
-
-
+			}
 
 
 		}
+
+
+
+		return
 	}
 
 

@@ -23,3 +23,10 @@ type SystemMenu struct {
 	Level       int       `json:"level" xorm:"not null default 0 comment('层级') TINYINT(4)"`
 	Ctime       time.Time `json:"ctime" xorm:"not null default '0000-00-00 00:00:00' comment('时间') DATETIME"`
 }
+
+func (m *SystemMenu) Add() (int64 ,error){
+	return  mEngine.Insert(m)
+}
+func (m *SystemMenu) AddBatch(beans ...interface{}) (int64 ,error){
+	return mEngine.Insert(beans...)
+}

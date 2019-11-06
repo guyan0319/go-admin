@@ -22,3 +22,24 @@ func(r *SystemRole) GetRowById() bool {
 	}
 	return false
 }
+func(r *SystemRole) GetRowByName() bool {
+	has, err := mEngine.Where("name = ?", r.Name).Get(r)
+	if err==nil &&  has  {
+		return true
+	}
+	return false
+}
+func (r *SystemRole) Add() bool{
+	if r.Name=="" {
+		return false
+	}
+	has, err := mEngine.Where("name = ?", r.Name).Get(r)
+	if err==nil &&  has  {
+		return true
+	}
+	_,err =mEngine.Insert(r)
+	if err!=nil {
+		return true
+	}
+	return false
+}
