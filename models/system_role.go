@@ -18,7 +18,7 @@ type SystemRole struct {
 var systemrole = "system_role"
 
 func (r *SystemRole) GetRowById() bool {
-	has, err := mEngine.Where("id = ?", r.Id).Get(&r)
+	has, err := mEngine.Get(&r)
 	if err == nil && has {
 		return true
 	}

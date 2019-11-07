@@ -73,7 +73,7 @@ func StrFirstToUpper(str string) string {
 }
 
 //查找某值是否在数组中
-func InArrayString(m *[]string, v string) bool {
+func InArrayString( v string,m *[]string) bool {
 	for _, value := range *m {
 		if value == v {
 			return true

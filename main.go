@@ -9,6 +9,9 @@ import (
 	"go-admin/ctrl"
 	"go-admin/ctrl/user"
 	"go-admin/modules/cache"
+	"go-admin/public/common"
+	"log"
+	"net/url"
 )
 
 /*
@@ -25,6 +28,7 @@ func main() {
 	r.Use(sessions.Sessions("gosession", store))
 	r.Use(cors.New(GetCorsConfig()))//跨域
 	//r.Use(cors.Default())//默认跨域
+	r.Use(Auth())
 	r.GET("/", ctrl.Index)
 	r.GET("/info", user.Info)
 	r.POST("/logout", user.Logout)
@@ -39,6 +43,7 @@ func main() {
 }
 func Load() {
 	c := conf.Config{ShowSql:true}
+	c.Routes=[]string{"/login"}
 	conf.Set(c)
 
 }
@@ -49,4 +54,29 @@ func GetCorsConfig() cors.Config {
 	config.AllowCredentials = true
 	config.AllowHeaders = []string{"x-requested-with", "Content-Type", "AccessToken", "X-CSRF-Token","X-Token", "Authorization","token"}
 	return config
+}
+func Auth() gin.HandlerFunc{
+	return func(c *gin.Context) {
+		u,err:= url.Parse(c.Request.RequestURI)
+		if err != nil {
+			panic(err)
+		}
+		if common.InArrayString(u.Path,&conf.Cfg.Routes) {
+			c.Next()
+			return
+		}
+
+
+		//t := time.Now()
+		//// Set example variable
+		//c.Set("example", "12345")
+		// before request
+		//c.Next()
+		//// after request
+		//latency := time.Since(t)
+		//log.Print(latency) //时间  0s
+		// access the status we are sending
+		status := c.Writer.Status()
+		log.Println(status) //状态 200
+	}
 }

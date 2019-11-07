@@ -7,8 +7,8 @@ type SystemUserRole struct {
 }
 var systemuserrole ="system_user_role"
 
-func(u *SystemUserRole) GetRowById() bool {
-	has, err := mEngine.Where("id = ?", u.Id).Get(u)
+func(u *SystemUserRole) GetRow() bool {
+	has, err := mEngine.Get(u)
 	if err==nil &&  has  {
 		return true
 	}

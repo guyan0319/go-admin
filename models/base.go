@@ -17,8 +17,7 @@ func init() {
 		}
 		mEngine.SetMaxIdleConns(conf.Db["db1"].MaxIdle) //空闲连接
 		mEngine.SetMaxOpenConns(conf.Db["db1"].MaxOpen) //最大连接数
-		mEngine.ShowSQL(true)
-		//mEngine.ShowSQL(conf.Cfg.ShowSql)
+		mEngine.ShowSQL(conf.Cfg.ShowSql)
 		mEngine.ShowExecTime(conf.Cfg.ShowExecTime)
 	}
 }

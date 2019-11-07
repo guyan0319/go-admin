@@ -9,6 +9,8 @@ type Config struct {
 	Token string
 	ShowSql bool
 	ShowExecTime bool
+	Super string
+	Routes []string
 }
 var (
 	Cfg  Config
@@ -20,8 +22,10 @@ func  Set(cfg Config) {
 	mutex.Lock()
 	Cfg.Language=setDefault(cfg.Language,"","cn")
 	Cfg.Token=setDefault(cfg.Token,"","token")
+	Cfg.Super=setDefault(cfg.Super,"","admin")//超级账户
 	Cfg.ShowSql=cfg.ShowSql
 	Cfg.ShowExecTime=cfg.ShowExecTime
+	Cfg.Routes=cfg.Routes
 	mutex.Unlock()
 }
 func setDefault( value,def ,defValue string) string {

@@ -39,7 +39,7 @@ func Info(c *gin.Context){
 	}
 	uid:=session.Get(v)
 	user := models.SystemUser{Id:uid.(int)}
-	has:=user.GetRowById()
+	has:=user.GetRow()
 	if !has {
 		response.ShowError(c,"user_error")
 		return
