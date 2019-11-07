@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"time"
 )
 
@@ -13,33 +14,44 @@ type SystemRole struct {
 	Type        int       `json:"type" xorm:"not null default 1 comment('属于哪个应用') index INT(4)"`
 	Ctime       time.Time `json:"ctime" xorm:"not null comment('创建时间') DATETIME"`
 }
-var systemrole="system_role"
 
-func(r *SystemRole) GetRowById() bool {
-	has, err := mEngine.Where("id = ?", r.Id).Get(r)
-	if err==nil &&  has  {
+var systemrole = "system_role"
+
+func (r *SystemRole) GetRowById() bool {
+	has, err := mEngine.Where("id = ?", r.Id).Get(&r)
+	if err == nil && has {
 		return true
 	}
 	return false
 }
-func(r *SystemRole) GetRowByName() bool {
-	has, err := mEngine.Where("name = ?", r.Name).Get(r)
-	if err==nil &&  has  {
+func (r *SystemRole) GetRowByName() bool {
+	role := SystemRole{}
+	has, err := mEngine.Where("name = ?", r.Name).Get(&role)
+	if err == nil && has {
 		return true
 	}
 	return false
 }
-func (r *SystemRole) Add() bool{
-	if r.Name=="" {
+func (r *SystemRole) Add() bool {
+	if r.Name == "" {
 		return false
 	}
-	has, err := mEngine.Where("name = ?", r.Name).Get(r)
-	if err==nil &&  has  {
+	role := SystemRole{}
+	has, err := mEngine.Where("name = ?", r.Name).Desc("id").Get(&role)
+	if err != nil {
+		fmt.Println(err)
+		return false
+	}
+	if has {
+		r.Id=role.Id
 		return true
 	}
-	_,err =mEngine.Insert(r)
-	if err!=nil {
-		return true
+	r.Status=1
+	r.Type=1
+	_, err = mEngine.Insert(r)
+	if err != nil {
+		fmt.Println(err)
+		return false
 	}
-	return false
+	return true
 }
