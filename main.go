@@ -8,7 +8,9 @@ import (
 	"go-admin/conf"
 	"go-admin/ctrl"
 	"go-admin/ctrl/user"
+	"go-admin/models"
 	"go-admin/modules/cache"
+	"go-admin/modules/response"
 	"go-admin/public/common"
 	"log"
 	"net/url"
@@ -64,6 +66,30 @@ func Auth() gin.HandlerFunc{
 		if common.InArrayString(u.Path,&conf.Cfg.Routes) {
 			c.Next()
 			return
+		}
+		session := sessions.Default(c)
+		v := session.Get(conf.Cfg.Token)
+		if v==nil {
+			response.ShowError(c,"nologin")
+			return
+		}
+		uid:=session.Get(v)
+		user := models.SystemUser{Id:uid.(int),Status:1}
+		has:=user.GetRow()
+		if !has {
+			response.ShowError(c,"user_error")
+			return
+		}
+		constant:=models.SystemMenu{Type:1}
+		constant.GetRow()
+		spcial:=models.SystemMenu{Type:3}
+		spcial.GetRow()
+
+		//特殊账号
+		if user.Name==conf.Cfg.Super {
+
+
+
 		}
 
 
