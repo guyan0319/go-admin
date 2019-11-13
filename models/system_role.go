@@ -55,3 +55,25 @@ func (r *SystemRole) Add() bool {
 	}
 	return true
 }
+func  (r *SystemRole) GetRowMenu()(map[int][]string){
+	var sr []SystemRole
+	err:=mEngine.Find(&sr)
+	if err!=nil {
+		panic(err)
+	}
+	var srMap map[int]string
+	srMap = make(map[int]string,0)
+	for _,v:=range sr{
+		srMap[v.Id]=v.Name
+	}
+	var srm=SystemRoleMenu{}
+	rmArr,_:=srm.GetAll()
+	var mrMap=make(map[int][]string,0)
+	for _,value:=range rmArr{
+		_,ok:=srMap[value.SystemRoleId]
+		if ok {
+			mrMap[value.SystemMenuId]=append(mrMap[value.SystemMenuId],srMap[value.SystemRoleId])
+		}
+	}
+	return mrMap
+}

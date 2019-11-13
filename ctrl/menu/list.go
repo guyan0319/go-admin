@@ -5,20 +5,96 @@ import (
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"go-admin/conf"
+	"go-admin/models"
 	"go-admin/modules/response"
 )
 
-func List(c *gin.Context)  {
+func List(c *gin.Context) {
 	session := sessions.Default(c)
 	v := session.Get(conf.Cfg.Token)
-	if v==nil {
-		response.ShowError(c,"fail")
+	if v == nil {
+		response.ShowError(c, "fail")
 		return
 	}
-	fmt.Println(v)
-	
+	uid := session.Get(v)
+	user := models.SystemUser{Id: uid.(int)}
+	has := user.GetRow()
+	if !has {
+		response.ShowError(c, "fail")
+		return
+	}
 
+	menu := models.SystemMenu{}
+	if user.Nickname == "admin" {
+		menuArr, err := menu.GetAll()
+		if err != nil {
+			response.ShowError(c, "fail")
+			return
+		}
+		tree(menuArr)
+	} else {
 
+	}
 
+	//tree(menuMap)
+	//fmt.Println(menuMap)
+	//
+	//
+	//
+	//fmt.Println(menuArr,err)
+
+}
+
+func tree(menuArr []models.SystemMenu) ([]interface{}) {
+	role := models.SystemRole{}
+	mrArr := role.GetRowMenu()
+	fmt.Println(mrArr)
+	var menuMap = make(map[int][]models.SystemMenu, 0)
+	for _, value := range menuArr {
+		menuMap[value.Pid] = append(menuMap[value.Pid], value)
+	}
+	var jsonArr []interface{}
+	var item = make(map[string]interface{})
+	mainMenu, ok := menuMap[0]
+	if !ok {
+		return nil
+	}
+	for _, value := range mainMenu {
+		//var item map[string]interface{}
+		item["path"] = value.Path
+		item["component"] = value.Component
+		if value.Redirect != "" {
+			item["redirect"] = value.Redirect
+		}
+		if value.Alwaysshow ==1 {
+			item["alwaysShow"] = true
+		}
+		if value.Hidden == 1 {
+			item["hidden"] = true
+		}
+		var meta=make(map[string]interface{})
+		if value.MetaTitle!=""{
+			meta["title"]=value.MetaTitle
+		}
+		if value.MetaIcon!="" {
+			meta["icon"]=value.MetaIcon
+		}
+		if value.MetaAffix==1 {
+			meta["affix"] = true
+		}
+		if value.MetaNocache==1 {
+			meta["noCache"] = true
+		}
+		if len(meta)>0 {
+			item["meta"]=meta
+		}
+		jsonArr = append(jsonArr,item)
+		item=nil
+	}
+	fmt.Println(jsonArr)
+	return jsonArr
+
+}
+func treeChilden() {
 
 }

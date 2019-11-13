@@ -7,6 +7,7 @@ type SystemRoleMenu struct {
 	SystemRoleId int `json:"system_role_id" xorm:"not null default 0 comment('角色主键') index(system_role_id) INT(11)"`
 	SystemMenuId int `json:"system_menu_id" xorm:"not null default 0 comment('菜单主键') index(system_role_id) INT(11)"`
 }
+var systemrolemenu = "system_role_menu"
 func (rm *SystemRoleMenu) Add() bool{
 	if rm.SystemRoleId==0 || rm.SystemMenuId==0 {
 		return false
@@ -26,4 +27,10 @@ func (rm *SystemRoleMenu) Add() bool{
 		return false
 	}
 	return true
+}
+
+func (rm *SystemRoleMenu) GetAll()([]SystemRoleMenu,error) {
+	var systemrolemenus []SystemRoleMenu
+	err:=mEngine.Find(&systemrolemenus)
+	return systemrolemenus,err
 }

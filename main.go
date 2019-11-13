@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"go-admin/conf"
 	"go-admin/ctrl"
+	"go-admin/ctrl/menu"
 	"go-admin/ctrl/user"
 	"go-admin/models"
 	"go-admin/modules/cache"
@@ -33,6 +34,7 @@ func main() {
 	r.Use(Auth())
 	r.GET("/", ctrl.Index)
 	r.GET("/info", user.Info)
+	r.GET("/routes",menu.List)
 	r.POST("/logout", user.Logout)
 	r.POST("/login", user.Login)
 	r.POST("/reg", user.Reg)
@@ -44,7 +46,7 @@ func main() {
 	r.Run(":8090") // listen and serve on 0.0.0.0:8080
 }
 func Load() {
-	c := conf.Config{ShowSql:true}
+	c := conf.Config{}
 	c.Routes=[]string{"/login"}
 	conf.Set(c)
 

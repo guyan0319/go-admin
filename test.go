@@ -1,11 +1,12 @@
 package main
 
-import (
-	"go-admin/models"
-	"time"
-)
+import "fmt"
 
 func main() {
-		r:=models.SystemRole{Name:"admin",Ctime:time.Now()}
-		r.Add()
+		var t=make(map[string]string)
+		var t2=make(map[string]string,0)
+		t["a"]="b"
+		t2["a"]="b"
+
+		fmt.Println(t,t2)
 }

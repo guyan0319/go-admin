@@ -90,7 +90,7 @@ func add(jsonStr string ,typev int){
 		//处理childen
 		if len(children)>0 {
 			for _,v:=range children{
-				menuChildren:=models.SystemMenu{Type:typev,Pid:menu.Id,Ctime:time.Now()}
+				menuChildren:=models.SystemMenu{Type:typev,Status:1,Pid:menu.Id,Ctime:time.Now()}
 				if  v.(map[string]interface{})["component"]!=nil {
 					menuChildren.Component = v.(map[string]interface{})["component"].(string)
 				}

@@ -23,6 +23,8 @@ type SystemMenu struct {
 	Level       int       `json:"level" xorm:"not null default 0 comment('层级') TINYINT(4)"`
 	Ctime       time.Time `json:"ctime" xorm:"not null default '0000-00-00 00:00:00' comment('时间') DATETIME"`
 }
+
+var systemmenu = "system_menu"
 func (m *SystemMenu) GetRow() bool {
 	has, err := mEngine.Get(&m)
 	if err == nil && has {
@@ -36,8 +38,18 @@ func (m *SystemMenu) Add() (int64 ,error){
 func (m *SystemMenu) AddBatch(beans ...interface{}) (int64 ,error){
 	return mEngine.Insert(beans...)
 }
-func (m *SystemMenu) GetRowByUid(uid int64){
+func (m *SystemMenu) GetRowByUid(uid interface{})([]SystemMenu,error){
 	var menu []SystemMenu
-
-
+	err := mEngine.Table(systemmenu).Distinct(systemmenu+".*").
+		Join("INNER", systemrolemenu, systemrolemenu+".system_menu_id= "+systemmenu+".id").
+		Join("INNER", systemuserrole, systemrolemenu+".system_role_id= "+systemuserrole+".system_role_id").
+		Where(systemmenu+".status = ?", 1).
+		Where(systemuserrole+".system_user_id = ?", uid).
+		Find(&menu)
+	return menu,err
+}
+func (rm *SystemMenu) GetAll()([]SystemMenu,error) {
+	var systemmenus []SystemMenu
+	err:=mEngine.Find(&systemmenus)
+	return systemmenus,err
 }
