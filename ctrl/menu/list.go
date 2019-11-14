@@ -31,17 +31,13 @@ func List(c *gin.Context) {
 			response.ShowError(c, "fail")
 			return
 		}
-		tree(menuArr)
+		jsonArr :=tree(menuArr)
+		response.ShowData(c,jsonArr)
+		return
 	} else {
 
 	}
 
-	//tree(menuMap)
-	//fmt.Println(menuMap)
-	//
-	//
-	//
-	//fmt.Println(menuArr,err)
 
 }
 
@@ -54,13 +50,52 @@ func tree(menuArr []models.SystemMenu) ([]interface{}) {
 		menuMap[value.Pid] = append(menuMap[value.Pid], value)
 	}
 	var jsonArr []interface{}
-	var item = make(map[string]interface{})
+
 	mainMenu, ok := menuMap[0]
 	if !ok {
 		return nil
 	}
 	for _, value := range mainMenu {
-		//var item map[string]interface{}
+		var item = make(map[string]interface{})
+		item["path"] = value.Path
+		item["component"] = value.Component
+		if value.Redirect != "" {
+			item["redirect"] = value.Redirect
+		}
+		if value.Alwaysshow ==1 {
+			item["alwaysShow"] = true
+		}
+		if value.Hidden == 1 {
+			item["hidden"] = true
+		}
+		var meta=make(map[string]interface{})
+		if value.MetaTitle!=""{
+			meta["title"]=value.MetaTitle
+		}
+		if value.MetaIcon!="" {
+			meta["icon"]=value.MetaIcon
+		}
+		if value.MetaAffix==1 {
+			meta["affix"] = true
+		}
+		if value.MetaNocache==1 {
+			meta["noCache"] = true
+		}
+		if len(meta)>0 {
+			item["meta"]=meta
+		}
+		if _,ok:=menuMap[value.Id] ;ok{
+			item["children"]=treeChilden(menuMap[value.Id])
+		}
+		jsonArr = append(jsonArr,item)
+	}
+	return jsonArr
+
+}
+func treeChilden(menuArr []models.SystemMenu )[]interface{} {
+	var jsonArr []interface{}
+	for _,value:=range menuArr  {
+		var item = make(map[string]interface{})
 		item["path"] = value.Path
 		item["component"] = value.Component
 		if value.Redirect != "" {
@@ -89,12 +124,6 @@ func tree(menuArr []models.SystemMenu) ([]interface{}) {
 			item["meta"]=meta
 		}
 		jsonArr = append(jsonArr,item)
-		item=nil
 	}
-	fmt.Println(jsonArr)
 	return jsonArr
-
-}
-func treeChilden() {
-
 }

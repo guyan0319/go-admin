@@ -2,8 +2,9 @@ import request from '@/utils/request'
 
 export function getRoutes() {
   return request({
-    url: '/routes',
-    method: 'get'
+    url: '',
+    method: 'get',
+    baseURL: 'http://localhost:8090/routes'
   })
 }
 
