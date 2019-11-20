@@ -1,12 +1,14 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"go-admin/models"
+)
 
 func main() {
-		var t=make(map[string]string)
-		var t2=make(map[string]string,0)
-		t["a"]="b"
-		t2["a"]="b"
+	var constant []models.SystemMenu
+	menu := models.SystemMenu{Type:1}
+	constant,err:=menu.GetRowByType()
+	fmt.Println(constant,err)
 
-		fmt.Println(t,t2)
 }

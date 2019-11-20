@@ -35,6 +35,12 @@ func List(c *gin.Context) {
 		response.ShowData(c,jsonArr)
 		return
 	} else {
+		//var constant []models.SystemMenu
+		//menu := models.SystemMenu{Type:1}
+		//constant,err:=menu.GetAll()
+
+
+
 
 	}
 

@@ -53,3 +53,10 @@ func (rm *SystemMenu) GetAll()([]SystemMenu,error) {
 	err:=mEngine.Find(&systemmenus)
 	return systemmenus,err
 }
+
+func (rm *SystemMenu) GetRowByType()([]SystemMenu,error) {
+	var systemmenus []SystemMenu
+	err:=mEngine.Where("type=?",rm.Type).Find(&systemmenus)
+	return systemmenus,err
+}
+
