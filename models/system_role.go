@@ -77,3 +77,12 @@ func  (r *SystemRole) GetRowMenu()(map[int][]string){
 	}
 	return mrMap
 }
+
+func  (r *SystemRole) GetAll()([]SystemRole){
+	var sr []SystemRole
+	err:=mEngine.Find(&sr)
+	if err!=nil {
+		panic(err)
+	}
+	return sr
+}

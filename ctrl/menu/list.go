@@ -8,7 +8,12 @@ import (
 	"go-admin/models"
 	"go-admin/modules/response"
 )
-
+type Role struct {
+	Key string `form:"key" json:"key"`
+	Name string `form:"name" json:"name"`
+	Description string `form:"description" json:"description"`
+	Routes []interface{} `form:"routes" json:"routes"`
+}
 func List(c *gin.Context) {
 	session := sessions.Default(c)
 	v := session.Get(conf.Cfg.Token)
@@ -35,18 +40,12 @@ func List(c *gin.Context) {
 		response.ShowData(c,jsonArr)
 		return
 	} else {
-		//var constant []models.SystemMenu
-		//menu := models.SystemMenu{Type:1}
-		//constant,err:=menu.GetAll()
-
-
-
-
+		menuArr:=menu.GetRouteByUid(uid)
+		jsonArr :=tree(menuArr)
+		response.ShowData(c,jsonArr)
+		return
 	}
-
-
 }
-
 func tree(menuArr []models.SystemMenu) ([]interface{}) {
 	role := models.SystemRole{}
 	mrArr := role.GetRowMenu()
@@ -132,4 +131,21 @@ func treeChilden(menuArr []models.SystemMenu )[]interface{} {
 		jsonArr = append(jsonArr,item)
 	}
 	return jsonArr
+}
+func Roles(c *gin.Context){
+	model:=models.SystemRole{}
+	menu:=models.SystemMenu{}
+	roleArr :=model.GetAll()
+	var roleMenu []Role
+	for _,value:=range roleArr {
+		r:=Role{}
+		r.Key=value.Name
+		r.Name=value.Name
+		r.Description=value.Description
+		menuArr:=menu.GetRouteByRole(value.Id)
+		r.Routes=tree(menuArr)
+		roleMenu = append(roleMenu,r)
+	}
+	response.ShowData(c,roleMenu)
+	return
 }

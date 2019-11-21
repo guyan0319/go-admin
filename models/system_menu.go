@@ -48,6 +48,43 @@ func (m *SystemMenu) GetRowByUid(uid interface{})([]SystemMenu,error){
 		Find(&menu)
 	return menu,err
 }
+func (m *SystemMenu) GetRouteByUid(uid interface{})([]SystemMenu){
+	var constant []SystemMenu
+	menu := SystemMenu{Type:1}
+	constant,_=menu.GetRowByType()
+
+	var end []SystemMenu
+	menu.Type=3
+	end,_=menu.GetRowByType()
+	var async []SystemMenu
+	async,_=menu.GetRowByUid(uid)
+	constant = append(constant,async...)
+	constant = append(constant,end...)
+	return constant
+}
+func (m *SystemMenu) GetRouteByRole(id interface{})([]SystemMenu){
+	var constant []SystemMenu
+	menu := SystemMenu{Type:1}
+	constant,_=menu.GetRowByType()
+
+	var end []SystemMenu
+	menu.Type=3
+	end,_=menu.GetRowByType()
+	var async []SystemMenu
+	async,_=menu.GetRowByRole(id)
+	constant = append(constant,async...)
+	constant = append(constant,end...)
+	return constant
+}
+func (m *SystemMenu) GetRowByRole(id interface{})([]SystemMenu,error){
+	var menu []SystemMenu
+	err := mEngine.Table(systemmenu).Distinct(systemmenu+".*").
+		Join("INNER", systemrolemenu, systemrolemenu+".system_menu_id= "+systemmenu+".id").
+		Where(systemmenu+".status = ?", 1).
+		Where(systemrolemenu+".system_role_id = ?", id).
+		Find(&menu)
+	return menu,err
+}
 func (rm *SystemMenu) GetAll()([]SystemMenu,error) {
 	var systemmenus []SystemMenu
 	err:=mEngine.Find(&systemmenus)

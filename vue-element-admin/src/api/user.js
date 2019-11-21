@@ -1,10 +1,10 @@
-import request from '@/utils/request'
+import request, { httphost } from '@/utils/request'
 
 export function login(data) {
   return request({
     url: '',
     method: 'post',
-    baseURL: 'http://localhost:8090/login',
+    baseURL: httphost + '/login',
     data
   })
 }
@@ -14,7 +14,7 @@ export function getInfo(token) {
     url: '',
     method: 'get',
     params: { token },
-    baseURL: 'http://localhost:8090/info'
+    baseURL: httphost + '/info'
   })
 }
 
@@ -22,6 +22,6 @@ export function logout() {
   return request({
     url: '',
     method: 'post',
-    baseURL: 'http://localhost:8090/logout'
+    baseURL: httphost + '/logout'
   })
 }

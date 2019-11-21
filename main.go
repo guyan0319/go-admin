@@ -8,6 +8,7 @@ import (
 	"go-admin/conf"
 	"go-admin/ctrl"
 	"go-admin/ctrl/menu"
+	"go-admin/ctrl/role"
 	"go-admin/ctrl/user"
 	"go-admin/models"
 	"go-admin/modules/cache"
@@ -35,6 +36,8 @@ func main() {
 	r.GET("/", ctrl.Index)
 	r.GET("/info", user.Info)
 	r.GET("/routes",menu.List)
+	r.GET("/roles",menu.Roles)
+	r.POST("/roleupdate",role.UpdateRole)
 	r.POST("/logout", user.Logout)
 	r.POST("/login", user.Login)
 	r.POST("/reg", user.Reg)
@@ -53,7 +56,7 @@ func Load() {
 }
 func GetCorsConfig() cors.Config {
 	config := cors.DefaultConfig()
-	config.AllowOrigins = []string{"http://localhost:9529","http://localhost"}
+	config.AllowOrigins = []string{"http://localhost:9529","http://localhost:9528","http://localhost:9527","http://localhost"}
 	config.AllowMethods = []string{"POST", "GET", "OPTIONS", "PUT", "DELETE"}
 	config.AllowCredentials = true
 	config.AllowHeaders = []string{"x-requested-with", "Content-Type", "AccessToken", "X-CSRF-Token","X-Token", "Authorization","token"}

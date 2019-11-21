@@ -1,17 +1,17 @@
-import request from '@/utils/request'
+import request, { httphost } from '@/utils/request'
 
 export function getRoutes() {
   return request({
     url: '',
     method: 'get',
-    baseURL: 'http://localhost:8090/routes'
+    baseURL: httphost + '/routes'
   })
 }
-
 export function getRoles() {
   return request({
-    url: '/roles',
-    method: 'get'
+    url: '',
+    method: 'get',
+    baseURL: httphost + '/roles'
   })
 }
 
@@ -25,9 +25,10 @@ export function addRole(data) {
 
 export function updateRole(id, data) {
   return request({
-    url: `/role/${id}`,
-    method: 'put',
-    data
+    url: ``,
+    method: 'post',
+    data,
+    baseURL: httphost + '/updaterole'
   })
 }
 
