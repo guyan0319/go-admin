@@ -1,5 +1,5 @@
-import request, { httphost } from '@/utils/request'
-
+import request from '@/utils/request'
+import { httphost } from '@/utils/global'
 export function getRoutes() {
   return request({
     url: '',

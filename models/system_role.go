@@ -18,7 +18,7 @@ type SystemRole struct {
 var systemrole = "system_role"
 
 func (r *SystemRole) GetRow() bool {
-	has, err := mEngine.Get(&r)
+	has, err := mEngine.Get(r)
 	if err == nil && has {
 		return true
 	}
@@ -31,6 +31,66 @@ func (r *SystemRole) GetRowByName() bool {
 		return true
 	}
 	return false
+}
+func (r *SystemRole) Update(data []interface{}) error {
+
+	session := mEngine.NewSession()
+	defer session.Close()
+	// add Begin() before any action
+	if err := session.Begin(); err != nil {
+		// if returned then will rollback automatically
+		return err
+	}
+	if _, err := session.Where("id = ?", r.Id).Update(r); err != nil {
+		fmt.Println(err)
+		return err
+	}
+	if len(data)<=0 {
+		return  session.Commit()
+	}
+	//rolemenu:=SystemRoleMenu{SystemRoleId:r.Id}
+	//if _, err := session.Delete(&rolemenu); err != nil {
+	//	fmt.Println(err)
+	//	return err
+	//}
+	for _,value:=range data  {
+
+		menu:=SystemMenu{}
+		menu.Path=value.(map[string]interface{})["path"].(string)
+		menu.Component=value.(map[string]interface{})["component"].(string)
+		menu.Type=2
+		has:=menu.GetRow()
+		if !has {
+			continue
+		}
+		//rm:=SystemRoleMenu{SystemRoleId:r.Id,SystemMenuId:menu.Id}
+		//if _, err := session.Insert(&rm); err != nil {
+		//	fmt.Println(err)
+		//	return err
+		//}
+		childern :=value.(map[string]interface{})["childen"]
+		if childern==nil {
+			continue
+		}
+		fmt.Println(childern)
+		for _,v:=range childern.([]interface{})  {
+			fmt.Println(v)
+		}
+
+
+
+
+
+
+
+
+	}
+
+
+
+
+	// add Commit() after all actions
+	return  session.Commit()
 }
 func (r *SystemRole) Add() bool {
 	if r.Name == "" {

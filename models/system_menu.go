@@ -26,7 +26,7 @@ type SystemMenu struct {
 
 var systemmenu = "system_menu"
 func (m *SystemMenu) GetRow() bool {
-	has, err := mEngine.Get(&m)
+	has, err := mEngine.Get(m)
 	if err == nil && has {
 		return true
 	}
