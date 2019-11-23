@@ -17,21 +17,20 @@ export function getRoles() {
 
 export function addRole(data) {
   return request({
-    url: '/role',
+    url: '',
     method: 'post',
-    data
+    data,
+    baseURL: httphost + '/addrole'
   })
 }
 
 export function updateRole(id, data) {
   return request({
-    url: ``,
-    method: 'post',
-    data,
-    baseURL: httphost + '/updaterole'
+    url: `/role/${id}`,
+    method: 'put',
+    data
   })
 }
-
 export function deleteRole(id) {
   return request({
     url: `/role/${id}`,

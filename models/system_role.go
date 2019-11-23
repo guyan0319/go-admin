@@ -33,7 +33,6 @@ func (r *SystemRole) GetRowByName() bool {
 	return false
 }
 func (r *SystemRole) Update(data []interface{}) error {
-
 	session := mEngine.NewSession()
 	defer session.Close()
 	// add Begin() before any action
@@ -48,47 +47,97 @@ func (r *SystemRole) Update(data []interface{}) error {
 	if len(data)<=0 {
 		return  session.Commit()
 	}
-	//rolemenu:=SystemRoleMenu{SystemRoleId:r.Id}
-	//if _, err := session.Delete(&rolemenu); err != nil {
-	//	fmt.Println(err)
-	//	return err
-	//}
+	rolemenu:=SystemRoleMenu{SystemRoleId:r.Id}
+	if _, err := session.Delete(&rolemenu); err != nil {
+		fmt.Println(err)
+		return err
+	}
 	for _,value:=range data  {
-
 		menu:=SystemMenu{}
 		menu.Path=value.(map[string]interface{})["path"].(string)
 		menu.Component=value.(map[string]interface{})["component"].(string)
 		menu.Type=2
-		has:=menu.GetRow()
+		has:=menu.GetRowByPathCT()
 		if !has {
 			continue
 		}
-		//rm:=SystemRoleMenu{SystemRoleId:r.Id,SystemMenuId:menu.Id}
-		//if _, err := session.Insert(&rm); err != nil {
-		//	fmt.Println(err)
-		//	return err
-		//}
-		childern :=value.(map[string]interface{})["childen"]
-		if childern==nil {
+		rm:=SystemRoleMenu{SystemRoleId:r.Id,SystemMenuId:menu.Id}
+		if _, err := session.Insert(&rm); err != nil {
+			fmt.Println(err)
+			return err
+		}
+		children :=value.(map[string]interface{})["children"]
+		if children==nil {
 			continue
 		}
-		fmt.Println(childern)
-		for _,v:=range childern.([]interface{})  {
-			fmt.Println(v)
+		for _,v:=range children.([]interface{})  {
+			menu:=SystemMenu{}
+			menu.Path=v.(map[string]interface{})["path"].(string)
+			menu.Component=v.(map[string]interface{})["component"].(string)
+			menu.Type=2
+			has:=menu.GetRowByPathCT()
+			if !has {
+				continue
+			}
+			rm:=SystemRoleMenu{SystemRoleId:r.Id,SystemMenuId:menu.Id}
+			if _, err := session.Insert(&rm); err != nil {
+				fmt.Println(err)
+				return err
+			}
 		}
-
-
-
-
-
-
-
-
 	}
-
-
-
-
+	// add Commit() after all actions
+	return  session.Commit()
+}
+func (r *SystemRole) AddCommit(data []interface{}) error {
+	session := mEngine.NewSession()
+	defer session.Close()
+	// add Begin() before any action
+	if err := session.Begin(); err != nil {
+		// if returned then will rollback automatically
+		return err
+	}
+	if _, err := session.Insert(r); err != nil {
+		fmt.Println(err)
+		return err
+	}
+	if len(data)<=0 {
+		return  session.Commit()
+	}
+	for _,value:=range data  {
+		menu:=SystemMenu{}
+		menu.Path=value.(map[string]interface{})["path"].(string)
+		menu.Component=value.(map[string]interface{})["component"].(string)
+		menu.Type=2
+		has:=menu.GetRowByPathCT()
+		if !has {
+			continue
+		}
+		rm:=SystemRoleMenu{SystemRoleId:r.Id,SystemMenuId:menu.Id}
+		if _, err := session.Insert(&rm); err != nil {
+			fmt.Println(err)
+			return err
+		}
+		children :=value.(map[string]interface{})["children"]
+		if children==nil {
+			continue
+		}
+		for _,v:=range children.([]interface{})  {
+			menu:=SystemMenu{}
+			menu.Path=v.(map[string]interface{})["path"].(string)
+			menu.Component=v.(map[string]interface{})["component"].(string)
+			menu.Type=2
+			has:=menu.GetRowByPathCT()
+			if !has {
+				continue
+			}
+			rm:=SystemRoleMenu{SystemRoleId:r.Id,SystemMenuId:menu.Id}
+			if _, err := session.Insert(&rm); err != nil {
+				fmt.Println(err)
+				return err
+			}
+		}
+	}
 	// add Commit() after all actions
 	return  session.Commit()
 }

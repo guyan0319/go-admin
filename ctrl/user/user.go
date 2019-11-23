@@ -21,8 +21,7 @@ func Reg(c *gin.Context){
 	}
 	salt :=common.GetRandomBoth(4)
 	passwd = common.Sha1En(passwd+salt)
-	fmt.Println(salt)
-	fmt.Println(passwd)
+
 }
 type Userinfo struct {
 	Roles []string `json:"roles"`

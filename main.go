@@ -38,6 +38,7 @@ func main() {
 	r.GET("/routes",menu.List)
 	r.GET("/roles",menu.Roles)
 	r.POST("/updaterole",role.UpdateRole)
+	r.POST("/addrole",role.AddRole)
 	r.POST("/logout", user.Logout)
 	r.POST("/login", user.Login)
 	r.POST("/reg", user.Reg)

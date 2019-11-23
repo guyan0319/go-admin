@@ -32,6 +32,14 @@ func (m *SystemMenu) GetRow() bool {
 	}
 	return false
 }
+func (m *SystemMenu) GetRowByPathCT() bool {
+	has, err := mEngine.Where("path=?",m.Path).Where("component=?",m.Component).Where("type=?",m.Type).Get(m)
+	if err == nil && has {
+		return true
+	}
+	return false
+}
+
 func (m *SystemMenu) Add() (int64 ,error){
 	return  mEngine.Insert(m)
 }
