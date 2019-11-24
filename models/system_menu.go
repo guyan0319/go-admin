@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"time"
 )
 
@@ -32,8 +33,8 @@ func (m *SystemMenu) GetRow() bool {
 	}
 	return false
 }
-func (m *SystemMenu) GetRowByPathCT() bool {
-	has, err := mEngine.Where("path=?",m.Path).Where("component=?",m.Component).Where("type=?",m.Type).Get(m)
+func (m *SystemMenu) GetRowByPathCT(menu SystemMenu) bool {
+	has, err := mEngine.Where("path=?",menu.Path).Where("component=?",menu.Component).Where("type=?",menu.Type).Get(m)
 	if err == nil && has {
 		return true
 	}
@@ -80,13 +81,15 @@ func (m *SystemMenu) GetRouteByRole(id interface{})([]SystemMenu){
 	end,_=menu.GetRowByType()
 	var async []SystemMenu
 	async,_=menu.GetRowByRole(id)
+
+	fmt.Println(async)
 	constant = append(constant,async...)
 	constant = append(constant,end...)
 	return constant
 }
 func (m *SystemMenu) GetRowByRole(id interface{})([]SystemMenu,error){
 	var menu []SystemMenu
-	err := mEngine.Table(systemmenu).Distinct(systemmenu+".*").
+	err := mEngine.Table(systemmenu).Select(systemmenu+".*").
 		Join("INNER", systemrolemenu, systemrolemenu+".system_menu_id= "+systemmenu+".id").
 		Where(systemmenu+".status = ?", 1).
 		Where(systemrolemenu+".system_role_id = ?", id).

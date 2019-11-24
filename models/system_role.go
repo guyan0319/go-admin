@@ -57,11 +57,12 @@ func (r *SystemRole) Update(data []interface{}) error {
 		menu.Path=value.(map[string]interface{})["path"].(string)
 		menu.Component=value.(map[string]interface{})["component"].(string)
 		menu.Type=2
-		has:=menu.GetRowByPathCT()
+		initMenu:=SystemMenu{}
+		has:=initMenu.GetRowByPathCT(menu)
 		if !has {
 			continue
 		}
-		rm:=SystemRoleMenu{SystemRoleId:r.Id,SystemMenuId:menu.Id}
+		rm:=SystemRoleMenu{SystemRoleId:r.Id,SystemMenuId:initMenu.Id}
 		if _, err := session.Insert(&rm); err != nil {
 			fmt.Println(err)
 			return err
@@ -75,11 +76,12 @@ func (r *SystemRole) Update(data []interface{}) error {
 			menu.Path=v.(map[string]interface{})["path"].(string)
 			menu.Component=v.(map[string]interface{})["component"].(string)
 			menu.Type=2
-			has:=menu.GetRowByPathCT()
+			initMenu:=SystemMenu{}
+			has:=initMenu.GetRowByPathCT(menu)
 			if !has {
 				continue
 			}
-			rm:=SystemRoleMenu{SystemRoleId:r.Id,SystemMenuId:menu.Id}
+			rm:=SystemRoleMenu{SystemRoleId:r.Id,SystemMenuId:initMenu.Id}
 			if _, err := session.Insert(&rm); err != nil {
 				fmt.Println(err)
 				return err
@@ -109,11 +111,12 @@ func (r *SystemRole) AddCommit(data []interface{}) error {
 		menu.Path=value.(map[string]interface{})["path"].(string)
 		menu.Component=value.(map[string]interface{})["component"].(string)
 		menu.Type=2
-		has:=menu.GetRowByPathCT()
+		initMenu:=SystemMenu{}
+		has:=initMenu.GetRowByPathCT(menu)
 		if !has {
 			continue
 		}
-		rm:=SystemRoleMenu{SystemRoleId:r.Id,SystemMenuId:menu.Id}
+		rm:=SystemRoleMenu{SystemRoleId:r.Id,SystemMenuId:initMenu.Id}
 		if _, err := session.Insert(&rm); err != nil {
 			fmt.Println(err)
 			return err
@@ -127,11 +130,12 @@ func (r *SystemRole) AddCommit(data []interface{}) error {
 			menu.Path=v.(map[string]interface{})["path"].(string)
 			menu.Component=v.(map[string]interface{})["component"].(string)
 			menu.Type=2
-			has:=menu.GetRowByPathCT()
+			initMenu:=SystemMenu{}
+			has:=initMenu.GetRowByPathCT(menu)
 			if !has {
 				continue
 			}
-			rm:=SystemRoleMenu{SystemRoleId:r.Id,SystemMenuId:menu.Id}
+			rm:=SystemRoleMenu{SystemRoleId:r.Id,SystemMenuId:initMenu.Id}
 			if _, err := session.Insert(&rm); err != nil {
 				fmt.Println(err)
 				return err

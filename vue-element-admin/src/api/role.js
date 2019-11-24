@@ -26,11 +26,13 @@ export function addRole(data) {
 
 export function updateRole(id, data) {
   return request({
-    url: `/role/${id}`,
-    method: 'put',
-    data
+    url: ``,
+    method: 'post',
+    data,
+    baseURL: httphost + '/updaterole'
   })
 }
+
 export function deleteRole(id) {
   return request({
     url: `/role/${id}`,

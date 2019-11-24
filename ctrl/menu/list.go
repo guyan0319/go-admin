@@ -74,6 +74,10 @@ func tree(menuArr []models.SystemMenu) ([]interface{}) {
 			item["hidden"] = true
 		}
 		var meta=make(map[string]interface{})
+		_,ok:=mrArr[value.Id]
+		if ok {
+			meta["roles"]=mrArr[value.Id]
+		}
 		if value.MetaTitle!=""{
 			meta["title"]=value.MetaTitle
 		}
@@ -90,14 +94,14 @@ func tree(menuArr []models.SystemMenu) ([]interface{}) {
 			item["meta"]=meta
 		}
 		if _,ok:=menuMap[value.Id] ;ok{
-			item["children"]=treeChilden(menuMap[value.Id])
+			item["children"]=treeChilden(menuMap[value.Id],mrArr)
 		}
 		jsonArr = append(jsonArr,item)
 	}
 	return jsonArr
 
 }
-func treeChilden(menuArr []models.SystemMenu )[]interface{} {
+func treeChilden(menuArr []models.SystemMenu, mrArr map[int][]string)[]interface{} {
 	var jsonArr []interface{}
 	for _,value:=range menuArr  {
 		var item = make(map[string]interface{})
@@ -113,6 +117,10 @@ func treeChilden(menuArr []models.SystemMenu )[]interface{} {
 			item["hidden"] = true
 		}
 		var meta=make(map[string]interface{})
+		_,ok:=mrArr[value.Id]
+		if ok {
+			meta["roles"]=mrArr[value.Id]
+		}
 		if value.MetaTitle!=""{
 			meta["title"]=value.MetaTitle
 		}
