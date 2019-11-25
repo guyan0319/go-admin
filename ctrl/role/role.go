@@ -55,7 +55,6 @@ func AddRole(c *gin.Context)  {
 	model.Description=data["description"].(string)
 	err=model.AddCommit(data["routes"].([]interface{}))
 	if err!=nil {
-		fmt.Println(err)
 		response.ShowError(c, "fail")
 		return
 	}
@@ -63,5 +62,27 @@ func AddRole(c *gin.Context)  {
 	response.ShowData(c,datas)
 	return
 }
+func DeleteRole(c *gin.Context) {
+	name := c.Param("name") //通过Param获取
+	if name=="" {
+		response.ShowError(c, "fail")
+		return
+	}
+	role:=models.SystemRole{Name:name}
+	has:=role.GetRow()
+	if !has {
+		response.ShowError(c, "fail")
+		return
+	}
 
+	roles:=models.SystemRole{Id:role.Id}
+	err:=roles.Delete()
+	if err!=nil {
+		response.ShowError(c, "fail")
+		return
+	}
+	datas:=map[string]string{"status":"success"}
+	response.ShowData(c,datas)
+	return
+}
 

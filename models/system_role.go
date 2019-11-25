@@ -2,6 +2,7 @@ package models
 
 import (
 	"fmt"
+	"strings"
 	"time"
 )
 
@@ -54,7 +55,9 @@ func (r *SystemRole) Update(data []interface{}) error {
 	}
 	for _,value:=range data  {
 		menu:=SystemMenu{}
-		menu.Path=value.(map[string]interface{})["path"].(string)
+
+		pathMain:=value.(map[string]interface{})["path"].(string)
+		menu.Path=pathMain
 		menu.Component=value.(map[string]interface{})["component"].(string)
 		menu.Type=2
 		initMenu:=SystemMenu{}
@@ -73,7 +76,7 @@ func (r *SystemRole) Update(data []interface{}) error {
 		}
 		for _,v:=range children.([]interface{})  {
 			menu:=SystemMenu{}
-			menu.Path=v.(map[string]interface{})["path"].(string)
+			menu.Path=strings.TrimPrefix(v.(map[string]interface{})["path"].(string),pathMain+"/")
 			menu.Component=v.(map[string]interface{})["component"].(string)
 			menu.Type=2
 			initMenu:=SystemMenu{}
@@ -108,7 +111,8 @@ func (r *SystemRole) AddCommit(data []interface{}) error {
 	}
 	for _,value:=range data  {
 		menu:=SystemMenu{}
-		menu.Path=value.(map[string]interface{})["path"].(string)
+		pathMain:=value.(map[string]interface{})["path"].(string)
+		menu.Path=pathMain
 		menu.Component=value.(map[string]interface{})["component"].(string)
 		menu.Type=2
 		initMenu:=SystemMenu{}
@@ -127,7 +131,7 @@ func (r *SystemRole) AddCommit(data []interface{}) error {
 		}
 		for _,v:=range children.([]interface{})  {
 			menu:=SystemMenu{}
-			menu.Path=v.(map[string]interface{})["path"].(string)
+			strings.TrimPrefix(v.(map[string]interface{})["path"].(string),pathMain+"/")
 			menu.Component=v.(map[string]interface{})["component"].(string)
 			menu.Type=2
 			initMenu:=SystemMenu{}
@@ -198,4 +202,31 @@ func  (r *SystemRole) GetAll()([]SystemRole){
 		panic(err)
 	}
 	return sr
+}
+func(r *SystemRole) Delete()(error) {
+	session := mEngine.NewSession()
+	defer session.Close()
+	// add Begin() before any action
+	if err := session.Begin(); err != nil {
+		// if returned then will rollback automatically
+		return err
+	}
+	if _, err := session.Delete(&r); err != nil {
+		fmt.Println(err,"ok")
+		return err
+	}
+	fmt.Println(r)
+	rolemenu:=SystemRoleMenu{SystemRoleId:r.Id}
+	if _, err := session.Delete(&rolemenu); err != nil {
+		fmt.Println(err)
+		return err
+	}
+	roleuser:=SystemUserRole{SystemRoleId:r.Id}
+	if _, err := session.Delete(&roleuser); err != nil {
+		fmt.Println(err)
+		return err
+	}
+	// add Commit() after all actions
+	return  session.Commit()
+
 }

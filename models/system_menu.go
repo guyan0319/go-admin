@@ -1,7 +1,6 @@
 package models
 
 import (
-	"fmt"
 	"time"
 )
 
@@ -81,8 +80,6 @@ func (m *SystemMenu) GetRouteByRole(id interface{})([]SystemMenu){
 	end,_=menu.GetRowByType()
 	var async []SystemMenu
 	async,_=menu.GetRowByRole(id)
-
-	fmt.Println(async)
 	constant = append(constant,async...)
 	constant = append(constant,end...)
 	return constant

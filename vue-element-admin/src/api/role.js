@@ -11,7 +11,7 @@ export function getRoles() {
   return request({
     url: '',
     method: 'get',
-    baseURL: httphost + '/roles'
+    baseURL: httphost + '/role/list'
   })
 }
 
@@ -20,7 +20,7 @@ export function addRole(data) {
     url: '',
     method: 'post',
     data,
-    baseURL: httphost + '/addrole'
+    baseURL: httphost + '/role/add'
   })
 }
 
@@ -29,13 +29,16 @@ export function updateRole(id, data) {
     url: ``,
     method: 'post',
     data,
-    baseURL: httphost + '/updaterole'
+    baseURL: httphost + '/role/update'
   })
 }
 
 export function deleteRole(id) {
   return request({
-    url: `/role/${id}`,
-    method: 'delete'
+    url: ``,
+    method: 'post',
+    baseURL: httphost + `/role/delete/${id}`
+    // url: `/role/${id}`,
+    // method: 'delete'
   })
 }

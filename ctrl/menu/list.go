@@ -1,7 +1,6 @@
 package menu
 
 import (
-	"fmt"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"go-admin/conf"
@@ -49,7 +48,6 @@ func List(c *gin.Context) {
 func tree(menuArr []models.SystemMenu) ([]interface{}) {
 	role := models.SystemRole{}
 	mrArr := role.GetRowMenu()
-	fmt.Println(mrArr)
 	var menuMap = make(map[int][]models.SystemMenu, 0)
 	for _, value := range menuArr {
 		menuMap[value.Pid] = append(menuMap[value.Pid], value)
