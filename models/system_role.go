@@ -211,11 +211,6 @@ func(r *SystemRole) Delete()(error) {
 		// if returned then will rollback automatically
 		return err
 	}
-	if _, err := session.Delete(&r); err != nil {
-		fmt.Println(err,"ok")
-		return err
-	}
-	fmt.Println(r)
 	rolemenu:=SystemRoleMenu{SystemRoleId:r.Id}
 	if _, err := session.Delete(&rolemenu); err != nil {
 		fmt.Println(err)
@@ -226,6 +221,13 @@ func(r *SystemRole) Delete()(error) {
 		fmt.Println(err)
 		return err
 	}
+
+	if _, err := session.Delete(r); err != nil {
+		fmt.Println(err,"ok")
+		return err
+	}
+	fmt.Println(r)
+
 	// add Commit() after all actions
 	return  session.Commit()
 

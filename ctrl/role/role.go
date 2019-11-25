@@ -7,6 +7,7 @@ import (
 	"go-admin/models"
 	"go-admin/modules/response"
 	"io/ioutil"
+	"time"
 )
 
 func UpdateRole(c *gin.Context)  {
@@ -51,8 +52,10 @@ func AddRole(c *gin.Context)  {
 		response.ShowError(c, "fail")
 		return
 	}
+
 	model.AliasName=data["name"].(string)
 	model.Description=data["description"].(string)
+	model.Ctime=time.Now()
 	err=model.AddCommit(data["routes"].([]interface{}))
 	if err!=nil {
 		response.ShowError(c, "fail")
