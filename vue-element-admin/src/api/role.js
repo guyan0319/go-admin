@@ -38,7 +38,5 @@ export function deleteRole(id) {
     url: ``,
     method: 'post',
     baseURL: httphost + `/role/delete/${id}`
-    // url: `/role/${id}`,
-    // method: 'delete'
   })
 }

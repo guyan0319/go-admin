@@ -170,7 +170,22 @@ export const asyncRoutes = [
       }
     ]
   },
-
+  {
+    path: '/menu',
+    component: Layout,
+    name: 'menu',
+    children: [
+      {
+        path: 'list',
+        component: () => import('@/views/menus/list'),
+        name: 'menus',
+        meta: {
+          title: 'menu',
+          icon: 'tree'
+        }
+      }
+    ]
+  },
   {
     path: '/icon',
     component: Layout,
