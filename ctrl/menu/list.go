@@ -1,11 +1,14 @@
 package menu
 
 import (
+	"encoding/json"
+	"fmt"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"go-admin/conf"
 	"go-admin/models"
 	"go-admin/modules/response"
+	"net/http"
 )
 type Role struct {
 	Key string `form:"key" json:"key"`
@@ -153,5 +156,20 @@ func Roles(c *gin.Context){
 		roleMenu = append(roleMenu,r)
 	}
 	response.ShowData(c,roleMenu)
+	return
+}
+
+func Dashboard(c *gin.Context){
+	roleMenu:="{\"menuList\":[{\"create_time\":\"2018-03-1611:33:00\",\"menu_type\":\"M\",\"children\":[{\"create_time\":\"2018-03-1611:33:00\",\"menu_type\":\"C\",\"children\":[],\"parent_id\":1,\"menu_name\":\"用户管理\",\"icon\":\"#\",\"perms\":\"system:user:index\",\"order_num\":1,\"menu_id\":4,\"url\":\"/system/user\"},{\"create_time\":\"2018-12-2810:36:20\",\"menu_type\":\"M\",\"children\":[{\"create_time\":\"2018-12-2810:50:28\",\"menu_type\":\"C\",\"parent_id\":73,\"menu_name\":\"人员通讯录\",\"icon\":null,\"perms\":\"system:person:index\",\"order_num\":1,\"menu_id\":74,\"url\":\"/system/book/person\"}],\"parent_id\":1,\"menu_name\":\"通讯录管理\",\"icon\":\"fafa-address-book-o\",\"perms\":null,\"order_num\":1,\"menu_id\":73,\"url\":\"#\"}],\"parent_id\":0,\"menu_name\":\"系统管理\",\"icon\":\"fafa-adjust\",\"perms\":null,\"order_num\":2,\"menu_id\":1,\"url\":\"#\"},{\"create_time\":\"2018-03-1611:33:00\",\"menu_type\":\"M\",\"children\":[{\"create_time\":\"2018-03-1611:33:00\",\"menu_type\":\"C\",\"parent_id\":2,\"menu_name\":\"数据监控\",\"icon\":\"#\",\"perms\":\"monitor:data:view\",\"order_num\":3,\"menu_id\":15,\"url\":\"/system/druid/monitor\"}],\"parent_id\":0,\"menu_name\":\"系统监控\",\"icon\":\"fafa-video-camera\",\"perms\":null,\"order_num\":5,\"menu_id\":2,\"url\":\"#\"}],\"user\":{\"login_name\":\"admin\",\"user_id\":1,\"user_name\":\"管理员\",\"dept_id\":1}}"
+	var data map[string]interface{}
+	err := json.Unmarshal([]byte(roleMenu), &data)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"code": 0,
+		"data":  data,
+	})
 	return
 }

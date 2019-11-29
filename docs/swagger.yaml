@@ -1,0 +1,28 @@
+info:
+  contact: {}
+  license: {}
+paths:
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: login
+      parameters:
+      - description: username
+        in: path
+        name: username
+        required: true
+        type: string
+      - description: passwd
+        in: path
+        name: passwd
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: string
+swagger: "2.0"

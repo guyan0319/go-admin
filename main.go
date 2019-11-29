@@ -5,11 +5,14 @@ import (
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/redis"
 	"github.com/gin-gonic/gin"
+	"github.com/swaggo/gin-swagger"
+	"github.com/swaggo/gin-swagger/swaggerFiles"
 	"go-admin/conf"
 	"go-admin/ctrl"
 	"go-admin/ctrl/menu"
 	"go-admin/ctrl/role"
 	"go-admin/ctrl/user"
+	_ "go-admin/docs"
 	"go-admin/models"
 	"go-admin/modules/cache"
 	"go-admin/modules/response"
@@ -33,9 +36,11 @@ func main() {
 	r.Use(cors.New(GetCorsConfig()))//跨域
 	//r.Use(cors.Default())//默认跨域
 	r.Use(Auth())
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	r.GET("/", ctrl.Index)
 	r.GET("/info", user.Info)
 	r.GET("/routes",menu.List)
+	r.GET("/dashboard",menu.Dashboard)
 	r.GET("/role/list",menu.Roles)
 	r.POST("/role/delete/:name",role.DeleteRole)
 	r.POST("/role/update",role.UpdateRole)

@@ -25,3 +25,13 @@ export function logout() {
     baseURL: httphost + '/logout'
   })
 }
+//
+// export function getAuthMenu(token) {
+//   return request({
+//     url: '/dashboard',
+//     method: 'get',
+//     // baseURL: httphost + '/dashboard',
+//     params: { token }
+//
+//   })
+// }

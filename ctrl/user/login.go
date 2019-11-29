@@ -15,6 +15,14 @@ type User struct {
 	Username string `form:"username" json:"username" binding:"required"`
 	Password   string `form:"password" json:"password" binding:"required"`
 }
+// @登录
+// @Description login
+// @Accept  json
+// @Produce json
+// @Param   username     path    string     true        "username"
+// @Param   passwd     path    string     true        "passwd"
+// @Success 200 {string} string	"ok"
+// @Router /login [post]
 func Login(c *gin.Context) {
 	var u User
 	err :=c.BindJSON(&u)
