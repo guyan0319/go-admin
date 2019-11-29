@@ -168,7 +168,7 @@ func Dashboard(c *gin.Context){
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"code": 0,
+		"code": 20000,
 		"data":  data,
 	})
 	return

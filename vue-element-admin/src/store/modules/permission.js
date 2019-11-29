@@ -1,5 +1,3 @@
-
-
 import { asyncRoutes, constantRoutes } from '@/router'
 import { getAuthMenu } from '@/api/user'
 import Layout from '@/layout'
@@ -77,11 +75,9 @@ const actions = {
       // 先查询后台并返回左侧菜单数据并把数据添加到路由
       getAuthMenu(state.token).then(response => {
         let data = response
-        if (response.code !== 0) {
-          this.$message({
-            message: '菜单数据加载异常',
-            type: 0
-          })
+        if (response.code !== 20000) {
+          alert(JSON.stringify('菜单数据加载异常'))
+          // throw new Error('菜单数据加载异常')
         } else {
           data = response.data.menuList
           Object.assign(loadMenuData, data)
