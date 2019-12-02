@@ -80,7 +80,7 @@ const actions = {
           alert(JSON.stringify('菜单数据加载异常'))
           // throw new Error('菜单数据加载异常')
         } else {
-          data = response.data.menuList
+          data = response.data
           Object.assign(loadMenuData, data)
           generaMenu(asyncRoutes, loadMenuData)
           let accessedRoutes
