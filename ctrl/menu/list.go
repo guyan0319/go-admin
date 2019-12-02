@@ -176,6 +176,11 @@ func treeMenuChilden(menuArr []models.SystemMenu, mrArr map[int][]string)[]inter
 		if len(meta)>0 {
 			item["meta"]=meta
 		}
+		item["pid"]=value.Pid
+		item["id"]=value.Id
+		item["url"]=value.Url
+		item["name"]=value.Name
+
 		jsonArr = append(jsonArr,item)
 	}
 	return jsonArr
@@ -188,7 +193,6 @@ func treeMenu(menuArr []models.SystemMenu) ([]interface{}) {
 		menuMap[value.Pid] = append(menuMap[value.Pid], value)
 	}
 	var jsonArr []interface{}
-
 	mainMenu, ok := menuMap[0]
 	if !ok {
 		return nil
@@ -229,6 +233,10 @@ func treeMenu(menuArr []models.SystemMenu) ([]interface{}) {
 		if _,ok:=menuMap[value.Id] ;ok{
 			item["children"]=treeMenuChilden(menuMap[value.Id],mrArr)
 		}
+		item["pid"]=value.Pid
+		item["id"]=value.Id
+		item["url"]=value.Url
+		item["name"]=value.Name
 		jsonArr = append(jsonArr,item)
 	}
 	return jsonArr
@@ -266,7 +274,6 @@ func Dashboard(c *gin.Context){
 		response.ShowError(c, "fail")
 		return
 	}
-
 	menu := models.SystemMenu{}
 	if user.Nickname == "admin" {
 		menuArr, err := menu.GetAll()
@@ -274,12 +281,12 @@ func Dashboard(c *gin.Context){
 			response.ShowError(c, "fail")
 			return
 		}
-		jsonArr :=tree(menuArr)
+		jsonArr :=treeMenu(menuArr)
 		response.ShowData(c,jsonArr)
 		return
 	} else {
 		menuArr:=menu.GetRouteByUid(uid)
-		jsonArr :=tree(menuArr)
+		jsonArr :=treeMenu(menuArr)
 		response.ShowData(c,jsonArr)
 		return
 	}

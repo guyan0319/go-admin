@@ -10,6 +10,7 @@ type SystemMenu struct {
 	Path        string    `json:"path" xorm:"not null default '' comment('路径') index VARCHAR(50)"`
 	Component   string    `json:"component" xorm:"not null default '' comment('组件') VARCHAR(100)"`
 	Redirect    string    `json:"redirect" xorm:"not null default '' comment('重定向') VARCHAR(200)"`
+	Url         string    `json:"url" xorm:"not null default '' comment('url') VARCHAR(200)"`
 	MetaTitle   string    `json:"meta_title" xorm:"not null default '' comment('meta标题') VARCHAR(50)"`
 	MetaIcon    string    `json:"meta_icon" xorm:"not null default '' comment('meta icon') VARCHAR(50)"`
 	MetaNocache int       `json:"meta_nocache" xorm:"not null default 0 comment('是否缓存（1:是 0:否）') TINYINT(4)"`

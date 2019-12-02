@@ -23,12 +23,13 @@ export function generaMenu(routes, data) {
   data.forEach(item => {
     // alert(JSON.stringify(item))
     const menu = {
-      path: item.url === '#' ? item.menu_id + '_key' : item.url,
-      component: item.url === '#' ? Layout : () => import(`@/views${item.url}/index`),
+      path: item.component === '#' ? item.id + '_key' : item.component,
+      component: item.component === '#' ? Layout : () => import(`@/views${item.component}/index`),
       // hidden: true,
       children: [],
-      name: 'menu_' + item.menu_id,
-      meta: { title: item.menu_name, id: item.menu_id, roles: ['admin'] }
+      name: 'menu_' + item.id,
+      meta: item.meta
+      // meta: { title: item.name, id: item.id, roles: ['admin'] }
     }
     if (item.children) {
       generaMenu(menu.children, item.children)
