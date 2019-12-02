@@ -141,6 +141,99 @@ func treeChilden(menuArr []models.SystemMenu, mrArr map[int][]string)[]interface
 	}
 	return jsonArr
 }
+func treeMenuChilden(menuArr []models.SystemMenu, mrArr map[int][]string)[]interface{} {
+	var jsonArr []interface{}
+	for _,value:=range menuArr  {
+		var item = make(map[string]interface{})
+		item["path"] = value.Path
+		item["component"] = value.Component
+		if value.Redirect != "" {
+			item["redirect"] = value.Redirect
+		}
+		if value.Alwaysshow ==1 {
+			item["alwaysShow"] = true
+		}
+		if value.Hidden == 1 {
+			item["hidden"] = true
+		}
+		var meta=make(map[string]interface{})
+		_,ok:=mrArr[value.Id]
+		if ok {
+			meta["roles"]=mrArr[value.Id]
+		}
+		if value.MetaTitle!=""{
+			meta["title"]=value.MetaTitle
+		}
+		if value.MetaIcon!="" {
+			meta["icon"]=value.MetaIcon
+		}
+		if value.MetaAffix==1 {
+			meta["affix"] = true
+		}
+		if value.MetaNocache==1 {
+			meta["noCache"] = true
+		}
+		if len(meta)>0 {
+			item["meta"]=meta
+		}
+		jsonArr = append(jsonArr,item)
+	}
+	return jsonArr
+}
+func treeMenu(menuArr []models.SystemMenu) ([]interface{}) {
+	role := models.SystemRole{}
+	mrArr := role.GetRowMenu()
+	var menuMap = make(map[int][]models.SystemMenu, 0)
+	for _, value := range menuArr {
+		menuMap[value.Pid] = append(menuMap[value.Pid], value)
+	}
+	var jsonArr []interface{}
+
+	mainMenu, ok := menuMap[0]
+	if !ok {
+		return nil
+	}
+	for _, value := range mainMenu {
+		var item = make(map[string]interface{})
+		item["path"] = value.Path
+		item["component"] = value.Component
+		if value.Redirect != "" {
+			item["redirect"] = value.Redirect
+		}
+		if value.Alwaysshow ==1 {
+			item["alwaysShow"] = true
+		}
+		if value.Hidden == 1 {
+			item["hidden"] = true
+		}
+		var meta=make(map[string]interface{})
+		_,ok:=mrArr[value.Id]
+		if ok {
+			meta["roles"]=mrArr[value.Id]
+		}
+		if value.MetaTitle!=""{
+			meta["title"]=value.MetaTitle
+		}
+		if value.MetaIcon!="" {
+			meta["icon"]=value.MetaIcon
+		}
+		if value.MetaAffix==1 {
+			meta["affix"] = true
+		}
+		if value.MetaNocache==1 {
+			meta["noCache"] = true
+		}
+		if len(meta)>0 {
+			item["meta"]=meta
+		}
+		if _,ok:=menuMap[value.Id] ;ok{
+			item["children"]=treeMenuChilden(menuMap[value.Id],mrArr)
+		}
+		jsonArr = append(jsonArr,item)
+	}
+	return jsonArr
+
+}
 func Roles(c *gin.Context){
 	model:=models.SystemRole{}
 	menu:=models.SystemMenu{}
@@ -174,11 +267,27 @@ func Dashboard(c *gin.Context){
 		return
 	}
 
+	menu := models.SystemMenu{}
+	if user.Nickname == "admin" {
+		menuArr, err := menu.GetAll()
+		if err != nil {
+			response.ShowError(c, "fail")
+			return
+		}
+		jsonArr :=tree(menuArr)
+		response.ShowData(c,jsonArr)
+		return
+	} else {
+		menuArr:=menu.GetRouteByUid(uid)
+		jsonArr :=tree(menuArr)
+		response.ShowData(c,jsonArr)
+		return
+	}
 
 
 
 
-	roleMenu:="{\"menuList\": [{ 		\"children\": [{ 			\"menu_type\": \"M\", 			\"children\": [{ 				\"menu_type\": \"C\", 				\"parent_id\": 73, 				\"menu_name\": \"人员通讯录\", 				\"icon\": null, 				\"order_num\": 1, 				\"menu_id\": 74, 				\"url\": \"/system/book/person\" 			}], 			\"parent_id\": 1, 			\"menu_name\": \"通讯录管理\", 			\"icon\": \"fafa-address-book-o\", 			\"perms\": null, 			\"order_num\": 1, 			\"menu_id\": 73, 			\"url\": \"#\" 		}], 		\"parent_id\": 0, 		\"menu_name\": \"系统管理\", 		\"icon\": \"fafa-adjust\", 		\"perms\": null, 		\"order_num\": 2, 		\"menu_id\": 1, 		\"url\": \"#\" 	}], 	\"user\": { 		\"login_name\": \"admin\", 		\"user_id\": 1, 		\"user_name\": \"管理员\", 		\"dept_id\": 1 	} }"
+	roleMenu:="{\"menuList\": [{ 		\"children\": [{ 			\"menu_type\": \"M\", 			\"children\": [{ 				\"menu_type\": \"C\", 				\"parent_id\": 73, 				\"menu_name\": \"人员通讯录\", 				\"icon\": null, 				\"order_num\": 1, 				\"menu_id\": 74, 				\"url\": \"/system/book/person\" 			}], 			\"parent_id\": 1, 			\"menu_name\": \"通讯录管理\", 			\"icon\": \"fafa-address-book-o\", 			\"perms\": null, 			\"order_num\": 1, 			\"menu_id\": 73, 			\"url\": \"#\" 		}], 		\"parent_id\": 0, 		\"menu_name\": \"系统管理\", 		\"icon\": \"fafa-adjust\", 		\"perms\": null, 		\"order_num\": 2, 		\"menu_id\": 1, 		\"url\": \"#\" 	}], 	\"user\": { 		\"login_name\": \"admin1\", 		\"user_id\": 1, 		\"user_name\": \"管理员\", 		\"dept_id\": 1 	} }"
 	var data map[string]interface{}
 	err := json.Unmarshal([]byte(roleMenu), &data)
 	if err != nil {
