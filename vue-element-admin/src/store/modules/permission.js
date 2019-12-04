@@ -24,8 +24,8 @@ export function generaMenu(routes, data) {
     // alert(JSON.stringify(item))
     const menu = {
       path: item.component === '#' ? item.id + '_key' : item.component,
-      component: item.component === '#' ? Layout : () => import(`@/views${item.component}/index`),
-      // hidden: true,
+      component: item.component === '#' ? Layout : () => import(`@/views${item.component}`),
+      hidden: item.hidden,
       children: [],
       name: 'menu_' + item.id,
       meta: item.meta

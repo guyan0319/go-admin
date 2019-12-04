@@ -155,6 +155,8 @@ func treeMenuChilden(menuArr []models.SystemMenu, mrArr map[int][]string)[]inter
 		}
 		if value.Hidden == 1 {
 			item["hidden"] = true
+		}else{
+			item["hidden"] = false
 		}
 		var meta=make(map[string]interface{})
 		_,ok:=mrArr[value.Id]
@@ -209,7 +211,10 @@ func treeMenu(menuArr []models.SystemMenu) ([]interface{}) {
 		}
 		if value.Hidden == 1 {
 			item["hidden"] = true
+		}else{
+			item["hidden"] = false
 		}
+
 		var meta=make(map[string]interface{})
 		_,ok:=mrArr[value.Id]
 		if ok {
@@ -290,9 +295,6 @@ func Dashboard(c *gin.Context){
 		response.ShowData(c,jsonArr)
 		return
 	}
-
-
-
 
 	roleMenu:="{\"menuList\": [{ 		\"children\": [{ 			\"menu_type\": \"M\", 			\"children\": [{ 				\"menu_type\": \"C\", 				\"parent_id\": 73, 				\"menu_name\": \"人员通讯录\", 				\"icon\": null, 				\"order_num\": 1, 				\"menu_id\": 74, 				\"url\": \"/system/book/person\" 			}], 			\"parent_id\": 1, 			\"menu_name\": \"通讯录管理\", 			\"icon\": \"fafa-address-book-o\", 			\"perms\": null, 			\"order_num\": 1, 			\"menu_id\": 73, 			\"url\": \"#\" 		}], 		\"parent_id\": 0, 		\"menu_name\": \"系统管理\", 		\"icon\": \"fafa-adjust\", 		\"perms\": null, 		\"order_num\": 2, 		\"menu_id\": 1, 		\"url\": \"#\" 	}], 	\"user\": { 		\"login_name\": \"admin1\", 		\"user_id\": 1, 		\"user_name\": \"管理员\", 		\"dept_id\": 1 	} }"
 	var data map[string]interface{}
