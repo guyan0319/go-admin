@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-button type="primary" @click="handleAddRole">
-      {{ $t('permission.addRole') }}
+      {{ $t('menu.addRoot') }}
     </el-button>
 
     <el-table :data="rolesList" style="width: 100%;margin-top:30px;" border>
