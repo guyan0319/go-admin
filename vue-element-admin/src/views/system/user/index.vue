@@ -64,14 +64,11 @@
 <script>
 import path from 'path'
 import { deepClone } from '@/utils'
-import { getRoutes, getRoles, addRole, deleteRole, updateRole } from '@/api/role'
-import i18n from '@/lang'
-
+import { getRoles, addRole, deleteRole, updateRole } from '@/api/role'
 const defaultRole = {
   key: '',
   name: '',
-  description: '',
-  routes: []
+  description: ''
 }
 export default {
   data() {
@@ -95,70 +92,12 @@ export default {
   },
   created() {
     // Mock: get all routes and roles list from server
-    this.getRoutes()
     this.getRoles()
   },
   methods: {
-    async getRoutes() {
-      const res = await getRoutes()
-      this.serviceRoutes = res.data
-      const routes = this.generateRoutes(res.data)
-      this.routes = this.i18n(routes)
-    },
     async getRoles() {
       const res = await getRoles()
       this.rolesList = res.data
-    },
-    i18n(routes) {
-      const app = routes.map(route => {
-        route.title = i18n.t(`route.${route.title}`)
-        if (route.children) {
-          route.children = this.i18n(route.children)
-        }
-        return route
-      })
-      return app
-    },
-    // Reshape the routes structure so that it looks the same as the sidebar
-    generateRoutes(routes, basePath = '/') {
-      const res = []
-
-      for (let route of routes) {
-        // skip some route
-        if (route.hidden) { continue }
-
-        const onlyOneShowingChild = this.onlyOneShowingChild(route.children, route)
-
-        if (route.children && onlyOneShowingChild && !route.alwaysShow) {
-          route = onlyOneShowingChild
-        }
-
-        const data = {
-          path: path.resolve(basePath, route.path),
-          title: route.meta && route.meta.title
-
-        }
-
-        // recursive child routes
-        if (route.children) {
-          data.children = this.generateRoutes(route.children, data.path)
-        }
-        res.push(data)
-      }
-      return res
-    },
-    generateArr(routes) {
-      let data = []
-      routes.forEach(route => {
-        data.push(route)
-        if (route.children) {
-          const temp = this.generateArr(route.children)
-          if (temp.length > 0) {
-            data = [...data, ...temp]
-          }
-        }
-      })
-      return data
     },
     handleAddRole() {
       this.role = Object.assign({}, defaultRole)
@@ -173,12 +112,6 @@ export default {
       this.dialogVisible = true
       this.checkStrictly = true
       this.role = deepClone(scope.row)
-      this.$nextTick(() => {
-        const routes = this.generateRoutes(this.role.routes)
-        this.$refs.tree.setCheckedNodes(this.generateArr(routes))
-        // set checked state of a node not affects its father and child nodes
-        this.checkStrictly = false
-      })
     },
     handleDelete({ $index, row }) {
       this.$confirm('Confirm to remove the role?', 'Warning', {
