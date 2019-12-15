@@ -1,14 +1,11 @@
 package menu
 
 import (
-	"encoding/json"
-	"fmt"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"go-admin/conf"
 	"go-admin/models"
 	"go-admin/modules/response"
-	"net/http"
 )
 type Role struct {
 	Key string `form:"key" json:"key"`
@@ -295,17 +292,52 @@ func Dashboard(c *gin.Context){
 		response.ShowData(c,jsonArr)
 		return
 	}
+	//
+	//roleMenu:="{\"menuList\": [{ 		\"children\": [{ 			\"menu_type\": \"M\", 			\"children\": [{ 				\"menu_type\": \"C\", 				\"parent_id\": 73, 				\"menu_name\": \"人员通讯录\", 				\"icon\": null, 				\"order_num\": 1, 				\"menu_id\": 74, 				\"url\": \"/system/book/person\" 			}], 			\"parent_id\": 1, 			\"menu_name\": \"通讯录管理\", 			\"icon\": \"fafa-address-book-o\", 			\"perms\": null, 			\"order_num\": 1, 			\"menu_id\": 73, 			\"url\": \"#\" 		}], 		\"parent_id\": 0, 		\"menu_name\": \"系统管理\", 		\"icon\": \"fafa-adjust\", 		\"perms\": null, 		\"order_num\": 2, 		\"menu_id\": 1, 		\"url\": \"#\" 	}], 	\"user\": { 		\"login_name\": \"admin1\", 		\"user_id\": 1, 		\"user_name\": \"管理员\", 		\"dept_id\": 1 	} }"
+	//var data map[string]interface{}
+	//err := json.Unmarshal([]byte(roleMenu), &data)
+	//if err != nil {
+	//	fmt.Println(err)
+	//}
+	//
+	//c.JSON(http.StatusOK, gin.H{
+	//	"code": 20000,
+	//	"data":  data,
+	//})
+	//return
+}
 
-	roleMenu:="{\"menuList\": [{ 		\"children\": [{ 			\"menu_type\": \"M\", 			\"children\": [{ 				\"menu_type\": \"C\", 				\"parent_id\": 73, 				\"menu_name\": \"人员通讯录\", 				\"icon\": null, 				\"order_num\": 1, 				\"menu_id\": 74, 				\"url\": \"/system/book/person\" 			}], 			\"parent_id\": 1, 			\"menu_name\": \"通讯录管理\", 			\"icon\": \"fafa-address-book-o\", 			\"perms\": null, 			\"order_num\": 1, 			\"menu_id\": 73, 			\"url\": \"#\" 		}], 		\"parent_id\": 0, 		\"menu_name\": \"系统管理\", 		\"icon\": \"fafa-adjust\", 		\"perms\": null, 		\"order_num\": 2, 		\"menu_id\": 1, 		\"url\": \"#\" 	}], 	\"user\": { 		\"login_name\": \"admin1\", 		\"user_id\": 1, 		\"user_name\": \"管理员\", 		\"dept_id\": 1 	} }"
-	var data map[string]interface{}
-	err := json.Unmarshal([]byte(roleMenu), &data)
-	if err != nil {
-		fmt.Println(err)
+func Index(c *gin.Context){
+	session := sessions.Default(c)
+	v := session.Get(conf.Cfg.Token)
+	if v == nil {
+		response.ShowError(c, "fail")
+		return
+	}
+	uid := session.Get(v)
+	user := models.SystemUser{Id: uid.(int)}
+	has := user.GetRow()
+	if !has {
+		response.ShowError(c, "fail")
+		return
+	}
+	menu := models.SystemMenu{}
+	if user.Nickname == "admin" {
+		menuArr, err := menu.GetAll()
+		if err != nil {
+			response.ShowError(c, "fail")
+			return
+		}
+		jsonArr :=treeMenu(menuArr)
+		response.ShowData(c,jsonArr)
+		return
+	} else {
+		menuArr:=menu.GetRouteByUid(uid)
+		jsonArr :=treeMenu(menuArr)
+		response.ShowData(c,jsonArr)
+		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"code": 20000,
-		"data":  data,
-	})
-	return
+
+
 }

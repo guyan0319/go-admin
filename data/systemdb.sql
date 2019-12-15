@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主机： localhost
--- 生成日期： 2019-12-02 23:14:06
+-- 生成日期： 2019-12-15 22:37:50
 -- 服务器版本： 8.0.12
 -- PHP 版本： 7.3.4
 
@@ -73,7 +73,8 @@ CREATE TABLE `system_menu` (
 
 INSERT INTO `system_menu` (`id`, `name`, `path`, `component`, `redirect`, `url`, `meta_title`, `meta_icon`, `meta_nocache`, `alwaysshow`, `meta_affix`, `type`, `hidden`, `pid`, `sort`, `status`, `level`, `ctime`) VALUES
 (1, '系统管理', '', '#', '', '#', '系统管理', 'fafa-adjust', 0, 0, 0, 2, 0, 0, 0, 1, 0, '2019-12-02 06:14:15'),
-(2, '用户管理', '', '/system/user', '', '/system/user', '用户管理', '#', 0, 0, 0, 2, 0, 1, 0, 1, 0, '2019-12-02 00:00:00');
+(2, '用户管理', '', '/system/user', '', '/system/user', '用户管理', '#', 0, 0, 0, 2, 0, 1, 0, 1, 0, '2019-12-02 00:00:00'),
+(3, '菜单管理', '', '/system/menu', '', '/system/menu', '菜单管理', '#', 0, 0, 0, 2, 0, 1, 0, 1, 0, '2019-12-02 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -228,7 +229,7 @@ ALTER TABLE `system_log`
 -- 使用表AUTO_INCREMENT `system_menu`
 --
 ALTER TABLE `system_menu`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键', AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键', AUTO_INCREMENT=4;
 
 --
 -- 使用表AUTO_INCREMENT `system_role`

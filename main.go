@@ -42,6 +42,7 @@ func main() {
 	r.GET("/routes",menu.List)
 	r.GET("/dashboard",menu.Dashboard)
 	r.GET("/role/list",menu.Roles)
+	r.GET("/menu/index",menu.Index)
 	r.POST("/role/delete/:name",role.DeleteRole)
 	r.POST("/role/update",role.UpdateRole)
 	r.POST("/role/add",role.AddRole)
