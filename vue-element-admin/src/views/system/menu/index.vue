@@ -1,23 +1,28 @@
 <template>
   <div class="app-container">
-    <el-button type="primary" @click="handleAddRole">
+    <el-button type="primary" @click="handleAddMenu">
       {{ $t('menu.addRoot') }}
     </el-button>
 
-    <el-table :data="rolesList" style="width: 100%;margin-top:30px;" border>
-      <el-table-column align="center" label="Role Key" width="220">
+    <el-table :data="MenusList" style="width: 100%;margin-top:30px;" border>
+      <el-table-column align="center" label="Menu Key" width="220">
         <template slot-scope="scope">
-          {{ scope.row.key }}
+          {{ scope.row.id }}
         </template>
       </el-table-column>
-      <el-table-column align="center" label="Role Name" width="220">
+      <el-table-column align="center" label="Menu Name" width="220">
         <template slot-scope="scope">
           {{ scope.row.name }}
         </template>
       </el-table-column>
       <el-table-column align="header-center" label="Description">
         <template slot-scope="scope">
-          {{ scope.row.description }}
+          {{ scope.row.path }}
+        </template>
+      </el-table-column>
+      <el-table-column align="header-center" label="Description">
+        <template slot-scope="scope">
+          {{ scope.row.status }}
         </template>
       </el-table-column>
       <el-table-column align="center" label="Operations">
@@ -32,17 +37,17 @@
       </el-table-column>
     </el-table>
 
-    <el-dialog :visible.sync="dialogVisible" :title="dialogType==='edit'?'Edit Role':'New Role'">
-      <el-form :model="role" label-width="80px" label-position="left">
+    <el-dialog :visible.sync="dialogVisible" :title="dialogType==='edit'?'Edit Menu':'New Menu'">
+      <el-form :model="Menu" label-width="80px" label-position="left">
         <el-form-item label="Name">
-          <el-input v-model="role.name" placeholder="Role Name" />
+          <el-input v-model="Menu.name" placeholder="Menu Name" />
         </el-form-item>
         <el-form-item label="Desc">
           <el-input
-            v-model="role.description"
+            v-model="Menu.description"
             :autosize="{ minRows: 2, maxRows: 4}"
             type="textarea"
-            placeholder="Role Description"
+            placeholder="Menu Description"
           />
         </el-form-item>
         <el-form-item label="Menus">
@@ -53,7 +58,7 @@
         <el-button type="danger" @click="dialogVisible=false">
           {{ $t('permission.cancel') }}
         </el-button>
-        <el-button type="primary" @click="confirmRole">
+        <el-button type="primary" @click="confirmMenu">
           {{ $t('permission.confirm') }}
         </el-button>
       </div>
@@ -64,8 +69,9 @@
 <script>
 import path from 'path'
 import { deepClone } from '@/utils'
-import { getRoles, addRole, deleteRole, updateRole } from '@/api/role'
-const defaultRole = {
+import { getMenus } from '@/api/menu'
+// import { getMenus, addMenu, deleteMenu, updateMenu } from '@/api/menu'
+const defaultMenu = {
   key: '',
   name: '',
   description: ''
@@ -73,9 +79,9 @@ const defaultRole = {
 export default {
   data() {
     return {
-      role: Object.assign({}, defaultRole),
+      Menu: Object.assign({}, defaultMenu),
       routes: [],
-      rolesList: [],
+      MenusList: [],
       dialogVisible: false,
       dialogType: 'new',
       checkStrictly: false,
@@ -91,16 +97,16 @@ export default {
     }
   },
   created() {
-    // Mock: get all routes and roles list from server
-    this.getRoles()
+    // Mock: get all routes and Menus list from server
+    this.getMenus()
   },
   methods: {
-    async getRoles() {
-      const res = await getRoles()
-      this.rolesList = res.data
+    async getMenus() {
+      const res = await getMenus()
+      this.MenusList = res.data
     },
-    handleAddRole() {
-      this.role = Object.assign({}, defaultRole)
+    handleAddMenu() {
+      this.Menu = Object.assign({}, defaultMenu)
       if (this.$refs.tree) {
         this.$refs.tree.setCheckedNodes([])
       }
@@ -111,17 +117,17 @@ export default {
       this.dialogType = 'edit'
       this.dialogVisible = true
       this.checkStrictly = true
-      this.role = deepClone(scope.row)
+      this.Menu = deepClone(scope.row)
     },
     handleDelete({ $index, row }) {
-      this.$confirm('Confirm to remove the role?', 'Warning', {
+      this.$confirm('Confirm to remove the Menu?', 'Warning', {
         confirmButtonText: 'Confirm',
         cancelButtonText: 'Cancel',
         type: 'warning'
       })
         .then(async() => {
-          await deleteRole(row.key)
-          this.rolesList.splice($index, 1)
+          await deleteMenu(row.key)
+          this.MenusList.splice($index, 1)
           this.$message({
             type: 'success',
             message: 'Delete succed!'
@@ -146,34 +152,34 @@ export default {
       }
       return res
     },
-    async confirmRole() {
+    async confirmMenu() {
       const isEdit = this.dialogType === 'edit'
 
       const checkedKeys = this.$refs.tree.getCheckedKeys()
-      this.role.routes = this.generateTree(deepClone(this.serviceRoutes), '/', checkedKeys)
+      this.Menu.routes = this.generateTree(deepClone(this.serviceRoutes), '/', checkedKeys)
 
       if (isEdit) {
-        await updateRole(this.role.key, this.role)
-        for (let index = 0; index < this.rolesList.length; index++) {
-          if (this.rolesList[index].key === this.role.key) {
-            this.rolesList.splice(index, 1, Object.assign({}, this.role))
+        await updateMenu(this.Menu.key, this.Menu)
+        for (let index = 0; index < this.MenusList.length; index++) {
+          if (this.MenusList[index].key === this.Menu.key) {
+            this.MenusList.splice(index, 1, Object.assign({}, this.Menu))
             break
           }
         }
       } else {
-        const { data } = await addRole(this.role)
-        this.role.key = data.key
-        this.rolesList.push(this.role)
+        const { data } = await addMenu(this.Menu)
+        this.Menu.key = data.key
+        this.MenusList.push(this.Menu)
       }
 
-      const { description, key, name } = this.role
+      const { description, key, name } = this.Menu
       this.dialogVisible = false
       this.$notify({
         title: 'Success',
         dangerouslyUseHTMLString: true,
         message: `
-            <div>Role Key: ${key}</div>
-            <div>Role Name: ${name}</div>
+            <div>Menu Key: ${key}</div>
+            <div>Menu Name: ${name}</div>
             <div>Description: ${description}</div>
           `,
         type: 'success'
@@ -205,7 +211,7 @@ export default {
 
 <style lang="scss" scoped>
 .app-container {
-  .roles-table {
+  .Menus-table {
     margin-top: 30px;
   }
   .permission-tree {

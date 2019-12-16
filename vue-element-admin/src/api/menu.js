@@ -4,6 +4,6 @@ export function getMenus() {
   return request({
     url: '',
     method: 'get',
-    baseURL: httphost + '/menu/list'
+    baseURL: httphost + '/menu'
   })
 }
