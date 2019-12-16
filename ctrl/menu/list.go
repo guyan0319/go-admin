@@ -314,30 +314,24 @@ func Index(c *gin.Context){
 		response.ShowError(c, "fail")
 		return
 	}
-	uid := session.Get(v)
-	user := models.SystemUser{Id: uid.(int)}
-	has := user.GetRow()
-	if !has {
+	menu := models.SystemMenu{}
+	menuArr, err := menu.GetAll()
+	if err != nil {
 		response.ShowError(c, "fail")
 		return
 	}
-	menu := models.SystemMenu{}
-	if user.Nickname == "admin" {
-		menuArr, err := menu.GetAll()
-		if err != nil {
-			response.ShowError(c, "fail")
-			return
-		}
-		jsonArr :=treeMenu(menuArr)
-		response.ShowData(c,jsonArr)
-		return
-	} else {
-		menuArr:=menu.GetRouteByUid(uid)
-		jsonArr :=treeMenu(menuArr)
-		response.ShowData(c,jsonArr)
-		return
+	var menuMap = make(map[int][]models.SystemMenu, 0)
+	for _, value := range menuArr {
+		menuMap[value.Pid] = append(menuMap[value.Pid], value)
 	}
-
-
-
+	var menuNewArr []models.SystemMenu
+	for _,v:=range menuArr{
+		if v.Pid==0 {
+			menuNewArr=append(menuNewArr, v)
+			menuNewArr=append(menuNewArr,menuMap[v.Id]...)
+		}
+	}
+	//fmt.Println(menuNewArr)
+	response.ShowData(c,menuNewArr)
+	return
 }

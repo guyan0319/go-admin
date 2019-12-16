@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.5
+-- version 4.8.2
 -- https://www.phpmyadmin.net/
 --
--- 主机： localhost
--- 生成日期： 2019-12-15 22:37:50
--- 服务器版本： 8.0.12
--- PHP 版本： 7.3.4
+-- Host: 127.0.0.1
+-- Generation Time: 2019-12-16 12:45:16
+-- 服务器版本： 5.5.53
+-- PHP Version: 7.2.1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -19,7 +19,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- 数据库： `systemdb`
+-- Database: `systemdb`
 --
 
 -- --------------------------------------------------------
@@ -38,7 +38,7 @@ CREATE TABLE `system_log` (
   `ip` varchar(50) NOT NULL DEFAULT '' COMMENT 'ip',
   `url` varchar(500) NOT NULL DEFAULT '',
   `ctime` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '时间'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='操作日志';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='操作日志';
 
 -- --------------------------------------------------------
 
@@ -65,16 +65,16 @@ CREATE TABLE `system_menu` (
   `status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '状态（0禁止1启动）',
   `level` tinyint(4) NOT NULL DEFAULT '0' COMMENT '层级',
   `ctime` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '时间'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='权限';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='权限';
 
 --
 -- 转存表中的数据 `system_menu`
 --
 
 INSERT INTO `system_menu` (`id`, `name`, `path`, `component`, `redirect`, `url`, `meta_title`, `meta_icon`, `meta_nocache`, `alwaysshow`, `meta_affix`, `type`, `hidden`, `pid`, `sort`, `status`, `level`, `ctime`) VALUES
-(1, '系统管理', '', '#', '', '#', '系统管理', 'fafa-adjust', 0, 0, 0, 2, 0, 0, 0, 1, 0, '2019-12-02 06:14:15'),
-(2, '用户管理', '', '/system/user', '', '/system/user', '用户管理', '#', 0, 0, 0, 2, 0, 1, 0, 1, 0, '2019-12-02 00:00:00'),
-(3, '菜单管理', '', '/system/menu', '', '/system/menu', '菜单管理', '#', 0, 0, 0, 2, 0, 1, 0, 1, 0, '2019-12-02 00:00:00');
+(1, '系统管理', '#', '#', '', '#', '系统管理', 'fafa-adjust', 0, 0, 0, 2, 0, 0, 0, 1, 0, '2019-12-02 06:14:15'),
+(2, '用户管理', '/system/user', '/system/user', '', '/system/user', '用户管理', '#', 0, 0, 0, 2, 0, 1, 0, 1, 0, '2019-12-02 00:00:00'),
+(3, '菜单管理', '/system/menu', '/system/menu/index', '', '/system/menu', '菜单管理', '#', 0, 0, 0, 2, 0, 1, 0, 1, 0, '2019-12-02 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -90,7 +90,7 @@ CREATE TABLE `system_role` (
   `status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '角色状态（0无效1有效）',
   `type` int(4) NOT NULL DEFAULT '1' COMMENT '属于哪个应用',
   `ctime` datetime NOT NULL COMMENT '创建时间'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='角色';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色';
 
 --
 -- 转存表中的数据 `system_role`
@@ -111,7 +111,7 @@ CREATE TABLE `system_role_menu` (
   `id` int(11) NOT NULL COMMENT '主键',
   `system_role_id` int(11) NOT NULL DEFAULT '0' COMMENT '角色主键',
   `system_menu_id` int(11) NOT NULL DEFAULT '0' COMMENT '菜单主键'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='角色与菜单关联表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色与菜单关联表';
 
 -- --------------------------------------------------------
 
@@ -133,7 +133,7 @@ CREATE TABLE `system_user` (
   `last_login_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '上次登录时间',
   `last_login_ip` varchar(50) NOT NULL DEFAULT '' COMMENT '最近登录IP',
   `ctime` datetime NOT NULL COMMENT '注册时间'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='管理账户表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='管理账户表';
 
 --
 -- 转存表中的数据 `system_user`
@@ -152,7 +152,7 @@ CREATE TABLE `system_user_role` (
   `id` int(11) NOT NULL COMMENT '主键',
   `system_user_id` int(11) NOT NULL COMMENT '用户主键',
   `system_role_id` int(11) NOT NULL COMMENT '角色主键'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='账户和角色关联表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='账户和角色关联表';
 
 --
 -- 转存表中的数据 `system_user_role`
@@ -164,11 +164,11 @@ INSERT INTO `system_user_role` (`id`, `system_user_id`, `system_role_id`) VALUES
 (3, 1, 3);
 
 --
--- 转储表的索引
+-- Indexes for dumped tables
 --
 
 --
--- 表的索引 `system_log`
+-- Indexes for table `system_log`
 --
 ALTER TABLE `system_log`
   ADD PRIMARY KEY (`id`),
@@ -178,7 +178,7 @@ ALTER TABLE `system_log`
   ADD KEY `RELATION_TABLE` (`relation_table`);
 
 --
--- 表的索引 `system_menu`
+-- Indexes for table `system_menu`
 --
 ALTER TABLE `system_menu`
   ADD PRIMARY KEY (`id`),
@@ -186,7 +186,7 @@ ALTER TABLE `system_menu`
   ADD KEY `path` (`path`);
 
 --
--- 表的索引 `system_role`
+-- Indexes for table `system_role`
 --
 ALTER TABLE `system_role`
   ADD PRIMARY KEY (`id`),
@@ -194,14 +194,14 @@ ALTER TABLE `system_role`
   ADD KEY `STATUS` (`status`);
 
 --
--- 表的索引 `system_role_menu`
+-- Indexes for table `system_role_menu`
 --
 ALTER TABLE `system_role_menu`
   ADD PRIMARY KEY (`id`),
   ADD KEY `system_role_id` (`system_role_id`,`system_menu_id`);
 
 --
--- 表的索引 `system_user`
+-- Indexes for table `system_user`
 --
 ALTER TABLE `system_user`
   ADD PRIMARY KEY (`id`),
@@ -209,7 +209,7 @@ ALTER TABLE `system_user`
   ADD KEY `PASSWORD` (`password`);
 
 --
--- 表的索引 `system_user_role`
+-- Indexes for table `system_user_role`
 --
 ALTER TABLE `system_user_role`
   ADD PRIMARY KEY (`id`),

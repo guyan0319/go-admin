@@ -23,7 +23,7 @@ export function generaMenu(routes, data) {
   data.forEach(item => {
     // alert(JSON.stringify(item))
     const menu = {
-      path: item.component === '#' ? item.id + '_key' : item.component,
+      path: item.path === '#' ? item.id + '_key' : item.path,
       component: item.component === '#' ? Layout : () => import(`@/views${item.component}`),
       hidden: item.hidden,
       children: [],
