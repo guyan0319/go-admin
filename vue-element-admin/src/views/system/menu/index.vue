@@ -20,9 +20,11 @@
           {{ scope.row.path }}
         </template>
       </el-table-column>
-      <el-table-column align="header-center" label="状态">
-        <template slot-scope="scope">
-            {{ scope.row.status==0 ? '停止':'启动' }}
+      <el-table-column class-name="status-col" label="状态" width="110">
+        <template slot-scope="{row}">
+          <el-tag :type="row.status | statusFilter">
+            {{ row.status | statusNameFilter }}
+          </el-tag>
         </template>
       </el-table-column>
       <el-table-column align="center" label="操作">
@@ -42,6 +44,28 @@
         <el-form-item label="Name">
           <el-input v-model="Menu.name" placeholder="Menu Name" />
         </el-form-item>
+        <el-form-item label="Name">
+          <el-input v-model="Menu.path" placeholder="Menu Path" />
+        </el-form-item>
+        <el-form-item label="Name">
+          <el-input v-model="Menu.component" placeholder="Menu component" />
+        </el-form-item>
+        <el-form-item label="Name">
+          <el-input v-model="Menu.redirect" placeholder="Menu redirect" />
+        </el-form-item>
+        <el-form-item label="Name">
+          <el-input v-model="Menu.url" placeholder="Menu url" />
+        </el-form-item>
+        <el-form-item label="Name">
+          <el-input v-model="Menu.meta_title" placeholder="Menu meta_title" />
+        </el-form-item>
+        <el-form-item label="Name">
+          <el-input v-model="Menu.meta_icon" placeholder="Menu meta_icon" />
+        </el-form-item>
+
+        <el-form-item label="总显示" >
+          <el-switch v-model="Menu.meta_nocache"></el-switch>
+        </el-form-item>
         <el-form-item label="Desc">
           <el-input
             v-model="Menu.description"
@@ -50,9 +74,7 @@
             placeholder="Menu Description"
           />
         </el-form-item>
-        <el-form-item label="Menus">
-          <el-tree ref="tree" :check-strictly="checkStrictly" :data="routesData" :props="defaultProps" show-checkbox node-key="path" class="permission-tree" />
-        </el-form-item>
+
       </el-form>
       <div style="text-align:right;">
         <el-button type="danger" @click="dialogVisible=false">
@@ -74,10 +96,37 @@ import { getMenus } from '@/api/menu'
 const defaultMenu = {
   key: '',
   name: '',
-  description: ''
+  path: '',
+  component: '',
+  redirect: '',
+  url: '',
+  meta_title: '',
+  meta_icon: '',
+  meta_nocache: '',
+  alwaysshow: '',
+  meta_affix: '',
+  hidden: '',
+  pid: '',
+  sort: '',
+  status: ''
 }
 export default {
-
+  filters: {
+    statusFilter(status) {
+      const statusMap = {
+        1: 'success',
+        0: 'info'
+      }
+      return statusMap[status]
+    },
+    statusNameFilter(status) {
+      const statusMap = {
+        1: '成功',
+        0: 'info'
+      }
+      return statusMap[status]
+    }
+  },
   data() {
     return {
       Menu: Object.assign({}, defaultMenu),
@@ -107,10 +156,6 @@ export default {
       this.MenusList = res.data
     },
     handleAddMenu() {
-      this.Menu = Object.assign({}, defaultMenu)
-      if (this.$refs.tree) {
-        this.$refs.tree.setCheckedNodes([])
-      }
       this.dialogType = 'new'
       this.dialogVisible = true
     },
