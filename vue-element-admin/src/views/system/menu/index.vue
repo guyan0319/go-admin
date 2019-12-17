@@ -5,27 +5,27 @@
     </el-button>
 
     <el-table :data="MenusList" style="width: 100%;margin-top:30px;" border>
-      <el-table-column align="center" label="Menu Key" width="220">
+      <el-table-column align="center" label="主键" width="220">
         <template slot-scope="scope">
           {{ scope.row.id }}
         </template>
       </el-table-column>
-      <el-table-column align="center" label="Menu Name" width="220">
+      <el-table-column align="center" label="菜单名称" width="220">
         <template slot-scope="scope">
           {{ scope.row.name }}
         </template>
       </el-table-column>
-      <el-table-column align="header-center" label="Description">
+      <el-table-column align="header-center" label="路径">
         <template slot-scope="scope">
           {{ scope.row.path }}
         </template>
       </el-table-column>
-      <el-table-column align="header-center" label="Description">
+      <el-table-column align="header-center" label="状态">
         <template slot-scope="scope">
-          {{ scope.row.status }}
+            {{ scope.row.status==0 ? '停止':'启动' }}
         </template>
       </el-table-column>
-      <el-table-column align="center" label="Operations">
+      <el-table-column align="center" label="操作">
         <template slot-scope="scope">
           <el-button type="primary" size="small" @click="handleEdit(scope)">
             {{ $t('permission.editPermission') }}
@@ -77,6 +77,7 @@ const defaultMenu = {
   description: ''
 }
 export default {
+
   data() {
     return {
       Menu: Object.assign({}, defaultMenu),
