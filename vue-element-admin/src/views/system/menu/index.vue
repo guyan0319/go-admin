@@ -41,31 +41,37 @@
 
     <el-dialog :visible.sync="dialogVisible" :title="dialogType==='edit'?'Edit Menu':'New Menu'">
       <el-form :model="Menu" label-width="80px" label-position="left">
-        <el-form-item label="Name">
+        <el-form-item label="名称">
           <el-input v-model="Menu.name" placeholder="Menu Name" />
         </el-form-item>
-        <el-form-item label="Name">
+        <el-form-item label="路径">
           <el-input v-model="Menu.path" placeholder="Menu Path" />
         </el-form-item>
-        <el-form-item label="Name">
+        <el-form-item label="组件">
           <el-input v-model="Menu.component" placeholder="Menu component" />
         </el-form-item>
-        <el-form-item label="Name">
+        <el-form-item label="跳转">
           <el-input v-model="Menu.redirect" placeholder="Menu redirect" />
         </el-form-item>
-        <el-form-item label="Name">
+        <el-form-item label="api url">
           <el-input v-model="Menu.url" placeholder="Menu url" />
         </el-form-item>
-        <el-form-item label="Name">
+        <el-form-item label="meta title">
           <el-input v-model="Menu.meta_title" placeholder="Menu meta_title" />
         </el-form-item>
-        <el-form-item label="Name">
+        <el-form-item label="meta icon">
           <el-input v-model="Menu.meta_icon" placeholder="Menu meta_icon" />
         </el-form-item>
-
-        <el-form-item label="总显示" >
+        <el-form-item label="总显示">
           <el-switch v-model="Menu.meta_nocache"></el-switch>
         </el-form-item>
+        <el-form-item label="是否隐藏">
+          <el-switch v-model="Menu.hidden"></el-switch>
+        </el-form-item>
+        <el-form-item label="状态">
+          <el-switch v-model="Menu.status"></el-switch>
+        </el-form-item>
+
         <el-form-item label="Desc">
           <el-input
             v-model="Menu.description"
@@ -121,8 +127,8 @@ export default {
     },
     statusNameFilter(status) {
       const statusMap = {
-        1: '成功',
-        0: 'info'
+        1: '启动',
+        0: '停止'
       }
       return statusMap[status]
     }
