@@ -7,3 +7,11 @@ export function getMenus() {
     baseURL: httphost + '/menu'
   })
 }
+export function addRole(data) {
+  return request({
+    url: '',
+    method: 'post',
+    data,
+    baseURL: httphost + '/menu'
+  })
+}

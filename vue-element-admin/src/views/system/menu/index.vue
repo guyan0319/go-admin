@@ -72,15 +72,6 @@
           <el-switch v-model="Menu.status"></el-switch>
         </el-form-item>
 
-        <el-form-item label="Desc">
-          <el-input
-            v-model="Menu.description"
-            :autosize="{ minRows: 2, maxRows: 4}"
-            type="textarea"
-            placeholder="Menu Description"
-          />
-        </el-form-item>
-
       </el-form>
       <div style="text-align:right;">
         <el-button type="danger" @click="dialogVisible=false">
@@ -97,7 +88,7 @@
 <script>
 import path from 'path'
 import { deepClone } from '@/utils'
-import { getMenus } from '@/api/menu'
+import { getMenus, addMenu } from '@/api/menu'
 // import { getMenus, addMenu, deleteMenu, updateMenu } from '@/api/menu'
 const defaultMenu = {
   key: '',
