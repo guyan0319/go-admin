@@ -1,11 +1,14 @@
 package menu
 
 import (
+	"encoding/json"
+	"fmt"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"go-admin/conf"
 	"go-admin/models"
 	"go-admin/modules/response"
+	"io/ioutil"
 )
 type Role struct {
 	Key string `form:"key" json:"key"`
@@ -334,4 +337,36 @@ func Index(c *gin.Context){
 	//fmt.Println(menuNewArr)
 	response.ShowData(c,menuNewArr)
 	return
+}
+func Add(c *gin.Context){
+	jsonstr, _ := ioutil.ReadAll(c.Request.Body)
+	var data map[string]interface{}
+	err := json.Unmarshal(jsonstr, &data)
+	if err != nil {
+		response.ShowError(c, "fail")
+		return
+	}
+
+	fmt.Println(data)
+
+	//menu := models.SystemMenu{}
+	//menuArr, err := menu.GetAll()
+	//if err != nil {
+	//	response.ShowError(c, "fail")
+	//	return
+	//}
+	//var menuMap = make(map[int][]models.SystemMenu, 0)
+	//for _, value := range menuArr {
+	//	menuMap[value.Pid] = append(menuMap[value.Pid], value)
+	//}
+	//var menuNewArr []models.SystemMenu
+	//for _,v:=range menuArr{
+	//	if v.Pid==0 {
+	//		menuNewArr=append(menuNewArr, v)
+	//		menuNewArr=append(menuNewArr,menuMap[v.Id]...)
+	//	}
+	//}
+	////fmt.Println(menuNewArr)
+	//response.ShowData(c,menuNewArr)
+	//return
 }

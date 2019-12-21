@@ -197,10 +197,6 @@ export default {
     },
     async confirmMenu() {
       const isEdit = this.dialogType === 'edit'
-
-      const checkedKeys = this.$refs.tree.getCheckedKeys()
-      this.Menu.routes = this.generateTree(deepClone(this.serviceRoutes), '/', checkedKeys)
-
       if (isEdit) {
         await updateMenu(this.Menu.key, this.Menu)
         for (let index = 0; index < this.MenusList.length; index++) {
