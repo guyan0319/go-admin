@@ -10,12 +10,14 @@ import (
 	"go-admin/modules/response"
 	"io/ioutil"
 )
+
 type Role struct {
-	Key string `form:"key" json:"key"`
-	Name string `form:"name" json:"name"`
-	Description string `form:"description" json:"description"`
-	Routes []interface{} `form:"routes" json:"routes"`
+	Key         string        `form:"key" json:"key"`
+	Name        string        `form:"name" json:"name"`
+	Description string        `form:"description" json:"description"`
+	Routes      []interface{} `form:"routes" json:"routes"`
 }
+
 func List(c *gin.Context) {
 	session := sessions.Default(c)
 	v := session.Get(conf.Cfg.Token)
@@ -38,13 +40,13 @@ func List(c *gin.Context) {
 			response.ShowError(c, "fail")
 			return
 		}
-		jsonArr :=tree(menuArr)
-		response.ShowData(c,jsonArr)
+		jsonArr := tree(menuArr)
+		response.ShowData(c, jsonArr)
 		return
 	} else {
-		menuArr:=menu.GetRouteByUid(uid)
-		jsonArr :=tree(menuArr)
-		response.ShowData(c,jsonArr)
+		menuArr := menu.GetRouteByUid(uid)
+		jsonArr := tree(menuArr)
+		response.ShowData(c, jsonArr)
 		return
 	}
 }
@@ -68,122 +70,122 @@ func tree(menuArr []models.SystemMenu) ([]interface{}) {
 		if value.Redirect != "" {
 			item["redirect"] = value.Redirect
 		}
-		if value.Alwaysshow ==1 {
+		if value.Alwaysshow == 1 {
 			item["alwaysShow"] = true
 		}
 		if value.Hidden == 1 {
 			item["hidden"] = true
 		}
-		var meta=make(map[string]interface{})
-		_,ok:=mrArr[value.Id]
+		var meta = make(map[string]interface{})
+		_, ok := mrArr[value.Id]
 		if ok {
-			meta["roles"]=mrArr[value.Id]
+			meta["roles"] = mrArr[value.Id]
 		}
-		if value.MetaTitle!=""{
-			meta["title"]=value.MetaTitle
+		if value.MetaTitle != "" {
+			meta["title"] = value.MetaTitle
 		}
-		if value.MetaIcon!="" {
-			meta["icon"]=value.MetaIcon
+		if value.MetaIcon != "" {
+			meta["icon"] = value.MetaIcon
 		}
-		if value.MetaAffix==1 {
+		if value.MetaAffix == 1 {
 			meta["affix"] = true
 		}
-		if value.MetaNocache==1 {
+		if value.MetaNocache == 1 {
 			meta["noCache"] = true
 		}
-		if len(meta)>0 {
-			item["meta"]=meta
+		if len(meta) > 0 {
+			item["meta"] = meta
 		}
-		if _,ok:=menuMap[value.Id] ;ok{
-			item["children"]=treeChilden(menuMap[value.Id],mrArr)
+		if _, ok := menuMap[value.Id]; ok {
+			item["children"] = treeChilden(menuMap[value.Id], mrArr)
 		}
-		jsonArr = append(jsonArr,item)
+		jsonArr = append(jsonArr, item)
 	}
 	return jsonArr
 
 }
-func treeChilden(menuArr []models.SystemMenu, mrArr map[int][]string)[]interface{} {
+func treeChilden(menuArr []models.SystemMenu, mrArr map[int][]string) []interface{} {
 	var jsonArr []interface{}
-	for _,value:=range menuArr  {
+	for _, value := range menuArr {
 		var item = make(map[string]interface{})
 		item["path"] = value.Path
 		item["component"] = value.Component
 		if value.Redirect != "" {
 			item["redirect"] = value.Redirect
 		}
-		if value.Alwaysshow ==1 {
+		if value.Alwaysshow == 1 {
 			item["alwaysShow"] = true
 		}
 		if value.Hidden == 1 {
 			item["hidden"] = true
 		}
-		var meta=make(map[string]interface{})
-		_,ok:=mrArr[value.Id]
+		var meta = make(map[string]interface{})
+		_, ok := mrArr[value.Id]
 		if ok {
-			meta["roles"]=mrArr[value.Id]
+			meta["roles"] = mrArr[value.Id]
 		}
-		if value.MetaTitle!=""{
-			meta["title"]=value.MetaTitle
+		if value.MetaTitle != "" {
+			meta["title"] = value.MetaTitle
 		}
-		if value.MetaIcon!="" {
-			meta["icon"]=value.MetaIcon
+		if value.MetaIcon != "" {
+			meta["icon"] = value.MetaIcon
 		}
-		if value.MetaAffix==1 {
+		if value.MetaAffix == 1 {
 			meta["affix"] = true
 		}
-		if value.MetaNocache==1 {
+		if value.MetaNocache == 1 {
 			meta["noCache"] = true
 		}
-		if len(meta)>0 {
-			item["meta"]=meta
+		if len(meta) > 0 {
+			item["meta"] = meta
 		}
-		jsonArr = append(jsonArr,item)
+		jsonArr = append(jsonArr, item)
 	}
 	return jsonArr
 }
-func treeMenuChilden(menuArr []models.SystemMenu, mrArr map[int][]string)[]interface{} {
+func treeMenuChilden(menuArr []models.SystemMenu, mrArr map[int][]string) []interface{} {
 	var jsonArr []interface{}
-	for _,value:=range menuArr  {
+	for _, value := range menuArr {
 		var item = make(map[string]interface{})
 		item["path"] = value.Path
 		item["component"] = value.Component
 		if value.Redirect != "" {
 			item["redirect"] = value.Redirect
 		}
-		if value.Alwaysshow ==1 {
+		if value.Alwaysshow == 1 {
 			item["alwaysShow"] = true
 		}
 		if value.Hidden == 1 {
 			item["hidden"] = true
-		}else{
+		} else {
 			item["hidden"] = false
 		}
-		var meta=make(map[string]interface{})
-		_,ok:=mrArr[value.Id]
+		var meta = make(map[string]interface{})
+		_, ok := mrArr[value.Id]
 		if ok {
-			meta["roles"]=mrArr[value.Id]
+			meta["roles"] = mrArr[value.Id]
 		}
-		if value.MetaTitle!=""{
-			meta["title"]=value.MetaTitle
+		if value.MetaTitle != "" {
+			meta["title"] = value.MetaTitle
 		}
-		if value.MetaIcon!="" {
-			meta["icon"]=value.MetaIcon
+		if value.MetaIcon != "" {
+			meta["icon"] = value.MetaIcon
 		}
-		if value.MetaAffix==1 {
+		if value.MetaAffix == 1 {
 			meta["affix"] = true
 		}
-		if value.MetaNocache==1 {
+		if value.MetaNocache == 1 {
 			meta["noCache"] = true
 		}
-		if len(meta)>0 {
-			item["meta"]=meta
+		if len(meta) > 0 {
+			item["meta"] = meta
 		}
-		item["pid"]=value.Pid
-		item["id"]=value.Id
-		item["url"]=value.Url
-		item["name"]=value.Name
+		item["pid"] = value.Pid
+		item["id"] = value.Id
+		item["url"] = value.Url
+		item["name"] = value.Name
 
-		jsonArr = append(jsonArr,item)
+		jsonArr = append(jsonArr, item)
 	}
 	return jsonArr
 }
@@ -206,66 +208,66 @@ func treeMenu(menuArr []models.SystemMenu) ([]interface{}) {
 		if value.Redirect != "" {
 			item["redirect"] = value.Redirect
 		}
-		if value.Alwaysshow ==1 {
+		if value.Alwaysshow == 1 {
 			item["alwaysShow"] = true
 		}
 		if value.Hidden == 1 {
 			item["hidden"] = true
-		}else{
+		} else {
 			item["hidden"] = false
 		}
 
-		var meta=make(map[string]interface{})
-		_,ok:=mrArr[value.Id]
+		var meta = make(map[string]interface{})
+		_, ok := mrArr[value.Id]
 		if ok {
-			meta["roles"]=mrArr[value.Id]
+			meta["roles"] = mrArr[value.Id]
 		}
-		if value.MetaTitle!=""{
-			meta["title"]=value.MetaTitle
+		if value.MetaTitle != "" {
+			meta["title"] = value.MetaTitle
 		}
-		if value.MetaIcon!="" {
-			meta["icon"]=value.MetaIcon
+		if value.MetaIcon != "" {
+			meta["icon"] = value.MetaIcon
 		}
-		if value.MetaAffix==1 {
+		if value.MetaAffix == 1 {
 			meta["affix"] = true
 		}
-		if value.MetaNocache==1 {
+		if value.MetaNocache == 1 {
 			meta["noCache"] = true
 		}
-		if len(meta)>0 {
-			item["meta"]=meta
+		if len(meta) > 0 {
+			item["meta"] = meta
 		}
-		if _,ok:=menuMap[value.Id] ;ok{
-			item["children"]=treeMenuChilden(menuMap[value.Id],mrArr)
+		if _, ok := menuMap[value.Id]; ok {
+			item["children"] = treeMenuChilden(menuMap[value.Id], mrArr)
 		}
-		item["pid"]=value.Pid
-		item["id"]=value.Id
-		item["url"]=value.Url
-		item["name"]=value.Name
-		jsonArr = append(jsonArr,item)
+		item["pid"] = value.Pid
+		item["id"] = value.Id
+		item["url"] = value.Url
+		item["name"] = value.Name
+		jsonArr = append(jsonArr, item)
 	}
 	return jsonArr
 
 }
-func Roles(c *gin.Context){
-	model:=models.SystemRole{}
-	menu:=models.SystemMenu{}
-	roleArr :=model.GetAll()
+func Roles(c *gin.Context) {
+	model := models.SystemRole{}
+	menu := models.SystemMenu{}
+	roleArr := model.GetAll()
 	var roleMenu []Role
-	for _,value:=range roleArr {
-		r:=Role{}
-		r.Key=value.Name
-		r.Name=value.Name
-		r.Description=value.Description
-		menuArr:=menu.GetRouteByRole(value.Id)
-		r.Routes=tree(menuArr)
-		roleMenu = append(roleMenu,r)
+	for _, value := range roleArr {
+		r := Role{}
+		r.Key = value.Name
+		r.Name = value.Name
+		r.Description = value.Description
+		menuArr := menu.GetRouteByRole(value.Id)
+		r.Routes = tree(menuArr)
+		roleMenu = append(roleMenu, r)
 	}
-	response.ShowData(c,roleMenu)
+	response.ShowData(c, roleMenu)
 	return
 }
 
-func Dashboard(c *gin.Context){
+func Dashboard(c *gin.Context) {
 	session := sessions.Default(c)
 	v := session.Get(conf.Cfg.Token)
 	if v == nil {
@@ -286,13 +288,13 @@ func Dashboard(c *gin.Context){
 			response.ShowError(c, "fail")
 			return
 		}
-		jsonArr :=treeMenu(menuArr)
-		response.ShowData(c,jsonArr)
+		jsonArr := treeMenu(menuArr)
+		response.ShowData(c, jsonArr)
 		return
 	} else {
-		menuArr:=menu.GetRouteByUid(uid)
-		jsonArr :=treeMenu(menuArr)
-		response.ShowData(c,jsonArr)
+		menuArr := menu.GetRouteByUid(uid)
+		jsonArr := treeMenu(menuArr)
+		response.ShowData(c, jsonArr)
 		return
 	}
 	//
@@ -310,7 +312,7 @@ func Dashboard(c *gin.Context){
 	//return
 }
 
-func Index(c *gin.Context){
+func Index(c *gin.Context) {
 	session := sessions.Default(c)
 	v := session.Get(conf.Cfg.Token)
 	if v == nil {
@@ -328,17 +330,17 @@ func Index(c *gin.Context){
 		menuMap[value.Pid] = append(menuMap[value.Pid], value)
 	}
 	var menuNewArr []models.SystemMenu
-	for _,v:=range menuArr{
-		if v.Pid==0 {
-			menuNewArr=append(menuNewArr, v)
-			menuNewArr=append(menuNewArr,menuMap[v.Id]...)
+	for _, v := range menuArr {
+		if v.Pid == 0 {
+			menuNewArr = append(menuNewArr, v)
+			menuNewArr = append(menuNewArr, menuMap[v.Id]...)
 		}
 	}
 	//fmt.Println(menuNewArr)
-	response.ShowData(c,menuNewArr)
+	response.ShowData(c, menuNewArr)
 	return
 }
-func Add(c *gin.Context){
+func Add(c *gin.Context) {
 	jsonstr, _ := ioutil.ReadAll(c.Request.Body)
 	var data map[string]interface{}
 	err := json.Unmarshal(jsonstr, &data)
@@ -348,25 +350,48 @@ func Add(c *gin.Context){
 	}
 
 	fmt.Println(data)
+	if _, ok := data["meta_title"]; !ok {
+		response.ShowError(c, "fail")
+		return
+	}
+	if _, ok := data["path"]; !ok {
+		response.ShowError(c, "fail")
+		return
+	}
+	if _, ok := data["component"]; !ok {
+		response.ShowError(c, "fail")
+		return
+	}
+	if _, ok := data["url"]; !ok {
+		response.ShowError(c, "fail")
+		return
+	}
 
-	//menu := models.SystemMenu{}
-	//menuArr, err := menu.GetAll()
-	//if err != nil {
-	//	response.ShowError(c, "fail")
+	menu := models.SystemMenu{Path:data["path"].(string)}
+	has:=menu.GetRow()
+	if has && menu.Path!="#" {
+		response.ShowError(c, "path不可重复")
+		return
+	}
+	fmt.Println(data["alwaysshow"].(string))
+	//menu.Name=data["path"].(string)
+	//menu.MetaTitle=data["path"].(string)
+	//menu.Component=data["component"].(string)
+	//menu.Url=data["url"].(string)
+	//menu.Redirect=data["redirect"].(string)
+	//menu.MetaIcon=data["meta_icon"].(string)
+	//menu.Alwaysshow=data["alwaysshow"].(int)
+	//menu.Hidden=data["hidden"].(int)
+	//menu.Status=data["status"].(int)
+	//menu.Ctime=time.Now()
+	//if _, ok := data["pid"]; !ok {
+	//	menu.Pid=data["pid"].(int)
+	//}
+	//res,err:=menu.Add()
+	//if err!=nil {
+	//	response.ShowError(c,"fail")
 	//	return
 	//}
-	//var menuMap = make(map[int][]models.SystemMenu, 0)
-	//for _, value := range menuArr {
-	//	menuMap[value.Pid] = append(menuMap[value.Pid], value)
-	//}
-	//var menuNewArr []models.SystemMenu
-	//for _,v:=range menuArr{
-	//	if v.Pid==0 {
-	//		menuNewArr=append(menuNewArr, v)
-	//		menuNewArr=append(menuNewArr,menuMap[v.Id]...)
-	//	}
-	//}
-	////fmt.Println(menuNewArr)
-	//response.ShowData(c,menuNewArr)
+	//response.ShowData(c,res)
 	//return
 }
