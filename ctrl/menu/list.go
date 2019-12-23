@@ -9,6 +9,7 @@ import (
 	"go-admin/models"
 	"go-admin/modules/response"
 	"io/ioutil"
+	"time"
 )
 
 type Role struct {
@@ -348,7 +349,6 @@ func Add(c *gin.Context) {
 		response.ShowError(c, "fail")
 		return
 	}
-
 	fmt.Println(data)
 	if _, ok := data["meta_title"]; !ok {
 		response.ShowError(c, "fail")
@@ -373,17 +373,24 @@ func Add(c *gin.Context) {
 		response.ShowError(c, "path不可重复")
 		return
 	}
-	fmt.Println(data["alwaysshow"].(string))
-	//menu.Name=data["path"].(string)
-	//menu.MetaTitle=data["path"].(string)
-	//menu.Component=data["component"].(string)
-	//menu.Url=data["url"].(string)
-	//menu.Redirect=data["redirect"].(string)
-	//menu.MetaIcon=data["meta_icon"].(string)
-	//menu.Alwaysshow=data["alwaysshow"].(int)
-	//menu.Hidden=data["hidden"].(int)
-	//menu.Status=data["status"].(int)
-	//menu.Ctime=time.Now()
+	menu.Name=data["meta_title"].(string)
+	menu.Path=data["path"].(string)
+	menu.MetaTitle=data["meta_title"].(string)
+	menu.Component=data["component"].(string)
+	menu.Url=data["url"].(string)
+	menu.Redirect=data["redirect"].(string)
+	menu.MetaIcon=data["meta_icon"].(string)
+	if data["alwaysshow"].(bool){
+		menu.Alwaysshow=1
+	}
+	if data["hidden"].(bool){
+		menu.Hidden=1
+	}
+	if data["status"].(bool){
+		menu.Status=1
+	}
+	menu.Ctime=time.Now()
+	fmt.Println(data["pid"].(int))
 	//if _, ok := data["pid"]; !ok {
 	//	menu.Pid=data["pid"].(int)
 	//}

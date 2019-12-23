@@ -63,7 +63,11 @@
           <el-input v-model="Menu.meta_icon" placeholder="Menu meta_icon" />
         </el-form-item>
         <el-form-item label="总显示">
-          <el-switch v-model="Menu.meta_nocache"></el-switch>
+          <el-switch
+                     v-model="Menu.alwaysshow"
+                     :on-value="1"
+                     :off-value="0"
+          ></el-switch>
         </el-form-item>
         <el-form-item label="是否隐藏">
           <el-switch v-model="Menu.hidden"></el-switch>
@@ -99,13 +103,13 @@ const defaultMenu = {
   url: '',
   meta_title: '',
   meta_icon: '',
-  meta_nocache: '',
-  alwaysshow: '',
-  meta_affix: '',
-  hidden: '',
-  pid: '',
-  sort: '',
-  status: ''
+  meta_nocache: true,
+  alwaysshow: true,
+  meta_affix: false,
+  hidden: false,
+  pid: 0,
+  sort: 0,
+  status: 0
 }
 export default {
   filters: {
