@@ -174,11 +174,13 @@ export default {
     sidebarLogo: '侧边栏 Logo'
   },
   menu: {
-    addRoot: '添加一级菜单',
-    addMenu: '添加子菜单',
-    updateMenu: '修改菜单',
-    delete: '删除菜单',
+    addRoot: '添加一级菜单'
+  },
+  buttons: {
     confirm: '确定',
-    cancel: '取消'
+    cancel: '取消',
+    add: '添加',
+    edit: '修改',
+    delete: '删除'
   }
 }

@@ -7,8 +7,10 @@ import (
 	"github.com/gin-gonic/gin"
 	"go-admin/conf"
 	"go-admin/models"
+	"go-admin/modules/request"
 	"go-admin/modules/response"
 	"io/ioutil"
+	"reflect"
 	"time"
 )
 
@@ -235,6 +237,10 @@ func treeMenu(menuArr []models.SystemMenu) ([]interface{}) {
 		if value.MetaNocache == 1 {
 			meta["noCache"] = true
 		}
+		if value.Status == 1 {
+			meta["status"] = true
+		}
+
 		if len(meta) > 0 {
 			item["meta"] = meta
 		}
@@ -349,8 +355,8 @@ func Add(c *gin.Context) {
 		response.ShowError(c, "fail")
 		return
 	}
-	fmt.Println(data)
-	if _, ok := data["meta_title"]; !ok {
+	//fmt.Println(data)
+	if _, ok := data["name"]; !ok {
 		response.ShowError(c, "fail")
 		return
 	}
@@ -367,15 +373,20 @@ func Add(c *gin.Context) {
 		return
 	}
 
-	menu := models.SystemMenu{Path:data["path"].(string)}
+	menu := models.SystemMenu{}
+	menu.Path = data["path"].(string)
+	if menu.Path=="" {
+		response.ShowError(c, "fail")
+		return
+	}
 	has:=menu.GetRow()
 	if has && menu.Path!="#" {
 		response.ShowError(c, "path不可重复")
 		return
 	}
-	menu.Name=data["meta_title"].(string)
+	menu.Name=data["name"].(string)
 	menu.Path=data["path"].(string)
-	menu.MetaTitle=data["meta_title"].(string)
+	menu.MetaTitle=data["name"].(string)
 	menu.Component=data["component"].(string)
 	menu.Url=data["url"].(string)
 	menu.Redirect=data["redirect"].(string)
@@ -390,15 +401,30 @@ func Add(c *gin.Context) {
 		menu.Status=1
 	}
 	menu.Ctime=time.Now()
-	fmt.Println(data["pid"].(int))
-	//if _, ok := data["pid"]; !ok {
-	//	menu.Pid=data["pid"].(int)
-	//}
-	//res,err:=menu.Add()
-	//if err!=nil {
-	//	response.ShowError(c,"fail")
-	//	return
-	//}
-	//response.ShowData(c,res)
-	//return
+	menu.Sort=int(data["sort"].(float64))
+	fmt.Println(reflect.TypeOf(data["pid"]))
+	menu.Pid = int(data["pid"].(float64))
+	_,err=menu.Add()
+	if err!=nil {
+		response.ShowError(c,"fail")
+		return
+	}
+	response.ShowData(c,menu)
+	return
+}
+func Update(c *gin.Context) {
+	data,err:=request.GetJson(c)
+	if err != nil {
+		response.ShowError(c, "fail")
+		return
+	}
+	if _, ok := data["id"]; !ok {
+		response.ShowError(c, "fail")
+		return
+	}
+	fmt.Println(reflect.TypeOf(data["id"]))
+
+
+
+
 }

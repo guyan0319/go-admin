@@ -15,3 +15,11 @@ export function addMenu(data) {
     baseURL: httphost + '/menu'
   })
 }
+export function updateMenu(data) {
+  return request({
+    url: '',
+    method: 'put',
+    data,
+    baseURL: httphost + '/menu'
+  })
+}
