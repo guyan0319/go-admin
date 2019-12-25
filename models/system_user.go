@@ -27,4 +27,11 @@ func(u *SystemUser) GetRow() bool {
 	}
 	return false
 }
+func (u *SystemUser) GetAll()([]SystemUser,error) {
+	var systemusers []SystemUser
+	err:=mEngine.Find(&systemusers)
+	return systemusers,err
+}
+
+
 

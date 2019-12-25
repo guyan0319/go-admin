@@ -10,7 +10,7 @@
           {{ scope.row.id }}
         </template>
       </el-table-column>
-      <el-table-column align="center" label="菜单名称" width="220">
+      <el-table-column align="left" label="菜单名称" width="220">
         <template slot-scope="scope">
           {{ scope.row.name }}
         </template>
@@ -112,7 +112,7 @@ const defaultMenu = {
   redirect: '',
   url: '',
   meta_title: '',
-  meta_icon: '',
+  meta_icon: '#',
   meta_nocache: true,
   alwaysshow: true,
   meta_affix: false,
@@ -123,6 +123,10 @@ const defaultMenu = {
 }
 export default {
   filters: {
+    // nameFilter(pid,name){
+    //
+    //
+    // },
     statusFilter(status) {
       const statusMap = {
         1: 'success',
@@ -196,9 +200,9 @@ export default {
       this.dialogVisible = true
       this.checkStrictly = true
       this.Menu = deepClone(scope.row)
-      this.Menu.status = (this.Menu.status == 1) ? true : false
-      this.Menu.alwaysshow = ( this.Menu.alwaysshow ==1 ) ? true : false
-      this.Menu.hidden = (this.Menu.hidden ==1) ? true : false
+      this.Menu.status = (this.Menu.status === 1) ? true : false
+      this.Menu.alwaysshow = (this.Menu.alwaysshow ===1) ? true : false
+      this.Menu.hidden = (this.Menu.hidden ===1) ? true : false
       this.$nextTick(() => {
         this.$refs['formData'].clearValidate()
       })

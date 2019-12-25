@@ -1,84 +1,171 @@
 <template>
   <div class="app-container">
-    <el-button type="primary" @click="handleAddRole">
+    <el-button type="primary" @click="handleAddMenu">
       {{ $t('menu.addRoot') }}
     </el-button>
 
-    <el-table :data="rolesList" style="width: 100%;margin-top:30px;" border>
-      <el-table-column align="center" label="Role Key" width="220">
+    <el-table :data="MenusList" style="width: 100%;margin-top:30px;" border>
+      <el-table-column align="center" label="主键" width="220">
         <template slot-scope="scope">
-          {{ scope.row.key }}
+          {{ scope.row.id }}
         </template>
       </el-table-column>
-      <el-table-column align="center" label="Role Name" width="220">
+      <el-table-column align="center" label="菜单名称" width="220">
         <template slot-scope="scope">
           {{ scope.row.name }}
         </template>
       </el-table-column>
-      <el-table-column align="header-center" label="Description">
+      <el-table-column align="header-center" label="路径">
         <template slot-scope="scope">
-          {{ scope.row.description }}
+          {{ scope.row.path }}
         </template>
       </el-table-column>
-      <el-table-column align="center" label="Operations">
+      <el-table-column class-name="status-col" label="状态" width="110">
+        <template slot-scope="{row}">
+          <el-tag :type="row.status | statusFilter">
+            {{ row.status | statusNameFilter }}
+          </el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="操作">
         <template slot-scope="scope">
+          <el-button @click="handleAddMenu(scope)">
+            {{ $t('buttons.add') }}
+          </el-button>
           <el-button type="primary" size="small" @click="handleEdit(scope)">
-            {{ $t('permission.editPermission') }}
+            {{ $t('buttons.edit') }}
           </el-button>
           <el-button type="danger" size="small" @click="handleDelete(scope)">
-            {{ $t('permission.delete') }}
+            {{ $t('buttons.delete') }}
           </el-button>
         </template>
       </el-table-column>
     </el-table>
 
-    <el-dialog :visible.sync="dialogVisible" :title="dialogType==='edit'?'Edit Role':'New Role'">
-      <el-form :model="role" label-width="80px" label-position="left">
-        <el-form-item label="Name">
-          <el-input v-model="role.name" placeholder="Role Name" />
+    <el-dialog :visible.sync="dialogVisible" :title="dialogType==='edit'?'Edit Menu':'New Menu'">
+      <el-form ref="formData" :model="Menu" :rules="rules" label-width="80px" label-position="left">
+        <el-form-item label="名称" prop="name">
+          <el-input v-model="Menu.name" placeholder="Menu Name" clearable/>
         </el-form-item>
-        <el-form-item label="Desc">
-          <el-input
-            v-model="role.description"
-            :autosize="{ minRows: 2, maxRows: 4}"
-            type="textarea"
-            placeholder="Role Description"
-          />
+        <el-form-item label="路径" prop="path">
+          <el-input v-model="Menu.path" placeholder="Menu Path" clearable/>
         </el-form-item>
-        <el-form-item label="Menus">
-          <el-tree ref="tree" :check-strictly="checkStrictly" :data="routesData" :props="defaultProps" show-checkbox node-key="path" class="permission-tree" />
+        <el-form-item label="组件" prop="component">
+          <el-input v-model="Menu.component" placeholder="Menu component" clearable/>
         </el-form-item>
+        <el-form-item label="跳转">
+          <el-input v-model="Menu.redirect" placeholder="Menu redirect" clearable/>
+        </el-form-item>
+        <el-form-item label="api url" prop="url">
+          <el-input v-model="Menu.url" placeholder="Menu url" clearable/>
+        </el-form-item>
+        <el-form-item label="meta icon">
+          <el-input v-model="Menu.meta_icon" placeholder="Menu meta_icon" clearable/>
+        </el-form-item>
+        <el-form-item label="sort">
+          <el-input v-model="Menu.sort" placeholder="Menu sort"/>
+        </el-form-item>
+
+        <el-form-item label="总显示">
+          <el-switch
+            v-model="Menu.alwaysshow"
+            :on-value="true"
+            :off-value="false"
+          ></el-switch>
+        </el-form-item>
+        <el-form-item label="是否隐藏">
+          <el-switch v-model="Menu.hidden"
+                     :on-value="true"
+                     :off-value="false"
+          ></el-switch>
+        </el-form-item>
+        <el-form-item label="状态">
+          <el-switch v-model="Menu.status"
+                     :on-value="true"
+                     :off-value="false"
+          ></el-switch>
+        </el-form-item>
+        <el-input v-model="Menu.pid" type="hidden"/>
+
       </el-form>
       <div style="text-align:right;">
         <el-button type="danger" @click="dialogVisible=false">
-          {{ $t('permission.cancel') }}
+          {{ $t('buttons.cancel') }}
         </el-button>
-        <el-button type="primary" @click="confirmRole">
-          {{ $t('permission.confirm') }}
+        <el-button type="primary" @click="confirmMenu">
+          {{ $t('buttons.confirm') }}
         </el-button>
       </div>
     </el-dialog>
+    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
   </div>
 </template>
 
 <script>
-import path from 'path'
+
 import { deepClone } from '@/utils'
-import { getRoles, addRole, deleteRole, updateRole } from '@/api/role'
-const defaultRole = {
-  key: '',
+import { getMenus, addMenu, updateMenu, deleteMenu } from '@/api/menu'
+import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
+const defaultMenu = {
+  id: '',
   name: '',
-  description: ''
+  path: '',
+  component: '',
+  redirect: '',
+  url: '',
+  meta_title: '',
+  meta_icon: '',
+  meta_nocache: true,
+  alwaysshow: true,
+  meta_affix: false,
+  hidden: false,
+  pid: 0,
+  sort: '0',
+  status: true
 }
 export default {
+  components: { Pagination },
+  filters: {
+    statusFilter(status) {
+      const statusMap = {
+        1: 'success',
+        0: 'info'
+      }
+      return statusMap[status]
+    },
+    statusNameFilter(status) {
+      const statusMap = {
+        1: '启动',
+        0: '停止'
+      }
+      return statusMap[status]
+    }
+  },
   data() {
+    const validateRequire = (rule, value, callback) => {
+      if (value === '') {
+        this.$message({
+          message: rule.field + '为必填项',
+          type: 'error'
+        })
+        callback(new Error(rule.field + '为必填项'))
+      } else {
+        callback()
+      }
+    }
     return {
-      role: Object.assign({}, defaultRole),
+      Menu: Object.assign({}, defaultMenu),
       routes: [],
-      rolesList: [],
+      MenusList: [],
       dialogVisible: false,
       dialogType: 'new',
       checkStrictly: false,
+      rules: {
+        name: [{ validator: validateRequire }],
+        path: [{ validator: validateRequire }],
+        component: [{ validator: validateRequire }],
+        url: [{ validator: validateRequire }]
+      },
       defaultProps: {
         children: 'children',
         label: 'title'
@@ -91,125 +178,125 @@ export default {
     }
   },
   created() {
-    // Mock: get all routes and roles list from server
-    this.getRoles()
+    // Mock: get all routes and Menus list from server
+    this.getMenus()
   },
   methods: {
-    async getRoles() {
-      const res = await getRoles()
-      this.rolesList = res.data
+    async getMenus() {
+      const res = await getMenus()
+      this.MenusList = res.data
     },
-    handleAddRole() {
-      this.role = Object.assign({}, defaultRole)
-      if (this.$refs.tree) {
-        this.$refs.tree.setCheckedNodes([])
-      }
+    handleAddMenu(scope) {
       this.dialogType = 'new'
       this.dialogVisible = true
+      this.Menu.pid = scope.row ? scope.row.id : 0
+      this.$nextTick(() => {
+        this.$refs['formData'].clearValidate()
+      })
     },
     handleEdit(scope) {
       this.dialogType = 'edit'
       this.dialogVisible = true
       this.checkStrictly = true
-      this.role = deepClone(scope.row)
+      this.Menu = deepClone(scope.row)
+      this.Menu.status = (this.Menu.status === 1) ? true : false
+      this.Menu.alwaysshow = (this.Menu.alwaysshow ===1) ? true : false
+      this.Menu.hidden = (this.Menu.hidden ===1) ? true : false
+      this.$nextTick(() => {
+        this.$refs['formData'].clearValidate()
+      })
     },
     handleDelete({ $index, row }) {
-      this.$confirm('Confirm to remove the role?', 'Warning', {
+      this.$confirm('Confirm to remove the Menu?', 'Warning', {
         confirmButtonText: 'Confirm',
         cancelButtonText: 'Cancel',
         type: 'warning'
       })
-        .then(async() => {
-          await deleteRole(row.key)
-          this.rolesList.splice($index, 1)
+        .then(async () => {
+          await deleteMenu(row.id)
+          for (let index = 0; index < this.MenusList.length; index++) {
+            if (this.MenusList[index].id === row.id) {
+              row.status = 0
+              this.MenusList.splice(index, 1, Object.assign({}, row))
+              break
+            }
+          }
+          // this.MenusList.splice($index, 1)
           this.$message({
             type: 'success',
             message: 'Delete succed!'
           })
         })
-        .catch(err => { console.error(err) })
+        .catch(err => {
+          console.error(err)
+        })
     },
-    generateTree(routes, basePath = '/', checkedKeys) {
-      const res = []
-
-      for (const route of routes) {
-        const routePath = path.resolve(basePath, route.path)
-
-        // recursive child routes
-        if (route.children) {
-          route.children = this.generateTree(route.children, routePath, checkedKeys)
-        }
-
-        if (checkedKeys.includes(routePath) || (route.children && route.children.length >= 1)) {
-          res.push(route)
-        }
-      }
-      return res
-    },
-    async confirmRole() {
+    confirmMenu() {
       const isEdit = this.dialogType === 'edit'
-
-      const checkedKeys = this.$refs.tree.getCheckedKeys()
-      this.role.routes = this.generateTree(deepClone(this.serviceRoutes), '/', checkedKeys)
-
-      if (isEdit) {
-        await updateRole(this.role.key, this.role)
-        for (let index = 0; index < this.rolesList.length; index++) {
-          if (this.rolesList[index].key === this.role.key) {
-            this.rolesList.splice(index, 1, Object.assign({}, this.role))
-            break
-          }
+      this.$refs['formData'].validate((valid) => {
+        if (!valid) {
+          return false
         }
-      } else {
-        const { data } = await addRole(this.role)
-        this.role.key = data.key
-        this.rolesList.push(this.role)
-      }
-
-      const { description, key, name } = this.role
-      this.dialogVisible = false
-      this.$notify({
-        title: 'Success',
-        dangerouslyUseHTMLString: true,
-        message: `
-            <div>Role Key: ${key}</div>
-            <div>Role Name: ${name}</div>
-            <div>Description: ${description}</div>
-          `,
-        type: 'success'
+        if (isEdit) {
+          this.Menu.sort = String(this.Menu.sort)
+          updateMenu(this.Menu.id, this.Menu).then(response => {
+            for (let index = 0; index < this.MenusList.length; index++) {
+            if (this.MenusList[index].id === this.Menu.id) {
+              this.Menu.status=this.Menu.status?1:0
+              this.MenusList.splice(index, 1, Object.assign({}, this.Menu))
+              break
+            }
+          }
+          const { path, id, name } = this.Menu
+          this.dialogVisible = false
+          this.$notify({
+            title: 'Success',
+            dangerouslyUseHTMLString: true,
+            message: `
+          <div>Menu Id: ${id}</div>
+          <div>Menu Name: ${name}</div>
+          <div>path: ${path}</div>
+        `,
+            type: 'success'
+          })
+          }).catch(err => {
+            console.log(err)
+          })
+        } else {
+          addMenu(this.Menu).then(response => {
+            this.Menu.id = response.data.id
+            this.Menu.status = (response.data.status === 1) ? 1 : 0
+            this.MenusList.push(this.Menu)
+            const { path, id, name } = this.Menu
+            this.dialogVisible = false
+            this.$notify({
+              title: 'Success',
+              dangerouslyUseHTMLString: true,
+              message: `
+          <div>Menu Id: ${id}</div>
+          <div>Menu Name: ${name}</div>
+          <div>path: ${path}</div>
+        `,
+              type: 'success'
+            })
+          }).catch(err => {
+            console.log(err)
+          })
+        }
       })
-    },
-    // reference: src/view/layout/components/Sidebar/SidebarItem.vue
-    onlyOneShowingChild(children = [], parent) {
-      let onlyOneChild = null
-      const showingChildren = children.filter(item => !item.hidden)
-
-      // When there is only one child route, the child route is displayed by default
-      if (showingChildren.length === 1) {
-        onlyOneChild = showingChildren[0]
-        onlyOneChild.path = path.resolve(parent.path, onlyOneChild.path)
-        return onlyOneChild
-      }
-
-      // Show parent if there are no child route to display
-      if (showingChildren.length === 0) {
-        onlyOneChild = { ... parent, path: '', noShowingChildren: true }
-        return onlyOneChild
-      }
-
-      return false
     }
+
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.app-container {
-  .roles-table {
-    margin-top: 30px;
+  .app-container {
+    .Menus-table {
+      margin-top: 30px;
+    }
+    .permission-tree {
+      margin-bottom: 30px;
+    }
   }
-  .permission-tree {
-    margin-bottom: 30px;
-  }
-}
 </style>

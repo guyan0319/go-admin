@@ -10,7 +10,6 @@ import (
 	"go-admin/modules/request"
 	"go-admin/modules/response"
 	"io/ioutil"
-	"reflect"
 	"strconv"
 	"time"
 )
@@ -403,9 +402,14 @@ func Add(c *gin.Context) {
 	menu.Ctime=time.Now()
 
 	menu.Sort,_=strconv.Atoi(data["sort"].(string))
-
-	fmt.Println(reflect.TypeOf(data["pid"]))
 	menu.Pid = int(data["pid"].(float64))
+	if menu.Pid==0 {
+		menu.Level=menu.Pid
+	}else{
+		pidMenuModel := models.SystemMenu{Id: menu.Pid}
+		_=pidMenuModel.GetRow()
+		menu.Level=pidMenuModel.Level+1
+	}
 	_,err=menu.Add()
 	if err!=nil {
 		response.ShowError(c,"fail")
