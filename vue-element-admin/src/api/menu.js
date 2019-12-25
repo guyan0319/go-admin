@@ -15,10 +15,18 @@ export function addMenu(data) {
     baseURL: httphost + '/menu'
   })
 }
-export function updateMenu(data) {
+export function updateMenu(id, data) {
   return request({
     url: '',
     method: 'put',
+    data,
+    baseURL: httphost + '/menu'
+  })
+}
+export function deleteMenu(data) {
+  return request({
+    url: '',
+    method: 'delete',
     data,
     baseURL: httphost + '/menu'
   })

@@ -63,26 +63,26 @@
           <el-input v-model="Menu.meta_icon" placeholder="Menu meta_icon" clearable/>
         </el-form-item>
         <el-form-item label="sort">
-          <el-input v-model="Menu.sort" placeholder="Menu sort" type="number"/>
+          <el-input v-model="Menu.sort" placeholder="Menu sort"/>
         </el-form-item>
 
         <el-form-item label="总显示">
           <el-switch
             v-model="Menu.alwaysshow"
-            :on-value="1"
-            :off-value="0"
+            :on-value="true"
+            :off-value="false"
           ></el-switch>
         </el-form-item>
         <el-form-item label="是否隐藏">
           <el-switch v-model="Menu.hidden"
-                     :on-value="1"
-                     :off-value="0"
+                     :on-value="true"
+                     :off-value="false"
           ></el-switch>
         </el-form-item>
         <el-form-item label="状态">
           <el-switch v-model="Menu.status"
-                     :on-value="1"
-                     :off-value="0"
+                     :on-value="true"
+                     :off-value="false"
           ></el-switch>
         </el-form-item>
         <el-input v-model="Menu.pid" type="hidden"/>
@@ -101,10 +101,9 @@
 </template>
 
 <script>
-import path from 'path'
+
 import { deepClone } from '@/utils'
-import { getMenus, addMenu, updateMenu } from '@/api/menu'
-// import { getMenus, addMenu, deleteMenu, updateMenu } from '@/api/menu'
+import { getMenus, addMenu, updateMenu, deleteMenu } from '@/api/menu'
 const defaultMenu = {
   id: '',
   name: '',
@@ -119,7 +118,7 @@ const defaultMenu = {
   meta_affix: false,
   hidden: false,
   pid: 0,
-  sort: 0,
+  sort: '0',
   status: true
 }
 export default {
@@ -188,25 +187,38 @@ export default {
       this.dialogType = 'new'
       this.dialogVisible = true
       this.Menu.pid = scope.row ? scope.row.id : 0
+      this.$nextTick(() => {
+        this.$refs['formData'].clearValidate()
+      })
     },
     handleEdit(scope) {
       this.dialogType = 'edit'
       this.dialogVisible = true
       this.checkStrictly = true
       this.Menu = deepClone(scope.row)
-      this.Menu.status = ( this.Menu.status ==1 ) ? true : false
+      this.Menu.status = (this.Menu.status == 1) ? true : false
       this.Menu.alwaysshow = ( this.Menu.alwaysshow ==1 ) ? true : false
-      this.Menu.hidden = ( this.Menu.hidden ==1 ) ? true : false
+      this.Menu.hidden = (this.Menu.hidden ==1) ? true : false
+      this.$nextTick(() => {
+        this.$refs['formData'].clearValidate()
+      })
     },
-    handleDelete({$index, row}) {
+    handleDelete({ $index, row }) {
       this.$confirm('Confirm to remove the Menu?', 'Warning', {
         confirmButtonText: 'Confirm',
         cancelButtonText: 'Cancel',
         type: 'warning'
       })
         .then(async () => {
-          await deleteMenu(row.key)
-          this.MenusList.splice($index, 1)
+          await deleteMenu(row.id)
+          for (let index = 0; index < this.MenusList.length; index++) {
+            if (this.MenusList[index].id === row.id) {
+              row.status = 0
+              this.MenusList.splice(index, 1, Object.assign({}, row))
+              break
+            }
+          }
+          // this.MenusList.splice($index, 1)
           this.$message({
             type: 'success',
             message: 'Delete succed!'
@@ -216,23 +228,6 @@ export default {
           console.error(err)
         })
     },
-    generateTree(routes, basePath = '/', checkedKeys) {
-      const res = []
-
-      for (const route of routes) {
-        const routePath = path.resolve(basePath, route.path)
-
-        // recursive child routes
-        if (route.children) {
-          route.children = this.generateTree(route.children, routePath, checkedKeys)
-        }
-
-        if (checkedKeys.includes(routePath) || (route.children && route.children.length >= 1)) {
-          res.push(route)
-        }
-      }
-      return res
-    },
     confirmMenu() {
       const isEdit = this.dialogType === 'edit'
       this.$refs['formData'].validate((valid) => {
@@ -240,13 +235,30 @@ export default {
           return false
         }
         if (isEdit) {
-          updateMenu(this.Menu.id, this.Menu)
-          for (let index = 0; index < this.MenusList.length; index++) {
+          this.Menu.sort = String(this.Menu.sort)
+          updateMenu(this.Menu.id, this.Menu).then(response => {
+            for (let index = 0; index < this.MenusList.length; index++) {
             if (this.MenusList[index].id === this.Menu.id) {
+              this.Menu.status=this.Menu.status?1:0
               this.MenusList.splice(index, 1, Object.assign({}, this.Menu))
               break
             }
           }
+          const { path, id, name } = this.Menu
+          this.dialogVisible = false
+          this.$notify({
+            title: 'Success',
+            dangerouslyUseHTMLString: true,
+            message: `
+          <div>Menu Id: ${id}</div>
+          <div>Menu Name: ${name}</div>
+          <div>path: ${path}</div>
+        `,
+            type: 'success'
+          })
+          }).catch(err => {
+            console.log(err)
+          })
         } else {
           addMenu(this.Menu).then(response => {
             this.Menu.id = response.data.id
@@ -267,35 +279,10 @@ export default {
           }).catch(err => {
             console.log(err)
           })
-          // const { data } = addMenu(this.Menu)
-          //
-          // console.log(data)
-          // this.Menu.id = data.id
-          // this.MenusList.push(this.Menu)
         }
-
       })
-    },
-    // reference: src/view/layout/components/Sidebar/SidebarItem.vue
-    onlyOneShowingChild(children = [], parent) {
-      let onlyOneChild = null
-      const showingChildren = children.filter(item => !item.hidden)
-
-      // When there is only one child route, the child route is displayed by default
-      if (showingChildren.length === 1) {
-        onlyOneChild = showingChildren[0]
-        onlyOneChild.path = path.resolve(parent.path, onlyOneChild.path)
-        return onlyOneChild
-      }
-
-      // Show parent if there are no child route to display
-      if (showingChildren.length === 0) {
-        onlyOneChild = {...parent, path: '', noShowingChildren: true}
-        return onlyOneChild
-      }
-
-      return false
     }
+
   }
 }
 </script>

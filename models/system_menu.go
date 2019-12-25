@@ -106,3 +106,15 @@ func (rm *SystemMenu) GetRowByType()([]SystemMenu,error) {
 	return systemmenus,err
 }
 
+func (m *SystemMenu) Update() error {
+	if _, err := mEngine.Where("id = ?", m.Id).Update(m); err != nil {
+		return err
+	}
+	return nil
+}
+func (m *SystemMenu) Delete() error {
+	if _, err := mEngine.Exec("update "+systemmenu+" set status=? where id=?",0,m.Id); err != nil {
+		return err
+	}
+	return nil
+}

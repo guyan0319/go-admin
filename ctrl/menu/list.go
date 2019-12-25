@@ -11,6 +11,7 @@ import (
 	"go-admin/modules/response"
 	"io/ioutil"
 	"reflect"
+	"strconv"
 	"time"
 )
 
@@ -343,7 +344,6 @@ func Index(c *gin.Context) {
 			menuNewArr = append(menuNewArr, menuMap[v.Id]...)
 		}
 	}
-	//fmt.Println(menuNewArr)
 	response.ShowData(c, menuNewArr)
 	return
 }
@@ -401,7 +401,9 @@ func Add(c *gin.Context) {
 		menu.Status=1
 	}
 	menu.Ctime=time.Now()
-	menu.Sort=int(data["sort"].(float64))
+
+	menu.Sort,_=strconv.Atoi(data["sort"].(string))
+
 	fmt.Println(reflect.TypeOf(data["pid"]))
 	menu.Pid = int(data["pid"].(float64))
 	_,err=menu.Add()
@@ -422,9 +424,85 @@ func Update(c *gin.Context) {
 		response.ShowError(c, "fail")
 		return
 	}
-	fmt.Println(reflect.TypeOf(data["id"]))
-
-
-
-
+	menu:=models.SystemMenu{}
+	menu.Id=int(data["id"].(float64))
+	has:=menu.GetRow()
+	if !has {
+		response.ShowError(c, "要修改数据不存在")
+		return
+	}
+	if _, ok := data["name"]; !ok {
+		response.ShowError(c, "fail")
+		return
+	}
+	if _, ok := data["path"]; !ok {
+		response.ShowError(c, "fail")
+		return
+	}
+	if _, ok := data["component"]; !ok {
+		response.ShowError(c, "fail")
+		return
+	}
+	if _, ok := data["url"]; !ok {
+		response.ShowError(c, "fail")
+		return
+	}
+	menuModel:=models.SystemMenu{}
+	menuModel.Path = data["path"].(string)
+	if menuModel.Path=="" {
+		response.ShowError(c, "fail")
+		return
+	}
+	has=menuModel.GetRow()
+	if has && menuModel.Path!="#" && menuModel.Id!=menu.Id {
+		response.ShowError(c, "path不可重复")
+		return
+	}
+	menu.Name=data["name"].(string)
+	menu.Path=data["path"].(string)
+	menu.MetaTitle=data["name"].(string)
+	menu.Component=data["component"].(string)
+	menu.Url=data["url"].(string)
+	menu.Redirect=data["redirect"].(string)
+	menu.MetaIcon=data["meta_icon"].(string)
+	if data["alwaysshow"].(bool){
+		menu.Alwaysshow=1
+	}
+	if data["hidden"].(bool){
+		menu.Hidden=1
+	}
+	if data["status"].(bool){
+		menu.Status=1
+	}
+	menu.Sort,_=strconv.Atoi(data["sort"].(string))
+	menu.Pid = int(data["pid"].(float64))
+	err=menu.Update()
+	if err!=nil {
+		response.ShowError(c,"fail")
+		return
+	}
+	response.ShowData(c,"success")
+	return
+}
+func Delete(c *gin.Context){
+	str, err := ioutil.ReadAll(c.Request.Body)
+	if err != nil {
+		response.ShowError(c, "fail")
+		return
+	}
+	id :=string(str)
+	if id=="" {
+		response.ShowError(c, "fail")
+		return
+	}
+	menu :=models.SystemMenu{}
+	menu.Id,_=strconv.Atoi(id)
+	fmt.Println(menu)
+	err=menu.Delete()
+	if err!=nil {
+		response.ShowError(c,"fail")
+		return
+	}
+	response.ShowData(c,"success")
+	return
 }
