@@ -54,6 +54,8 @@ func Info(c *gin.Context){
 	return
 }
 func Index(c *gin.Context)  {
+
+
 	userModel:=models.SystemUser{}
 	userArr, err := userModel.GetAll()
 	if err != nil {

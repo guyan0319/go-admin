@@ -320,12 +320,12 @@ func Dashboard(c *gin.Context) {
 }
 
 func Index(c *gin.Context) {
-	session := sessions.Default(c)
-	v := session.Get(conf.Cfg.Token)
-	if v == nil {
-		response.ShowError(c, "fail")
-		return
-	}
+	//session := sessions.Default(c)
+	//v := session.Get(conf.Cfg.Token)
+	//if v == nil {
+	//	response.ShowError(c, "fail")
+	//	return
+	//}
 	menu := models.SystemMenu{}
 	menuArr, err := menu.GetAll()
 	if err != nil {
@@ -336,15 +336,25 @@ func Index(c *gin.Context) {
 	for _, value := range menuArr {
 		menuMap[value.Pid] = append(menuMap[value.Pid], value)
 	}
+
+	//response.ShowData(c, menuMap)
+	//return
 	var menuNewArr []models.SystemMenu
-	for _, v := range menuArr {
-		if v.Pid == 0 {
-			menuNewArr = append(menuNewArr, v)
-			menuNewArr = append(menuNewArr, menuMap[v.Id]...)
-		}
-	}
+	menuNewArr =TreeNode(menuMap,0)
 	response.ShowData(c, menuNewArr)
 	return
+}
+func TreeNode(menuMap map[int][]models.SystemMenu,pid int) []models.SystemMenu {
+	var menuNewArr []models.SystemMenu
+	if _,ok:=menuMap[pid];ok{
+		for _, v := range menuMap[pid] {
+			menuNewArr=append(menuNewArr,v)
+			menuNewArr=append(menuNewArr,TreeNode(menuMap,v.Id)...)
+		}
+	}else{
+		return menuNewArr
+	}
+	return menuNewArr
 }
 func Add(c *gin.Context) {
 	jsonstr, _ := ioutil.ReadAll(c.Request.Body)

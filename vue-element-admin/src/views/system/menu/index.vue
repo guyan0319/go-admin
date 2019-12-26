@@ -12,7 +12,7 @@
       </el-table-column>
       <el-table-column align="left" label="菜单名称" width="220">
         <template slot-scope="scope">
-          {{ scope.row.name }}
+          <span v-for="c in scope.row.level">|--</span>{{ scope.row.name }}
         </template>
       </el-table-column>
       <el-table-column align="header-center" label="路径">
