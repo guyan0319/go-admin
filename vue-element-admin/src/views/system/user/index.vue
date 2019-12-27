@@ -6,42 +6,35 @@
           <span>{{ scope.row.id }}</span>
         </template>
       </el-table-column>
-
-      <el-table-column width="180px" align="center" label="Date">
+      <el-table-column width="120px" align="center" label="名称">
         <template slot-scope="scope">
-          <span>{{ scope.row.timestamp | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+          <span>{{ scope.row.name }}</span>
+        </template>
+      </el-table-column>
+            <el-table-column width="120px" align="center" label="昵称">
+        <template slot-scope="scope">
+          <span>{{ scope.row.nickname }}</span>
+        </template>
+      </el-table-column>
+            <el-table-column width="120px" align="center" label="phone">
+        <template slot-scope="scope">
+          <span>{{ scope.row.phone }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column width="120px" align="center" label="Author">
-        <template slot-scope="scope">
-          <span>{{ scope.row.author }}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column width="100px" label="Importance">
-        <template slot-scope="scope">
-          <svg-icon v-for="n in +scope.row.importance" :key="n" icon-class="star" class="meta-item__icon" />
-        </template>
-      </el-table-column>
-
-      <el-table-column class-name="status-col" label="Status" width="110">
+      <el-table-column class-name="status-col" label="状态" width="110">
         <template slot-scope="{row}">
           <el-tag :type="row.status | statusFilter">
-            {{ row.status }}
+            {{ row.status | statusNameFilter }}
           </el-tag>
         </template>
       </el-table-column>
-
-      <el-table-column min-width="300px" label="Title">
-        <template slot-scope="{row}">
-          <router-link :to="'/example/edit/'+row.id" class="link-type">
-            <span>{{ row.title }}</span>
-          </router-link>
+      <el-table-column width="180px" align="center" label="时间">
+        <template slot-scope="scope">
+          <span>{{ scope.row.ctime | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
         </template>
       </el-table-column>
-
-      <el-table-column align="center" label="Actions" width="120">
+      <el-table-column align="center" label="操作" width="120">
         <template slot-scope="scope">
           <router-link :to="'/example/edit/'+scope.row.id">
             <el-button type="primary" size="small" icon="el-icon-edit">
@@ -57,7 +50,7 @@
 </template>
 
 <script>
-import { fetchList } from '@/api/article'
+import { fetchList } from '@/api/user'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
 export default {
@@ -66,9 +59,15 @@ export default {
   filters: {
     statusFilter(status) {
       const statusMap = {
-        published: 'success',
-        draft: 'info',
-        deleted: 'danger'
+        1: 'success',
+        0: 'info'
+      }
+      return statusMap[status]
+    },
+    statusNameFilter(status) {
+      const statusMap = {
+        1: '启动',
+        0: '停止'
       }
       return statusMap[status]
     }

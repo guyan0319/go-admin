@@ -1,6 +1,7 @@
 package models
 
 import (
+	"go-admin/public/common"
 	"time"
 )
 
@@ -30,6 +31,18 @@ func(u *SystemUser) GetRow() bool {
 func (u *SystemUser) GetAll()([]SystemUser,error) {
 	var systemusers []SystemUser
 	err:=mEngine.Find(&systemusers)
+	return systemusers,err
+}
+
+func (u *SystemUser) GetAllPage(paging *common.Paging)([]SystemUser,error) {
+	var systemusers []SystemUser
+	var err error
+	paging.Total,err=mEngine.Where("status=?",1).Count(u)
+	paging.GetPages()
+	if paging.Total<1 {
+		return systemusers,err
+	}
+	err=mEngine.Where("status=?",1).Limit(int(paging.PageSize),int(paging.StartNums)).Find(&systemusers)
 	return systemusers,err
 }
 

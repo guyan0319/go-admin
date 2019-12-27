@@ -35,3 +35,11 @@ export function getAuthMenu(token) {
 
   })
 }
+export function fetchList(data) {
+  return request({
+    url: '',
+    method: 'get',
+    params: data,
+    baseURL: httphost + '/user'
+  })
+}

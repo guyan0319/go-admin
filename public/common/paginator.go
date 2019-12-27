@@ -25,9 +25,7 @@ func( p *Paging)GetPages() *Paging {
 	if p.PageSize < 1 {
 		p.PageSize = 10
 	}
-
 	page_count := math.Ceil(float64(p.Total) / float64(p.PageSize))
-
 	paging := new(Paging)
 	paging.Page=p.Page
 	paging.PageSize=p.PageSize

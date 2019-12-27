@@ -8,8 +8,8 @@ import (
 	"go-admin/models"
 	"go-admin/modules/response"
 	"go-admin/public/common"
+	"strconv"
 )
-
 
 func Reg(c *gin.Context){
 	nickname :=c.PostForm("nickname")
@@ -54,14 +54,20 @@ func Info(c *gin.Context){
 	return
 }
 func Index(c *gin.Context)  {
+	page, _ := strconv.ParseInt(c.Query("page"), 10, 64)
+	limit, _ := strconv.ParseInt(c.Query("limit"), 10, 64)
 
-
+	paging:=&common.Paging{Page:page,PageSize:limit}
 	userModel:=models.SystemUser{}
-	userArr, err := userModel.GetAll()
+	userArr, err := userModel.GetAllPage(paging)
 	if err != nil {
 		response.ShowError(c, "fail")
 		return
 	}
-	response.ShowData(c, userArr)
+	data :=make(map[string]interface{})
+	data["items"]=userArr
+	data["total"]=paging.Total
+
+	response.ShowData(c, data)
 	return
 }
