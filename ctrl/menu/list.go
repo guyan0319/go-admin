@@ -256,6 +256,7 @@ func treeMenu(menuArr []models.SystemMenu) ([]interface{}) {
 	return jsonArr
 
 }
+
 func Roles(c *gin.Context) {
 	model := models.SystemRole{}
 	menu := models.SystemMenu{}
@@ -288,15 +289,20 @@ func Dashboard(c *gin.Context) {
 		response.ShowError(c, "fail")
 		return
 	}
-	menu := models.SystemMenu{}
+	menu := models.SystemMenu{Status:1}
 	if user.Nickname == "admin" {
 		menuArr, err := menu.GetAll()
 		if err != nil {
 			response.ShowError(c, "fail")
 			return
 		}
-		jsonArr := treeMenu(menuArr)
-		response.ShowData(c, jsonArr)
+		//menuNewArr := treeMenu(menuArr)
+		var menuMap = make(map[int][]models.SystemMenu, 0)
+		for _, value := range menuArr {
+			menuMap[value.Pid] = append(menuMap[value.Pid], value)
+		}
+		jsonStr :=TreeMenuNew(menuMap,0)
+		response.ShowData(c, jsonStr)
 		return
 	} else {
 		menuArr := menu.GetRouteByUid(uid)
@@ -317,6 +323,56 @@ func Dashboard(c *gin.Context) {
 	//	"data":  data,
 	//})
 	//return
+}
+func TreeMenuNew(menuMap map[int][]models.SystemMenu ,pid int)[]interface{}{
+	var menuNewArr []interface{}
+	if _,ok:=menuMap[pid];ok{
+		for _, value := range menuMap[pid] {
+			var item = make(map[string]interface{})
+			item["path"] = value.Path
+			item["component"] = value.Component
+			if value.Redirect != "" {
+				item["redirect"] = value.Redirect
+			}
+			if value.Alwaysshow == 1 {
+				item["alwaysShow"] = true
+			}
+			if value.Hidden == 1 {
+				item["hidden"] = true
+			} else {
+				item["hidden"] = false
+			}
+
+			var meta = make(map[string]interface{})
+			if value.MetaTitle != "" {
+				meta["title"] = value.MetaTitle
+			}
+			if value.MetaIcon != "" {
+				meta["icon"] = value.MetaIcon
+			}
+			if value.MetaAffix == 1 {
+				meta["affix"] = true
+			}
+			if value.MetaNocache == 1 {
+				meta["noCache"] = true
+			}
+			if value.Status == 1 {
+				meta["status"] = true
+			}
+
+			if len(meta) > 0 {
+				item["meta"] = meta
+			}
+			item["pid"] = value.Pid
+			item["id"] = value.Id
+			item["url"] = value.Url
+			item["name"] = value.Name
+			item["children"] = TreeMenuNew(menuMap,value.Id)
+			menuNewArr=append(menuNewArr,item)
+		}
+	}
+	return menuNewArr
+
 }
 
 func Index(c *gin.Context) {
@@ -351,8 +407,6 @@ func TreeNode(menuMap map[int][]models.SystemMenu,pid int) []models.SystemMenu {
 			menuNewArr=append(menuNewArr,v)
 			menuNewArr=append(menuNewArr,TreeNode(menuMap,v.Id)...)
 		}
-	}else{
-		return menuNewArr
 	}
 	return menuNewArr
 }
