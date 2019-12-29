@@ -5,7 +5,7 @@
     </el-button>
 
     <el-table :data="MenusList" style="width: 100%;margin-top:30px;" border>
-      <el-table-column align="center" label="主键" width="220">
+      <el-table-column align="center" label="主键" width="80">
         <template slot-scope="scope">
           {{ scope.row.id }}
         </template>
@@ -20,7 +20,18 @@
           {{ scope.row.path }}
         </template>
       </el-table-column>
-      <el-table-column class-name="status-col" label="状态" width="110">
+           <el-table-column align="header-center" label="组件">
+        <template slot-scope="scope">
+          {{ scope.row.component }}
+        </template>
+      </el-table-column>
+           <el-table-column align="header-center" label="后端接口url" width="180">
+        <template slot-scope="scope">
+          {{ scope.row.url }}
+        </template>
+      </el-table-column>
+
+      <el-table-column class-name="status-col" label="状态" width="80">
         <template slot-scope="{row}">
           <el-tag :type="row.status | statusFilter">
             {{ row.status | statusNameFilter }}

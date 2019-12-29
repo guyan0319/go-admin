@@ -26,11 +26,13 @@ export function generaMenu(routes, data) {
       path: item.path === '#' ? item.id + '_key' : item.path,
       component: item.component === '#' ? Layout : () => import(`@/views${item.component}`),
       hidden: item.hidden,
+      redirect: item.redirect,
       children: [],
       name: 'menu_' + item.id,
       meta: item.meta
       // meta: { title: item.name, id: item.id, roles: ['admin'] }
     }
+
     if (item.children) {
       generaMenu(menu.children, item.children)
     }
