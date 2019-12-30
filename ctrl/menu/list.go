@@ -10,7 +10,6 @@ import (
 	"go-admin/modules/request"
 	"go-admin/modules/response"
 	"io/ioutil"
-	"net/http"
 	"strconv"
 	"time"
 )
@@ -318,13 +317,13 @@ func Dashboard(c *gin.Context) {
 	//err := json.Unmarshal([]byte(roleMenu), &data)
 	//if err != nil {
 	//	fmt.Println(err)
-	}
+	//}
 
-	c.JSON(http.StatusOK, gin.H{
-		"code": 20000,
-		"data":  data,
-	})
-	return
+	//c.JSON(http.StatusOK, gin.H{
+	//	"code": 20000,
+	//	"data":  data,
+	//})
+	//return
 }
 func TreeMenuNew(menuMap map[int][]models.SystemMenu ,pid int)[]interface{}{
 	var menuNewArr []interface{}
