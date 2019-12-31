@@ -377,12 +377,6 @@ func TreeMenuNew(menuMap map[int][]models.SystemMenu ,pid int)[]interface{}{
 }
 
 func Index(c *gin.Context) {
-	//session := sessions.Default(c)
-	//v := session.Get(conf.Cfg.Token)
-	//if v == nil {
-	//	response.ShowError(c, "fail")
-	//	return
-	//}
 	menu := models.SystemMenu{}
 	menuArr, err := menu.GetAll()
 	if err != nil {
@@ -393,9 +387,6 @@ func Index(c *gin.Context) {
 	for _, value := range menuArr {
 		menuMap[value.Pid] = append(menuMap[value.Pid], value)
 	}
-
-	//response.ShowData(c, menuMap)
-	//return
 	var menuNewArr []models.SystemMenu
 	menuNewArr =TreeNode(menuMap,0)
 	response.ShowData(c, menuNewArr)
@@ -419,7 +410,6 @@ func Add(c *gin.Context) {
 		response.ShowError(c, "fail")
 		return
 	}
-	//fmt.Println(data)
 	if _, ok := data["name"]; !ok {
 		response.ShowError(c, "fail")
 		return
@@ -437,17 +427,18 @@ func Add(c *gin.Context) {
 		return
 	}
 
-	menu := models.SystemMenu{}
-	menu.Path = data["path"].(string)
-	if menu.Path=="" {
+	menus := models.SystemMenu{}
+	menus.Path = data["path"].(string)
+	if menus.Path=="" {
 		response.ShowError(c, "fail")
 		return
 	}
-	has:=menu.GetRow()
-	if has && menu.Path!="#" {
+	has:=menus.GetRow()
+	if has && menus.Path!="#" {
 		response.ShowError(c, "path不可重复")
 		return
 	}
+	menu := models.SystemMenu{}
 	menu.Name=data["name"].(string)
 	menu.Path=data["path"].(string)
 	menu.MetaTitle=data["name"].(string)

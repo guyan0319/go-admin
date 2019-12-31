@@ -204,6 +204,8 @@ export default {
       this.Menu.pid = scope.row ? scope.row.id : 0
       this.$nextTick(() => {
         this.$refs['formData'].clearValidate()
+        this.$refs['formData'].resetFields()
+        this.Menu.status = true
       })
     },
     handleEdit(scope) {
@@ -254,7 +256,7 @@ export default {
           updateMenu(this.Menu.id, this.Menu).then(response => {
             for (let index = 0; index < this.MenusList.length; index++) {
             if (this.MenusList[index].id === this.Menu.id) {
-              this.Menu.status=this.Menu.status?1:0
+              this.Menu.status=this.Menu.status ? 1 : 0
               this.MenusList.splice(index, 1, Object.assign({}, this.Menu))
               break
             }
@@ -278,6 +280,7 @@ export default {
           addMenu(this.Menu).then(response => {
             this.Menu.id = response.data.id
             this.Menu.status = (response.data.status === 1) ? 1 : 0
+            this.Menu.pid = this.Menu.pid + 1
             this.MenusList.push(this.Menu)
             const { path, id, name } = this.Menu
             this.dialogVisible = false

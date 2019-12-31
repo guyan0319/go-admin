@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: 2019-12-16 12:45:16
+-- Generation Time: 2019-12-31 01:53:11
 -- 服务器版本： 5.5.53
 -- PHP Version: 7.2.1
 
@@ -73,8 +73,16 @@ CREATE TABLE `system_menu` (
 
 INSERT INTO `system_menu` (`id`, `name`, `path`, `component`, `redirect`, `url`, `meta_title`, `meta_icon`, `meta_nocache`, `alwaysshow`, `meta_affix`, `type`, `hidden`, `pid`, `sort`, `status`, `level`, `ctime`) VALUES
 (1, '系统管理', '#', '#', '', '#', '系统管理', 'fafa-adjust', 0, 0, 0, 2, 0, 0, 0, 1, 0, '2019-12-02 06:14:15'),
-(2, '用户管理', '/system/user', '/system/user', '', '/system/user', '用户管理', '#', 0, 0, 0, 2, 0, 1, 0, 1, 0, '2019-12-02 00:00:00'),
-(3, '菜单管理', '/system/menu', '/system/menu/index', '', '/system/menu', '菜单管理', '#', 0, 0, 0, 2, 0, 1, 0, 1, 0, '2019-12-02 00:00:00');
+(2, '用户管理', '/system/user', '/system/user/index', '', '/user', '用户管理', '#', 0, 0, 0, 2, 0, 1, 0, 1, 1, '2019-12-02 00:00:00'),
+(3, '菜单管理', '/system/menu', '/system/menu/index', '', '/menu', '菜单管理', '#', 0, 0, 0, 2, 0, 1, 0, 1, 1, '2019-12-02 00:00:00'),
+(26, '角色管理', '/system/role', '/system/role/index', '', '/roles', '角色管理', '#', 0, 1, 0, 0, 0, 1, 0, 1, 1, '2019-12-25 19:44:16'),
+(27, '添加用户', '/system/user/create', '/system/user/create/index', '', '/user/create', '添加用户', '#', 0, 1, 0, 0, 0, 2, 0, 1, 2, '2019-12-25 20:43:21'),
+(28, '用户列表', '/system/user/list', '/system/user/list/index', '', '/user/index', '用户列表', '#', 0, 0, 0, 0, 0, 2, 0, 1, 2, '2019-12-31 09:16:43'),
+(29, '用户编辑', '/system/user/edit', '/system/user/edit/index', '', '/user/update', '用户编辑', '#', 0, 1, 0, 0, 0, 2, 0, 1, 2, '2019-12-31 09:17:41'),
+(30, '内容管理', '#', '#', '', '/article', '内容管理', '#', 0, 1, 0, 0, 0, 0, 0, 1, 0, '2019-12-31 09:49:54'),
+(31, '创建文章', '/system/article/create', '/system/article/create/index', '', '/article/add', '创建文章', '#', 0, 1, 0, 0, 0, 30, 0, 1, 1, '2019-12-31 09:51:12'),
+(32, '文章编辑', '/system/article/edit', '/system/article/edit/index', '', '/article/update', '文章编辑', '#', 0, 1, 0, 0, 0, 30, 0, 1, 1, '2019-12-31 09:51:56'),
+(33, '文章列表', '/system/article/list', '/system/article/list/index', '', '/article/list', '文章列表', '#', 0, 1, 0, 0, 0, 30, 0, 1, 1, '2019-12-31 09:52:36');
 
 -- --------------------------------------------------------
 
@@ -140,7 +148,10 @@ CREATE TABLE `system_user` (
 --
 
 INSERT INTO `system_user` (`id`, `name`, `nickname`, `password`, `salt`, `phone`, `avatar`, `introduction`, `status`, `utime`, `last_login_time`, `last_login_ip`, `ctime`) VALUES
-(1, 'admin', 'admin', '297f8efd64f95e37a7d792d926a7b5db47c58403', 'MbBQ', '11111111111', 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif', '', 1, '2019-11-01 07:02:33', '0000-00-00 00:00:00', '', '2019-10-24 20:20:34');
+(1, 'admin', 'admin', '297f8efd64f95e37a7d792d926a7b5db47c58403', 'MbBQ', '11111111111', 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif', '', 1, '2019-11-01 07:02:33', '0000-00-00 00:00:00', '', '2019-10-24 20:20:34'),
+(3, 'admin', 'admin1', '297f8efd64f95e37a7d792d926a7b5db47c58403', 'MbBQ', '11111111111', 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif', '', 1, '2019-11-01 07:02:33', '0000-00-00 00:00:00', '', '2019-10-24 20:20:34'),
+(4, 'admin', 'admin12', '297f8efd64f95e37a7d792d926a7b5db47c58403', 'MbBQ', '11111111111', 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif', '', 1, '2019-11-01 07:02:33', '0000-00-00 00:00:00', '', '2019-10-24 20:20:34'),
+(5, 'admin', 'admin123', '297f8efd64f95e37a7d792d926a7b5db47c58403', 'MbBQ', '11111111111', 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif', '', 1, '2019-11-01 07:02:33', '0000-00-00 00:00:00', '', '2019-10-24 20:20:34');
 
 -- --------------------------------------------------------
 
@@ -229,7 +240,7 @@ ALTER TABLE `system_log`
 -- 使用表AUTO_INCREMENT `system_menu`
 --
 ALTER TABLE `system_menu`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键', AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键', AUTO_INCREMENT=34;
 
 --
 -- 使用表AUTO_INCREMENT `system_role`
@@ -247,7 +258,7 @@ ALTER TABLE `system_role_menu`
 -- 使用表AUTO_INCREMENT `system_user`
 --
 ALTER TABLE `system_user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键', AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键', AUTO_INCREMENT=6;
 
 --
 -- 使用表AUTO_INCREMENT `system_user_role`
