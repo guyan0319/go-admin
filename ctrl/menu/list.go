@@ -402,7 +402,7 @@ func TreeNode(menuMap map[int][]models.SystemMenu,pid int) []models.SystemMenu {
 	}
 	return menuNewArr
 }
-func Add(c *gin.Context) {
+func Create(c *gin.Context) {
 	jsonstr, _ := ioutil.ReadAll(c.Request.Body)
 	var data map[string]interface{}
 	err := json.Unmarshal(jsonstr, &data)
@@ -474,7 +474,7 @@ func Add(c *gin.Context) {
 	response.ShowData(c,menu)
 	return
 }
-func Update(c *gin.Context) {
+func Edit(c *gin.Context) {
 	data,err:=request.GetJson(c)
 	if err != nil {
 		response.ShowError(c, "fail")

@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"go-admin/conf"
 	"go-admin/models"
+	"go-admin/modules/request"
 	"go-admin/modules/response"
 	"go-admin/public/common"
 	"strconv"
@@ -70,4 +71,20 @@ func Index(c *gin.Context)  {
 
 	response.ShowData(c, data)
 	return
+}
+func Edit(c *gin.Context)  {
+	data,err:=request.GetJson(c)
+	if err != nil {
+		response.ShowError(c, "fail")
+		return
+	}
+	if _, ok := data["id"]; !ok {
+		response.ShowError(c, "fail")
+		return
+	}
+
+
+
+
+
 }
