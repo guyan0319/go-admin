@@ -1,13 +1,13 @@
 <template>
-  <article-detail :is-edit="false" />
+  <user-detail :is-edit="false" />
 </template>
 
 <script>
-import ArticleDetail from '../components/ArticleDetail'
+import UserDetail from '../components/CreateDetail'
 
 export default {
   name: 'CreateArticle',
-  components: { ArticleDetail }
+  components: { UserDetail }
 }
 </script>
 

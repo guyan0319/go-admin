@@ -77,9 +77,9 @@
           <el-input v-model="Menu.sort" placeholder="Menu sort"/>
         </el-form-item>
 
-        <el-form-item label="总显示">
+        <el-form-item label="是否缓存">
           <el-switch
-            v-model="Menu.alwaysshow"
+            v-model="Menu.meta_nocache"
             :on-value="true"
             :off-value="false"
           ></el-switch>
@@ -214,7 +214,7 @@ export default {
       this.checkStrictly = true
       this.Menu = deepClone(scope.row)
       this.Menu.status = (this.Menu.status === 1) ? true : false
-      this.Menu.alwaysshow = (this.Menu.alwaysshow ===1) ? true : false
+      this.Menu.meta_nocache = (this.Menu.meta_nocache ===1) ? true : false
       this.Menu.hidden = (this.Menu.hidden ===1) ? true : false
       this.$nextTick(() => {
         this.$refs['formData'].clearValidate()

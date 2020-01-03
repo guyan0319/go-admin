@@ -43,3 +43,11 @@ export function fetchList(data) {
     baseURL: httphost + '/user'
   })
 }
+export function createUser(data) {
+  return request({
+    url: '',
+    method: 'post',
+    data,
+    baseURL: httphost + '/user/create'
+  })
+}

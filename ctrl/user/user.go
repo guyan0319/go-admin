@@ -72,6 +72,56 @@ func Index(c *gin.Context)  {
 	response.ShowData(c, data)
 	return
 }
+func Create(c *gin.Context)  {
+	data,err:=request.GetJson(c)
+	if err != nil {
+		response.ShowError(c, "fail")
+		return
+	}
+	if _, ok := data["name"]; !ok {
+		response.ShowError(c, "fail")
+		return
+	}
+	if _, ok := data["nickname"]; !ok {
+		response.ShowError(c, "fail")
+		return
+	}
+	if _, ok := data["password"]; !ok {
+		response.ShowError(c, "fail")
+		return
+	}
+	if _, ok := data["repassword"]; !ok {
+		response.ShowError(c, "fail")
+		return
+	}
+	if _, ok := data["status"]; !ok {
+		response.ShowError(c, "fail")
+		return
+	}
+	if _, ok := data["avatar"]; !ok {
+		response.ShowError(c, "fail")
+		return
+	}
+	userModel := models.SystemUser{};
+	userModel.Nickname=data["name"].(string)
+	has:=userModel.GetRow()
+	if has {
+		response.ShowError(c, "name_exists")
+		return
+	}
+	userModel.Password=data["password"].(string)
+	if	userModel.Password!=data["repassword"].(string){
+		response.ShowError(c, "nickname_exists")
+		return
+	}
+	userModel.Salt =common.GetRandomBoth(4)
+	userModel.Password = common.Sha1En(userModel.Password+userModel.Salt)
+	userModel.Name = data["name"].(string)
+	if _, ok := data["status"]; ok {
+
+	}
+
+}
 func Edit(c *gin.Context)  {
 	data,err:=request.GetJson(c)
 	if err != nil {
@@ -82,9 +132,4 @@ func Edit(c *gin.Context)  {
 		response.ShowError(c, "fail")
 		return
 	}
-
-
-
-
-
 }

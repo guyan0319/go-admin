@@ -1,17 +1,17 @@
 <template>
   <el-dropdown :show-timeout="100" trigger="click">
     <el-button plain>
-      {{ !comment_disabled?'Comment: opened':'Comment: closed' }}
+      {{ !status?'启动':'停止' }}
       <i class="el-icon-caret-bottom el-icon--right" />
     </el-button>
     <el-dropdown-menu slot="dropdown" class="no-padding">
       <el-dropdown-item>
-        <el-radio-group v-model="comment_disabled" style="padding: 10px;">
+        <el-radio-group v-model="status" style="padding: 10px;">
           <el-radio :label="true">
-            Close comment
+            停止
           </el-radio>
           <el-radio :label="false">
-            Open comment
+           开启
           </el-radio>
         </el-radio-group>
       </el-dropdown-item>
@@ -28,7 +28,7 @@ export default {
     }
   },
   computed: {
-    comment_disabled: {
+    status: {
       get() {
         return this.value
       },

@@ -227,7 +227,7 @@ export const asyncRoutes = [
   //       path: 'edit/:id(\\d+)',
   //       component: () => import('@/views/example/edit'),
   //       name: 'EditArticle',
-  //       meta: { title: 'editArticle', noCache: true, activeMenu: '/example/list' },
+  //       meta: { title: 'editArticle', noCache: true },
   //       hidden: true
   //     },
   //     {
@@ -238,7 +238,38 @@ export const asyncRoutes = [
   //     }
   //   ]
   // },
-  //
+  // {
+  //   path: '/system/user',
+  //   component: Layout,
+  //   redirect: '/example/list',
+  //   name: 'Example',
+  //   meta: {
+  //     title: 'example',
+  //     icon: 'example'
+  //   },
+  //   children: [
+  //     {
+  //       path: 'create',
+  //       component: () => import('@/views/system/user/create/index'),
+  //       name: 'CreateArticle',
+  //       meta: { title: 'createArticle', icon: 'edit' }
+  //     },
+  //     {
+  //       path: 'edit/:id(\\d+)',
+  //       component: () => import('@/views/system/user/edit/index'),
+  //       name: 'EditArticle',
+  //       meta: { title: 'editArticle' },
+  //       hidden: true
+  //     },
+  //     {
+  //       path: 'list',
+  //       component: () => import('@/views/system/user/list/index'),
+  //       name: 'ArticleList',
+  //       meta: { title: 'articleList', icon: 'list' }
+  //     }
+  //   ]
+  // },
+
   // {
   //   path: '/tab',
   //   component: Layout,
