@@ -11,7 +11,7 @@
         <el-row>
           <el-col :span="10">
             <el-form-item label="名称" prop="name">
-              <el-input v-model="postForm.name" placeholder="user Name" clearable/>
+              {{ postForm.name }}
             </el-form-item>
           </el-col>
 
@@ -30,24 +30,11 @@
             </el-form-item>
           </el-col>
         </el-row>
-
-        <el-row>
-          <el-col :span="10">
-            <el-form-item label="密码" prop="password">
-              <el-input type="password" v-model="postForm.password"  clearable/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="10">
-            <el-form-item label="确认密码" prop="repassword">
-              <el-input type="password" v-model="postForm.repassword"  clearable/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-
-        <el-form-item prop="image_uri" label="icon" style="margin-bottom: 30px;">
-          <Upload v-model="postForm.image_uri" />
+        <el-form-item label="状态">
+          <el-switch v-model="postForm.status"
+                     :on-value="true"
+                     :off-value="false"
+          ></el-switch>
         </el-form-item>
       </div>
     </el-form>
@@ -55,16 +42,12 @@
 </template>
 
 <script>
-import Upload from '@/components/Upload/SingleImage3'
 import Sticky from '@/components/Sticky' // 粘性header组件
-import { fetchArticle } from '@/api/article'
-import { searchUser } from '@/api/remote-search'
+import { fetchUser, editUser } from '@/api/user'
 
 const defaultForm = {
   name: '', // 姓名
   nickname: '', // 昵称
-  password: '', // 密码
-  image_uri: '', // icon
   phone: '', // 手机号
   id: undefined,
   status: false
@@ -72,7 +55,7 @@ const defaultForm = {
 
 export default {
   name: 'UserDetail',
-  components: { Upload, Sticky },
+  components: { Sticky },
   props: {
     isEdit: {
       type: Boolean,
@@ -91,25 +74,14 @@ export default {
         callback()
       }
     }
-    const validatePass2 = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('请再次输入密码'))
-      } else if (value !== this.info.password) {
-        callback(new Error('两次输入密码不一致!'))
-      } else {
-        callback()
-      }
-    }
+
     return {
       postForm: Object.assign({}, defaultForm),
       loading: false,
       userListOptions: [],
       rules: {
-        image_uri: [{ validator: validateRequire }],
         name: [{ validator: validateRequire }],
         nickname: [{ validator: validateRequire }],
-        password: [{ validator: validateRequire }],
-        repassword: [{ validator: validatePass2 }]
       },
       tempRoute: {}
     }
@@ -147,54 +119,30 @@ export default {
   },
   methods: {
     fetchData(id) {
-      fetchArticle(id).then(response => {
+      fetchUser(id).then(response => {
         this.postForm = response.data
-
-        // just for test
-        this.postForm.title += `   Article Id:${this.postForm.id}`
-        this.postForm.content_short += `   Article Id:${this.postForm.id}`
-
-        // set tagsview title
-        this.setTagsViewTitle()
-
-        // set page title
-        this.setPageTitle()
+        this.postForm.status = response.data.status === 1 ? true : false
       }).catch(err => {
         console.log(err)
       })
     },
-    setTagsViewTitle() {
-      const title = this.lang === 'zh' ? '编辑文章' : 'Edit Article'
-      const route = Object.assign({}, this.tempRoute, { title: `${title}-${this.postForm.id}` })
-      this.$store.dispatch('tagsView/updateVisitedView', route)
-    },
-    setPageTitle() {
-      const title = 'Edit Article'
-      document.title = `${title} - ${this.postForm.id}`
-    },
     submitForm() {
       console.log(this.postForm)
       this.$refs.postForm.validate(valid => {
-        if (valid) {
+        if (!valid) {
+          this.loading = false
+          return false
+        }
+        editUser(this.postForm).then(() => {
           this.loading = true
           this.$notify({
-            title: '成功',
-            message: '发布文章成功',
+            title: 'Success',
+            dangerouslyUseHTMLString: true,
+            message: '添加成功',
             type: 'success',
             duration: 2000
           })
-          this.loading = false
-        } else {
-          console.log('error submit!!')
-          return false
-        }
-      })
-    },
-
-    getRemoteUserList(query) {
-      searchUser(query).then(response => {
-        if (!response.data.items) return
-        this.userListOptions = response.data.items.map(v => v.name)
+        })
       })
     }
   }

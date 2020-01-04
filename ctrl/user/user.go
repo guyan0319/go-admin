@@ -10,6 +10,7 @@ import (
 	"go-admin/modules/response"
 	"go-admin/public/common"
 	"strconv"
+	"time"
 )
 
 func Reg(c *gin.Context){
@@ -54,6 +55,23 @@ func Info(c *gin.Context){
 	response.ShowData(c, info)
 	return
 }
+func Detail(c *gin.Context){
+	id,has:=c.GetQuery("id")
+	if	!has{
+		response.ShowErrorParams(c, "id")
+		return
+	}
+	user := models.SystemUser{}
+	user.Id,_=strconv.Atoi(id)
+	has=user.GetRow()
+
+	if !has {
+		response.ShowError(c,"user_error")
+		return
+	}
+	response.ShowData(c, user)
+	return
+}
 func Index(c *gin.Context)  {
 	page, _ := strconv.ParseInt(c.Query("page"), 10, 64)
 	limit, _ := strconv.ParseInt(c.Query("limit"), 10, 64)
@@ -78,6 +96,7 @@ func Create(c *gin.Context)  {
 		response.ShowError(c, "fail")
 		return
 	}
+	fmt.Println(data)
 	if _, ok := data["name"]; !ok {
 		response.ShowError(c, "fail")
 		return
@@ -98,12 +117,9 @@ func Create(c *gin.Context)  {
 		response.ShowError(c, "fail")
 		return
 	}
-	if _, ok := data["avatar"]; !ok {
-		response.ShowError(c, "fail")
-		return
-	}
+
 	userModel := models.SystemUser{};
-	userModel.Nickname=data["name"].(string)
+	userModel.Name=data["name"].(string)
 	has:=userModel.GetRow()
 	if has {
 		response.ShowError(c, "name_exists")
@@ -117,9 +133,23 @@ func Create(c *gin.Context)  {
 	userModel.Salt =common.GetRandomBoth(4)
 	userModel.Password = common.Sha1En(userModel.Password+userModel.Salt)
 	userModel.Name = data["name"].(string)
-	if _, ok := data["status"]; ok {
-
+	userModel.Nickname = data["nickname"].(string)
+	if _, ok := data["phone"]; ok {
+		userModel.Phone = data["phone"].(string)
 	}
+
+	if _, ok := data["status"]; ok && data["status"].(bool) {
+		userModel.Status=1
+	}
+	userModel.Avatar="https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif"
+	userModel.Ctime=time.Now()
+	_,err=userModel.Add()
+	if err!=nil {
+		response.ShowError(c,"fail")
+		return
+	}
+	response.ShowData(c,userModel)
+	return
 
 }
 func Edit(c *gin.Context)  {
@@ -128,6 +158,7 @@ func Edit(c *gin.Context)  {
 		response.ShowError(c, "fail")
 		return
 	}
+	fmt.Println(data)
 	if _, ok := data["id"]; !ok {
 		response.ShowError(c, "fail")
 		return

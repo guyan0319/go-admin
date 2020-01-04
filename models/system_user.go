@@ -46,5 +46,8 @@ func (u *SystemUser) GetAllPage(paging *common.Paging)([]SystemUser,error) {
 	return systemusers,err
 }
 
+func (u *SystemUser) Add() (int64 ,error){
+	return  mEngine.Insert(u)
+}
 
 

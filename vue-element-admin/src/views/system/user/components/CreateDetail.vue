@@ -45,10 +45,6 @@
             </el-form-item>
           </el-col>
         </el-row>
-
-        <el-form-item prop="avatar" label="头像" style="margin-bottom: 30px;">
-          <Upload v-model="postForm.avatar" />
-        </el-form-item>
         <el-form-item label="状态">
           <el-switch v-model="postForm.status"
                      :on-value="true"
@@ -61,7 +57,6 @@
 </template>
 
 <script>
-import Upload from '@/components/Upload/SingleImage3'
 import Sticky from '@/components/Sticky' // 粘性header组件
 import { createUser } from '@/api/user'
 
@@ -69,7 +64,6 @@ const defaultForm = {
   name: '', // 姓名
   nickname: '', // 昵称
   password: '', // 密码
-  avatar: '', // 头像
   phone: '', // 手机号
   id: undefined,
   status: true
@@ -77,7 +71,7 @@ const defaultForm = {
 
 export default {
   name: 'UserDetail',
-  components: { Upload, Sticky },
+  components: { Sticky },
   props: {
     isEdit: {
       type: Boolean,
@@ -110,7 +104,6 @@ export default {
       loading: false,
       userListOptions: [],
       rules: {
-        avatar: [{ validator: validateRequire }],
         name: [{ validator: validateRequire }],
         nickname: [{ validator: validateRequire }],
         password: [{ validator: validateRequire }],
@@ -135,9 +128,11 @@ export default {
       // console.log(this.postForm)
       this.$refs.postForm.validate(valid => {
         if (!valid) {
+          this.loading = false
           return false
         }
         createUser(this.postForm).then(() => {
+          this.loading = true
           this.$notify({
             title: 'Success',
             dangerouslyUseHTMLString: true,

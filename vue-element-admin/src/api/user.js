@@ -51,3 +51,20 @@ export function createUser(data) {
     baseURL: httphost + '/user/create'
   })
 }
+export function editUser(data) {
+  return request({
+    url: '',
+    method: 'post',
+    data,
+    baseURL: httphost + '/user/edit'
+  })
+}
+
+export function fetchUser(id) {
+  return request({
+    url: '',
+    method: 'get',
+    params: { id },
+    baseURL: httphost + '/user/detail'
+  })
+}
