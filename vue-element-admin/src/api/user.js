@@ -59,12 +59,27 @@ export function editUser(data) {
     baseURL: httphost + '/user/edit'
   })
 }
-
+export function repasswdUser(data) {
+  return request({
+    url: '',
+    method: 'post',
+    data,
+    baseURL: httphost + '/user/repasswd'
+  })
+}
 export function fetchUser(id) {
   return request({
     url: '',
     method: 'get',
     params: { id },
     baseURL: httphost + '/user/detail'
+  })
+}
+export function deleteUser(id) {
+  return request({
+    url: '',
+    method: 'get',
+    params: { id },
+    baseURL: httphost + '/user/delete'
   })
 }

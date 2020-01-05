@@ -20,6 +20,7 @@ type SystemUser struct {
 	LastLoginIp   string    `json:"last_login_ip" xorm:"not null default '' comment('最近登录IP') VARCHAR(50)"`
 	Ctime         time.Time `json:"ctime" xorm:"not null comment('注册时间') DATETIME"`
 }
+var systemuser = "system_user"
 
 func(u *SystemUser) GetRow() bool {
 	has, err := mEngine.Get(u)
@@ -49,5 +50,15 @@ func (u *SystemUser) GetAllPage(paging *common.Paging)([]SystemUser,error) {
 func (u *SystemUser) Add() (int64 ,error){
 	return  mEngine.Insert(u)
 }
-
-
+func (u *SystemUser) Update() error {
+	if _, err := mEngine.Where("id = ?", u.Id).Update(u); err != nil {
+		return err
+	}
+	return nil
+}
+func (u *SystemUser) Delete() error {
+	if _, err := mEngine.Exec("update "+systemuser+" set status=? where id=?",0,u.Id); err != nil {
+		return err
+	}
+	return nil
+}

@@ -18,18 +18,27 @@ func UpdateRole(c *gin.Context)  {
 		response.ShowError(c, "fail")
 		return
 	}
+	if _, ok := data["id"]; !ok {
+		response.ShowError(c, "fail")
+		return
+	}
+	id:=int(data["id"].(float64))
 	model:=models.SystemRole{Name:data["name"].(string)}
 	has:=model.GetRow()
-	if !has {
+	if has && model.Id!=id {
 		response.ShowError(c, "role_error")
 		return
 	}
+	model.Id=id
 	model.AliasName=data["name"].(string)
 	model.Description=data["description"].(string)
-
-	err=model.Update(data["routes"].([]interface{}))
+	fmt.Println(data["routes"].([]interface{}))
+	var ids []int
+	if _, ok := data["routes"]; ok {
+		ids=TreeRoutes(data["routes"].([]interface{}))
+	}
+	err=model.Update(ids)
 	if err!=nil {
-		fmt.Println(err)
 		response.ShowError(c, "fail")
 		return
 	}
@@ -37,7 +46,18 @@ func UpdateRole(c *gin.Context)  {
 	response.ShowData(c,datas)
 	return
 }
+func TreeRoutes(routes []interface{} ) []int{
+	var ids []int
+	for _,value:=range routes {
+		ids = append(ids,int( value.(map[string]interface{})["id"].(float64)))
+		if _, ok := value.(map[string]interface{})["children"]; ok {
+			children:=value.(map[string]interface{})["children"].([]interface{})
+			ids = append(ids,TreeRoutes(children)...)
+		}
+	}
+	return ids
 
+}
 func AddRole(c *gin.Context)  {
 	jsonstr, _ := ioutil.ReadAll(c.Request.Body)
 	var data map[string]interface{}
@@ -77,7 +97,6 @@ func DeleteRole(c *gin.Context) {
 		response.ShowError(c, "fail")
 		return
 	}
-
 	roles:=models.SystemRole{Id:role.Id}
 	err:=roles.Delete()
 	if err!=nil {

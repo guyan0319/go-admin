@@ -84,17 +84,23 @@
             :off-value="false"
           ></el-switch>
         </el-form-item>
+        <el-form-item label="总是展示">
+          <el-switch
+            v-model="Menu.alwaysshow"
+            :on-value="true"
+            :off-value="false"
+          ></el-switch>
+        </el-form-item>
+
         <el-form-item label="是否隐藏">
-          <el-switch v-model="Menu.hidden"
-                     :on-value="true"
-                     :off-value="false"
+          <el-switch
+            v-model="Menu.hidden"
+            :on-value="true"
+            :off-value="false"
           ></el-switch>
         </el-form-item>
         <el-form-item label="状态">
-          <el-switch v-model="Menu.status"
-                     :on-value="true"
-                     :off-value="false"
-          ></el-switch>
+          <el-switch v-model="Menu.status" :on-value="true" :off-value="false"></el-switch>
         </el-form-item>
         <el-input v-model="Menu.pid" type="hidden"/>
 
@@ -216,6 +222,7 @@ export default {
       this.Menu.status = (this.Menu.status === 1) ? true : false
       this.Menu.meta_nocache = (this.Menu.meta_nocache ===1) ? true : false
       this.Menu.hidden = (this.Menu.hidden ===1) ? true : false
+      this.Menu.alwaysshow = (this.Menu.alwaysshow ===1) ? true : false
       this.$nextTick(() => {
         this.$refs['formData'].clearValidate()
       })
@@ -255,24 +262,24 @@ export default {
           this.Menu.sort = String(this.Menu.sort)
           updateMenu(this.Menu.id, this.Menu).then(response => {
             for (let index = 0; index < this.MenusList.length; index++) {
-            if (this.MenusList[index].id === this.Menu.id) {
-              this.Menu.status=this.Menu.status ? 1 : 0
-              this.MenusList.splice(index, 1, Object.assign({}, this.Menu))
-              break
+              if (this.MenusList[index].id === this.Menu.id) {
+                this.Menu.status = this.Menu.status ? 1 : 0
+                this.MenusList.splice(index, 1, Object.assign({}, this.Menu))
+                break
+              }
             }
-          }
-          const { path, id, name } = this.Menu
-          this.dialogVisible = false
-          this.$notify({
-            title: 'Success',
-            dangerouslyUseHTMLString: true,
-            message: `
+            const { path, id, name } = this.Menu
+            this.dialogVisible = false
+            this.$notify({
+              title: 'Success',
+              dangerouslyUseHTMLString: true,
+              message: `
           <div>Menu Id: ${id}</div>
           <div>Menu Name: ${name}</div>
           <div>path: ${path}</div>
         `,
-            type: 'success'
-          })
+              type: 'success'
+            })
           }).catch(err => {
             console.log(err)
           })
@@ -280,7 +287,7 @@ export default {
           addMenu(this.Menu).then(response => {
             this.Menu.id = response.data.id
             this.Menu.status = (response.data.status === 1) ? 1 : 0
-            this.Menu.pid = this.Menu.pid + 1
+            this.Menu.level = this.Menu.level + 1
             this.MenusList.push(this.Menu)
             const { path, id, name } = this.Menu
             this.dialogVisible = false

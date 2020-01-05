@@ -34,13 +34,21 @@
           <span>{{ scope.row.ctime | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="操作" width="120">
+      <el-table-column align="center" label="操作" width="320">
         <template slot-scope="scope">
           <router-link :to="'/system/user/edit/'+scope.row.id">
             <el-button type="primary" size="small" icon="el-icon-edit">
               Edit
             </el-button>
           </router-link>
+            <router-link :to="'/system/user/repasswd/'+scope.row.id">
+            <el-button type="primary" size="small" icon="el-icon-setting">
+              重置密码
+            </el-button>
+          </router-link>
+            <el-button type="danger" size="small" icon="el-icon-delete" @click="handleDelete(scope)">
+              删除
+            </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -50,7 +58,7 @@
 </template>
 
 <script>
-import { fetchList } from '@/api/user'
+import { fetchList, deleteUser } from '@/api/user'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
 export default {
@@ -87,6 +95,30 @@ export default {
     this.getList()
   },
   methods: {
+    handleDelete({ $index, row }) {
+      this.$confirm('Confirm to remove the User?', 'Warning', {
+        confirmButtonText: 'Confirm',
+        cancelButtonText: 'Cancel',
+        type: 'warning'
+      }).then(async() => {
+        await deleteUser(row.id)
+        for (let index = 0; index < this.list.length; index++) {
+          if (this.list[index].id === row.id) {
+            row.status = 0
+            this.list.splice(index, 1, Object.assign({}, row))
+            break
+          }
+        }
+        // this.MenusList.splice($index, 1)
+        this.$message({
+          type: 'success',
+          message: 'Delete succed!'
+        })
+      })
+        .catch(err => {
+          console.error(err)
+        })
+    },
     getList() {
       this.listLoading = true
       fetchList(this.listQuery).then(response => {

@@ -49,7 +49,7 @@ func Info(c *gin.Context){
 	role,_ :=userrole.GetRowByUid()
 	var info Userinfo
 	info.Roles = role
-	info.Name=user.Nickname
+	info.Name=user.Name
 	info.Avatar=user.Avatar
 	info.Introduction=user.Introduction
 	response.ShowData(c, info)
@@ -69,7 +69,25 @@ func Detail(c *gin.Context){
 		response.ShowError(c,"user_error")
 		return
 	}
+	user.Password=""
+	user.Salt=""
 	response.ShowData(c, user)
+	return
+}
+func Delete(c *gin.Context){
+	id,has:=c.GetQuery("id")
+	if	!has{
+		response.ShowErrorParams(c, "id")
+		return
+	}
+	user := models.SystemUser{}
+	user.Id,_=strconv.Atoi(id)
+	err:=user.Delete()
+	if err!=nil {
+		response.ShowError(c,"fail")
+		return
+	}
+	response.ShowData(c,"success")
 	return
 }
 func Index(c *gin.Context)  {
@@ -96,7 +114,6 @@ func Create(c *gin.Context)  {
 		response.ShowError(c, "fail")
 		return
 	}
-	fmt.Println(data)
 	if _, ok := data["name"]; !ok {
 		response.ShowError(c, "fail")
 		return
@@ -127,7 +144,7 @@ func Create(c *gin.Context)  {
 	}
 	userModel.Password=data["password"].(string)
 	if	userModel.Password!=data["repassword"].(string){
-		response.ShowError(c, "nickname_exists")
+		response.ShowError(c, "fail")
 		return
 	}
 	userModel.Salt =common.GetRandomBoth(4)
@@ -158,9 +175,79 @@ func Edit(c *gin.Context)  {
 		response.ShowError(c, "fail")
 		return
 	}
-	fmt.Println(data)
 	if _, ok := data["id"]; !ok {
 		response.ShowError(c, "fail")
 		return
 	}
+	userModel:=models.SystemUser{}
+	userModel.Id=int(data["id"].(float64))
+	has:=userModel.GetRow()
+	if !has {
+		response.ShowError(c,"user_error")
+		return
+	}
+	if _, ok := data["nickname"]; !ok {
+		response.ShowError(c, "fail")
+		return
+	}
+	if _, ok := data["status"]; !ok {
+		response.ShowError(c, "fail")
+		return
+	}
+	if _, ok := data["status"]; ok && data["status"].(bool) {
+		userModel.Status=1
+	}else{
+		userModel.Status=0
+	}
+	userModel.Nickname = data["nickname"].(string)
+	if _, ok := data["phone"]; ok {
+		userModel.Phone = data["phone"].(string)
+	}
+	err=userModel.Update()
+	if err!=nil {
+		response.ShowError(c,"fail")
+		return
+	}
+	response.ShowData(c,userModel)
+	return
+}
+func Repasswd(c *gin.Context)  {
+	data,err:=request.GetJson(c)
+	if err != nil {
+		response.ShowError(c, "fail")
+		return
+	}
+	if _, ok := data["id"]; !ok {
+		response.ShowError(c, "fail")
+		return
+	}
+	userModel:=models.SystemUser{}
+	userModel.Id=int(data["id"].(float64))
+	has:=userModel.GetRow()
+	if !has {
+		response.ShowError(c,"user_error")
+		return
+	}
+	if _, ok := data["password"]; !ok {
+		response.ShowError(c, "fail")
+		return
+	}
+	if _, ok := data["repassword"]; !ok {
+		response.ShowError(c, "fail")
+		return
+	}
+	userModel.Password=data["password"].(string)
+	if	userModel.Password!=data["repassword"].(string){
+		response.ShowError(c, "fail")
+		return
+	}
+	userModel.Salt =common.GetRandomBoth(4)
+	userModel.Password = common.Sha1En(userModel.Password+userModel.Salt)
+	err=userModel.Update()
+	if err!=nil {
+		response.ShowError(c,"fail")
+		return
+	}
+	response.ShowData(c,userModel)
+	return
 }

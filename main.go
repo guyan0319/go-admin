@@ -50,6 +50,8 @@ func main() {
 	r.GET("/user/detail",user.Detail)
 	r.POST("/user/create",user.Create)
 	r.POST("/user/edit",user.Edit)
+	r.POST("/user/repasswd",user.Repasswd)
+	r.GET("/user/delete",user.Delete)
 	r.POST("/role/delete/:name",role.DeleteRole)
 	r.POST("/role/update",role.UpdateRole)
 	r.POST("/role/add",role.AddRole)

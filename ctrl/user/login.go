@@ -34,7 +34,7 @@ func Login(c *gin.Context) {
 		response.ShowError(c, "fail")
 		return
 	}
-	user := models.SystemUser{Nickname: u.Username}
+	user := models.SystemUser{Name: u.Username}
 	has := user.GetRow()
 	if !has {
 		response.ShowError(c, "fail")

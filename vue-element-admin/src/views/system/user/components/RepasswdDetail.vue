@@ -11,26 +11,11 @@
         <el-row>
           <el-col :span="10">
             <el-form-item label="名称" prop="name">
-              <el-input v-model="postForm.name" placeholder="user Name" clearable/>
+              {{ postForm.name }}
             </el-form-item>
           </el-col>
 
         </el-row>
-        <el-row>
-          <el-col :span="10">
-            <el-form-item label="昵称" prop="nickname">
-              <el-input v-model="postForm.nickname" placeholder="user nickName" clearable/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="10">
-            <el-form-item label="手机号" prop="phone">
-              <el-input v-model="postForm.phone" placeholder="user phone" clearable/>
-            </el-form-item>
-          </el-col>
-        </el-row>
-
         <el-row>
           <el-col :span="10">
             <el-form-item label="密码" prop="password">
@@ -45,12 +30,6 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-form-item label="状态">
-          <el-switch v-model="postForm.status"
-                     :on-value="true"
-                     :off-value="false"
-          ></el-switch>
-        </el-form-item>
       </div>
     </el-form>
   </div>
@@ -58,15 +37,14 @@
 
 <script>
 import Sticky from '@/components/Sticky' // 粘性header组件
-import { createUser } from '@/api/user'
+import { fetchUser, repasswdUser } from '@/api/user'
 
 const defaultForm = {
   name: '', // 姓名
   nickname: '', // 昵称
-  password: '', // 密码
   phone: '', // 手机号
   id: undefined,
-  status: true
+  status: false
 }
 
 export default {
@@ -79,17 +57,6 @@ export default {
     }
   },
   data() {
-    const validateRequire = (rule, value, callback) => {
-      if (value === '') {
-        this.$message({
-          message: rule.field + '为必填项',
-          type: 'error'
-        })
-        callback(new Error(rule.field + '为必填项'))
-      } else {
-        callback()
-      }
-    }
     const validatePass2 = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请再次输入密码'))
@@ -99,31 +66,57 @@ export default {
         callback()
       }
     }
+
     return {
       postForm: Object.assign({}, defaultForm),
       loading: false,
       userListOptions: [],
       rules: {
-        name: [{ validator: validateRequire }],
-        nickname: [{ validator: validateRequire }],
-        password: [{ validator: validateRequire }],
         repassword: [{ validator: validatePass2 }]
       },
       tempRoute: {}
     }
   },
   computed: {
+    contentShortLength() {
+      return this.postForm.content_short.length
+    },
     lang() {
       return this.$store.getters.language
+    },
+    displayTime: {
+      // set and get is useful when the data
+      // returned by the back end api is different from the front end
+      // back end return => "2013-06-25 06:59:25"
+      // front end need timestamp => 1372114765000
+      get() {
+        return (+new Date(this.postForm.display_time))
+      },
+      set(val) {
+        this.postForm.display_time = new Date(val)
+      }
     }
   },
   created() {
+    if (this.isEdit) {
+      const id = this.$route.params && this.$route.params.id
+      this.fetchData(id)
+    }
+
     // Why need to make a copy of this.$route here?
     // Because if you enter this page and quickly switch tag, may be in the execution of the setTagsViewTitle function, this.$route is no longer pointing to the current page
     // https://github.com/PanJiaChen/vue-element-admin/issues/1221
     this.tempRoute = Object.assign({}, this.$route)
   },
   methods: {
+    fetchData(id) {
+      fetchUser(id).then(response => {
+        this.postForm = response.data
+        this.postForm.status = response.data.status === 1 ? true : false
+      }).catch(err => {
+        console.log(err)
+      })
+    },
     submitForm() {
       this.loading = true
       // console.log(this.postForm)
@@ -132,7 +125,7 @@ export default {
           this.loading = false
           return false
         }
-        createUser(this.postForm).then(() => {
+        repasswdUser(this.postForm).then(() => {
           this.loading = false
           this.$notify({
             title: 'Success',

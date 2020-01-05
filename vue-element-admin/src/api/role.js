@@ -2,17 +2,25 @@ import request from '@/utils/request'
 import { httphost } from '@/utils/global'
 export function getRoutes() {
   return request({
-    url: '',
-    method: 'get',
-    baseURL: httphost + '/routes'
+    url: '/routes',
+    method: 'get'
   })
+  // return request({
+  //   url: '',
+  //   method: 'get',
+  //   baseURL: httphost + '/routes'
+  // })
 }
 export function getRoles() {
   return request({
-    url: '',
-    method: 'get',
-    baseURL: httphost + '/role/list'
+    url: '/roles',
+    method: 'get'
   })
+  // return request({
+  //   url: '',
+  //   method: 'get',
+  //   baseURL: httphost + '/role/list'
+  // })
 }
 
 export function addRole(data) {

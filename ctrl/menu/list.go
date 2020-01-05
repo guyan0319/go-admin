@@ -2,7 +2,6 @@ package menu
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"go-admin/conf"
@@ -15,7 +14,7 @@ import (
 )
 
 type Role struct {
-	Key         string        `form:"key" json:"key"`
+	Id         int        `form:"id" json:"id"`
 	Name        string        `form:"name" json:"name"`
 	Description string        `form:"description" json:"description"`
 	Routes      []interface{} `form:"routes" json:"routes"`
@@ -35,23 +34,20 @@ func List(c *gin.Context) {
 		response.ShowError(c, "fail")
 		return
 	}
-
 	menu := models.SystemMenu{}
-	if user.Nickname == "admin" {
-		menuArr, err := menu.GetAll()
-		if err != nil {
-			response.ShowError(c, "fail")
-			return
-		}
-		jsonArr := tree(menuArr)
-		response.ShowData(c, jsonArr)
-		return
-	} else {
-		menuArr := menu.GetRouteByUid(uid)
-		jsonArr := tree(menuArr)
-		response.ShowData(c, jsonArr)
+	menuArr, err := menu.GetAll()
+	if err != nil {
+		response.ShowError(c, "fail")
 		return
 	}
+	var menuMap = make(map[int][]models.SystemMenu, 0)
+	for _, value := range menuArr {
+		value.Hidden=0
+		menuMap[value.Pid] = append(menuMap[value.Pid], value)
+	}
+	jsonArr :=TreeMenuNew(menuMap,0)
+	response.ShowData(c, jsonArr)
+	return
 }
 func tree(menuArr []models.SystemMenu) ([]interface{}) {
 	role := models.SystemRole{}
@@ -264,11 +260,21 @@ func Roles(c *gin.Context) {
 	var roleMenu []Role
 	for _, value := range roleArr {
 		r := Role{}
-		r.Key = value.Name
+		r.Id = value.Id
 		r.Name = value.Name
 		r.Description = value.Description
 		menuArr := menu.GetRouteByRole(value.Id)
-		r.Routes = tree(menuArr)
+		if menuArr!=nil {
+			var menuMap = make(map[int][]models.SystemMenu, 0)
+			for _, value := range menuArr {
+				menuMap[value.Pid] = append(menuMap[value.Pid], value)
+			}
+			jsonStr :=TreeMenuNew(menuMap,0)
+			if jsonStr!=nil {
+				r.Routes =jsonStr
+			}
+			//r.Routes = tree(menuArr)
+		}
 		roleMenu = append(roleMenu, r)
 	}
 	response.ShowData(c, roleMenu)
@@ -290,7 +296,7 @@ func Dashboard(c *gin.Context) {
 		return
 	}
 	menu := models.SystemMenu{Status:1}
-	if user.Nickname == "admin" {
+	if user.Name == "admin" {
 		menuArr, err := menu.GetAll()
 		if err != nil {
 			response.ShowError(c, "fail")
@@ -368,14 +374,16 @@ func TreeMenuNew(menuMap map[int][]models.SystemMenu ,pid int)[]interface{}{
 			item["id"] = value.Id
 			item["url"] = value.Url
 			item["name"] = value.Name
-			item["children"] = TreeMenuNew(menuMap,value.Id)
+			children := TreeMenuNew(menuMap,value.Id)
+			if children !=nil{
+				item["children"] = children
+			}
 			menuNewArr=append(menuNewArr,item)
 		}
 	}
 	return menuNewArr
 
 }
-
 func Index(c *gin.Context) {
 	menu := models.SystemMenu{}
 	menuArr, err := menu.GetAll()
@@ -525,12 +533,16 @@ func Edit(c *gin.Context) {
 	menu.Url=data["url"].(string)
 	menu.Redirect=data["redirect"].(string)
 	menu.MetaIcon=data["meta_icon"].(string)
-	if data["alwaysshow"].(bool){
-		menu.Alwaysshow=1
+	if data["meta_nocache"].(bool){
+		menu.MetaNocache=1
 	}
 	if data["hidden"].(bool){
 		menu.Hidden=1
 	}
+	if data["alwaysshow"].(bool){
+		menu.Alwaysshow=1
+	}
+
 	if data["status"].(bool){
 		menu.Status=1
 	}
@@ -557,7 +569,6 @@ func Delete(c *gin.Context){
 	}
 	menu :=models.SystemMenu{}
 	menu.Id,_=strconv.Atoi(id)
-	fmt.Println(menu)
 	err=menu.Delete()
 	if err!=nil {
 		response.ShowError(c,"fail")

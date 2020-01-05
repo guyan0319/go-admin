@@ -2,7 +2,7 @@
   <div class="createPost-container">
     <el-form ref="postForm" :model="postForm" :rules="rules" class="form-container">
       <sticky :z-index="10" :class-name="'sub-navbar draft'">
-        <el-button v-loading="loading" style="margin-left: 10px;" type="success" @click="submitForm">
+        <el-button v-loading="loading" style="margin-left: 10px;" type="primary" @click="submitForm">
           提交
         </el-button>
       </sticky>
@@ -31,10 +31,7 @@
           </el-col>
         </el-row>
         <el-form-item label="状态">
-          <el-switch v-model="postForm.status"
-                     :on-value="true"
-                     :off-value="false"
-          ></el-switch>
+          <el-switch v-model="postForm.status" :on-value="true" :off-value="false"></el-switch>
         </el-form-item>
       </div>
     </el-form>
@@ -127,14 +124,15 @@ export default {
       })
     },
     submitForm() {
-      console.log(this.postForm)
+      this.loading = true
+      // console.log(this.postForm)
       this.$refs.postForm.validate(valid => {
         if (!valid) {
           this.loading = false
           return false
         }
         editUser(this.postForm).then(() => {
-          this.loading = true
+          this.loading = false
           this.$notify({
             title: 'Success',
             dangerouslyUseHTMLString: true,

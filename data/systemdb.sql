@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: 2019-12-31 01:53:11
+-- Generation Time: 2020-01-05 10:18:02
 -- 服务器版本： 5.5.53
 -- PHP Version: 7.2.1
 
@@ -72,17 +72,18 @@ CREATE TABLE `system_menu` (
 --
 
 INSERT INTO `system_menu` (`id`, `name`, `path`, `component`, `redirect`, `url`, `meta_title`, `meta_icon`, `meta_nocache`, `alwaysshow`, `meta_affix`, `type`, `hidden`, `pid`, `sort`, `status`, `level`, `ctime`) VALUES
-(1, '系统管理', '#', '#', '', '#', '系统管理', 'fafa-adjust', 0, 0, 0, 2, 0, 0, 0, 1, 0, '2019-12-02 06:14:15'),
+(1, '系统管理', '/system', '#', '', '#', '系统管理', 'fafa-adjust', 0, 0, 0, 2, 0, 0, 0, 1, 0, '2019-12-02 06:14:15'),
 (2, '用户管理', '/system/user', '/system/user/index', '', '/user', '用户管理', '#', 0, 0, 0, 2, 0, 1, 0, 1, 1, '2019-12-02 00:00:00'),
 (3, '菜单管理', '/system/menu', '/system/menu/index', '', '/menu', '菜单管理', '#', 0, 0, 0, 2, 0, 1, 0, 1, 1, '2019-12-02 00:00:00'),
 (26, '角色管理', '/system/role', '/system/role/index', '', '/roles', '角色管理', '#', 0, 1, 0, 0, 0, 1, 0, 1, 1, '2019-12-25 19:44:16'),
 (27, '添加用户', '/system/user/create', '/system/user/create/index', '', '/user/create', '添加用户', '#', 0, 1, 0, 0, 0, 2, 0, 1, 2, '2019-12-25 20:43:21'),
 (28, '用户列表', '/system/user/list', '/system/user/list/index', '', '/user/index', '用户列表', '#', 0, 0, 0, 0, 0, 2, 0, 1, 2, '2019-12-31 09:16:43'),
-(29, '用户编辑', '/system/user/edit', '/system/user/edit/index', '', '/user/update', '用户编辑', '#', 0, 1, 0, 0, 0, 2, 0, 1, 2, '2019-12-31 09:17:41'),
-(30, '内容管理', '#', '#', '', '/article', '内容管理', '#', 0, 1, 0, 0, 0, 0, 0, 1, 0, '2019-12-31 09:49:54'),
-(31, '创建文章', '/system/article/create', '/system/article/create/index', '', '/article/add', '创建文章', '#', 0, 1, 0, 0, 0, 30, 0, 1, 1, '2019-12-31 09:51:12'),
-(32, '文章编辑', '/system/article/edit', '/system/article/edit/index', '', '/article/update', '文章编辑', '#', 0, 1, 0, 0, 0, 30, 0, 1, 1, '2019-12-31 09:51:56'),
-(33, '文章列表', '/system/article/list', '/system/article/list/index', '', '/article/list', '文章列表', '#', 0, 1, 0, 0, 0, 30, 0, 1, 1, '2019-12-31 09:52:36');
+(29, '用户编辑', '/system/user/edit/:id(\\d+)', '/system/user/edit/index', '', '/user/edit', '用户编辑', '#', 0, 1, 0, 0, 1, 2, 0, 1, 2, '2019-12-31 09:17:41'),
+(30, '内容管理', '/article', '#', '', '/article', '内容管理', '#', 0, 1, 0, 0, 0, 0, 0, 1, 0, '2019-12-31 09:49:54'),
+(31, '创建文章', '/system/article/create', '/system/article/create/index', '', '/article/create', '创建文章', '#', 0, 1, 0, 0, 0, 30, 0, 1, 1, '2019-12-31 09:51:12'),
+(32, '文章编辑', '/system/article/edit', '/system/article/edit/index', '', '/article/edit', '文章编辑', '#', 0, 1, 0, 0, 0, 30, 0, 1, 1, '2019-12-31 09:51:56'),
+(33, '文章列表', '/system/article/list', '/system/article/list/index', '', '/article/list', '文章列表', '#', 0, 1, 0, 0, 0, 30, 0, 1, 1, '2019-12-31 09:52:36'),
+(34, '重置密码', '/system/user/repasswd/:id(\\d+)', '/system/user/repasswd/index', '', '/user/repasswd', '重置密码', '#', 0, 1, 0, 0, 1, 2, 0, 1, 2, '2020-01-05 10:27:22');
 
 -- --------------------------------------------------------
 
@@ -121,6 +122,14 @@ CREATE TABLE `system_role_menu` (
   `system_menu_id` int(11) NOT NULL DEFAULT '0' COMMENT '菜单主键'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色与菜单关联表';
 
+--
+-- 转存表中的数据 `system_role_menu`
+--
+
+INSERT INTO `system_role_menu` (`id`, `system_role_id`, `system_menu_id`) VALUES
+(10, 1, 1),
+(12, 3, 1);
+
 -- --------------------------------------------------------
 
 --
@@ -129,8 +138,8 @@ CREATE TABLE `system_role_menu` (
 
 CREATE TABLE `system_user` (
   `id` int(11) NOT NULL COMMENT '主键',
-  `name` varchar(50) NOT NULL COMMENT '姓名',
-  `nickname` varchar(50) NOT NULL DEFAULT '' COMMENT '用户登录名',
+  `name` varchar(50) NOT NULL COMMENT '登录名称',
+  `nickname` varchar(50) NOT NULL DEFAULT '' COMMENT '昵称',
   `password` varchar(50) NOT NULL COMMENT '密码',
   `salt` varchar(4) NOT NULL COMMENT '盐',
   `phone` varchar(11) NOT NULL DEFAULT '' COMMENT '手机号',
@@ -148,10 +157,11 @@ CREATE TABLE `system_user` (
 --
 
 INSERT INTO `system_user` (`id`, `name`, `nickname`, `password`, `salt`, `phone`, `avatar`, `introduction`, `status`, `utime`, `last_login_time`, `last_login_ip`, `ctime`) VALUES
-(1, 'admin', 'admin', '297f8efd64f95e37a7d792d926a7b5db47c58403', 'MbBQ', '11111111111', 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif', '', 1, '2019-11-01 07:02:33', '0000-00-00 00:00:00', '', '2019-10-24 20:20:34'),
-(3, 'admin', 'admin1', '297f8efd64f95e37a7d792d926a7b5db47c58403', 'MbBQ', '11111111111', 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif', '', 1, '2019-11-01 07:02:33', '0000-00-00 00:00:00', '', '2019-10-24 20:20:34'),
-(4, 'admin', 'admin12', '297f8efd64f95e37a7d792d926a7b5db47c58403', 'MbBQ', '11111111111', 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif', '', 1, '2019-11-01 07:02:33', '0000-00-00 00:00:00', '', '2019-10-24 20:20:34'),
-(5, 'admin', 'admin123', '297f8efd64f95e37a7d792d926a7b5db47c58403', 'MbBQ', '11111111111', 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif', '', 1, '2019-11-01 07:02:33', '0000-00-00 00:00:00', '', '2019-10-24 20:20:34');
+(1, 'admin', 'admin1', '297f8efd64f95e37a7d792d926a7b5db47c58403', 'MbBQ', '11111111111', 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif', '', 1, '2019-11-01 07:02:33', '0001-01-01 00:00:00', '', '2019-10-24 20:20:34'),
+(3, 'admin1', 'admin1321', '4e6424236ee08cc1c0713f0aa4dc26457aa2a75d', 'K0Xr', '11111111111', 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif', '', 1, '2020-01-05 03:49:09', '0001-01-01 00:00:00', '', '2019-10-24 20:20:34'),
+(4, 'admin2', 'admin12', '297f8efd64f95e37a7d792d926a7b5db47c58403', 'MbBQ', '11111111111', 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif', '', 1, '2020-01-05 01:44:16', '0000-00-00 00:00:00', '', '2019-10-24 20:20:34'),
+(5, 'admin3', 'admin123', '297f8efd64f95e37a7d792d926a7b5db47c58403', 'MbBQ', '11111111111', 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif', '', 1, '2020-01-05 01:44:19', '0000-00-00 00:00:00', '', '2019-10-24 20:20:34'),
+(6, '测试', '', '9596d59aa09b28e31f57a257c441fc5df1059354', 'lDtc', '', 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif', '', 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', '2020-01-04 16:50:21');
 
 -- --------------------------------------------------------
 
@@ -201,6 +211,7 @@ ALTER TABLE `system_menu`
 --
 ALTER TABLE `system_role`
   ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `name` (`name`),
   ADD KEY `TYPE` (`type`),
   ADD KEY `STATUS` (`status`);
 
@@ -216,7 +227,7 @@ ALTER TABLE `system_role_menu`
 --
 ALTER TABLE `system_user`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `NICKNAME` (`nickname`),
+  ADD UNIQUE KEY `name` (`name`),
   ADD KEY `PASSWORD` (`password`);
 
 --
@@ -240,7 +251,7 @@ ALTER TABLE `system_log`
 -- 使用表AUTO_INCREMENT `system_menu`
 --
 ALTER TABLE `system_menu`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键', AUTO_INCREMENT=34;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键', AUTO_INCREMENT=35;
 
 --
 -- 使用表AUTO_INCREMENT `system_role`
@@ -252,13 +263,13 @@ ALTER TABLE `system_role`
 -- 使用表AUTO_INCREMENT `system_role_menu`
 --
 ALTER TABLE `system_role_menu`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键';
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键', AUTO_INCREMENT=13;
 
 --
 -- 使用表AUTO_INCREMENT `system_user`
 --
 ALTER TABLE `system_user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键', AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键', AUTO_INCREMENT=7;
 
 --
 -- 使用表AUTO_INCREMENT `system_user_role`
