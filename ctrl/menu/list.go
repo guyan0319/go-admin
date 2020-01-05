@@ -41,8 +41,11 @@ func List(c *gin.Context) {
 		return
 	}
 	var menuMap = make(map[int][]models.SystemMenu, 0)
+	//role := models.SystemRole{}
+	//mrArr := role.GetRowMenu()
 	for _, value := range menuArr {
 		value.Hidden=0
+
 		menuMap[value.Pid] = append(menuMap[value.Pid], value)
 	}
 	jsonArr :=TreeMenuNew(menuMap,0)
