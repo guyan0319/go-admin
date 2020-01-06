@@ -41,14 +41,13 @@ func List(c *gin.Context) {
 		return
 	}
 	var menuMap = make(map[int][]models.SystemMenu, 0)
-	//role := models.SystemRole{}
-	//mrArr := role.GetRowMenu()
+	role := models.SystemRole{}
+	mrArr := role.GetRowMenu()
 	for _, value := range menuArr {
 		value.Hidden=0
-
 		menuMap[value.Pid] = append(menuMap[value.Pid], value)
 	}
-	jsonArr :=TreeMenuNew(menuMap,0)
+	jsonArr :=TreeMenuNew(menuMap,0,mrArr)
 	response.ShowData(c, jsonArr)
 	return
 }
@@ -270,13 +269,15 @@ func Roles(c *gin.Context) {
 		if menuArr!=nil {
 			var menuMap = make(map[int][]models.SystemMenu, 0)
 			for _, value := range menuArr {
+				value.Hidden=0
 				menuMap[value.Pid] = append(menuMap[value.Pid], value)
 			}
-			jsonStr :=TreeMenuNew(menuMap,0)
+			role := models.SystemRole{}
+			mrArr := role.GetRowMenu()
+			jsonStr :=TreeMenuNew(menuMap,0,mrArr)
 			if jsonStr!=nil {
 				r.Routes =jsonStr
 			}
-			//r.Routes = tree(menuArr)
 		}
 		roleMenu = append(roleMenu, r)
 	}
@@ -310,7 +311,9 @@ func Dashboard(c *gin.Context) {
 		for _, value := range menuArr {
 			menuMap[value.Pid] = append(menuMap[value.Pid], value)
 		}
-		jsonStr :=TreeMenuNew(menuMap,0)
+		role := models.SystemRole{}
+		mrArr := role.GetRowMenu()
+		jsonStr :=TreeMenuNew(menuMap,0,mrArr)
 		response.ShowData(c, jsonStr)
 		return
 	} else {
@@ -334,7 +337,7 @@ func Dashboard(c *gin.Context) {
 	//})
 	//return
 }
-func TreeMenuNew(menuMap map[int][]models.SystemMenu ,pid int)[]interface{}{
+func TreeMenuNew(menuMap map[int][]models.SystemMenu ,pid int,mrArr map[int][]string)[]interface{}{
 	var menuNewArr []interface{}
 	if _,ok:=menuMap[pid];ok{
 		for _, value := range menuMap[pid] {
@@ -352,8 +355,10 @@ func TreeMenuNew(menuMap map[int][]models.SystemMenu ,pid int)[]interface{}{
 			} else {
 				item["hidden"] = false
 			}
-
 			var meta = make(map[string]interface{})
+			if _, ok := mrArr[value.Id];ok {
+				meta["roles"] = mrArr[value.Id]
+			}
 			if value.MetaTitle != "" {
 				meta["title"] = value.MetaTitle
 			}
@@ -377,7 +382,7 @@ func TreeMenuNew(menuMap map[int][]models.SystemMenu ,pid int)[]interface{}{
 			item["id"] = value.Id
 			item["url"] = value.Url
 			item["name"] = value.Name
-			children := TreeMenuNew(menuMap,value.Id)
+			children := TreeMenuNew(menuMap,value.Id,mrArr)
 			if children !=nil{
 				item["children"] = children
 			}
