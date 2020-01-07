@@ -140,10 +140,6 @@ const defaultMenu = {
 }
 export default {
   filters: {
-    // nameFilter(pid,name){
-    //
-    //
-    // },
     statusFilter(status) {
       const statusMap = {
         1: 'success',
@@ -233,7 +229,7 @@ export default {
         cancelButtonText: 'Cancel',
         type: 'warning'
       })
-        .then(async () => {
+        .then(async() => {
           await deleteMenu(row.id)
           for (let index = 0; index < this.MenusList.length; index++) {
             if (this.MenusList[index].id === row.id) {

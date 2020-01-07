@@ -104,7 +104,6 @@ func Index(c *gin.Context)  {
 	data :=make(map[string]interface{})
 	data["items"]=userArr
 	data["total"]=paging.Total
-
 	response.ShowData(c, data)
 	return
 }
@@ -154,7 +153,6 @@ func Create(c *gin.Context)  {
 	if _, ok := data["phone"]; ok {
 		userModel.Phone = data["phone"].(string)
 	}
-
 	if _, ok := data["status"]; ok && data["status"].(bool) {
 		userModel.Status=1
 	}

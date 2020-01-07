@@ -241,24 +241,31 @@ func(r *SystemRole) Delete()(error) {
 		// if returned then will rollback automatically
 		return err
 	}
-	rolemenu:=SystemRoleMenu{SystemRoleId:r.Id}
-	if _, err := session.Delete(&rolemenu); err != nil {
-		fmt.Println(err)
+	//rolemenu:=SystemRoleMenu{SystemRoleId:r.Id}
+	//if _, err := session.Delete(&rolemenu); err != nil {
+	//	fmt.Println(err)
+	//	return err
+	//}
+	//roleuser:=SystemUserRole{SystemRoleId:r.Id}
+	//if _, err := session.Delete(&roleuser); err != nil {
+	//	fmt.Println(err)
+	//	return err
+	//}
+	if _, err := session.Exec("update "+systemrole+" set status=? where id=?",0,r.Id); err != nil {
 		return err
 	}
-	roleuser:=SystemUserRole{SystemRoleId:r.Id}
-	if _, err := session.Delete(&roleuser); err != nil {
-		fmt.Println(err)
-		return err
-	}
-
-	if _, err := session.Delete(r); err != nil {
-		fmt.Println(err,"ok")
-		return err
-	}
-	fmt.Println(r)
-
+	//if _, err := session.Delete(r); err != nil {
+	//	return err
+	//}
 	// add Commit() after all actions
 	return  session.Commit()
 
+}
+func(r *SystemRole) GetNameList()([]string) {
+	var list []string
+	err:=mEngine.Table(systemrole).Where("status=?",1).Cols("name").Find(&list)
+	if err!=nil {
+		panic(err)
+	}
+	return list
 }

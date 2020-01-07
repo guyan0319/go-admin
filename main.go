@@ -55,6 +55,7 @@ func main() {
 	r.POST("/role/delete/:name",role.DeleteRole)
 	r.POST("/role/update",role.UpdateRole)
 	r.POST("/role/add",role.AddRole)
+	r.GET("/role/index",role.Index)
 	r.POST("/logout", user.Logout)
 	r.POST("/login", user.Login)
 	r.POST("/reg", user.Reg)

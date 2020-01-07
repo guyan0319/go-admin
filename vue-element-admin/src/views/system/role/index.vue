@@ -20,6 +20,13 @@
           {{ scope.row.description }}
         </template>
       </el-table-column>
+      <el-table-column class-name="status-col" label="状态" width="80">
+        <template slot-scope="{row}">
+          <el-tag :type="row.status | statusFilter">
+            {{ row.status | statusNameFilter }}
+          </el-tag>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="Operations">
         <template slot-scope="scope">
           <el-button type="primary" size="small" @click="handleEdit(scope)">
@@ -31,7 +38,6 @@
         </template>
       </el-table-column>
     </el-table>
-
     <el-dialog :visible.sync="dialogVisible" :title="dialogType==='edit'?'Edit Role':'New Role'">
       <el-form :model="role" label-width="80px" label-position="left">
         <el-form-item label="Name">
@@ -44,6 +50,9 @@
             type="textarea"
             placeholder="Role Description"
           />
+        </el-form-item>
+        <el-form-item label="状态">
+          <el-switch v-model="role.status" :on-value="true" :off-value="false"></el-switch>
         </el-form-item>
         <el-form-item label="Menus">
           <el-tree ref="tree" :check-strictly="checkStrictly" :data="routesData" :props="defaultProps" show-checkbox node-key="path" class="permission-tree" />
@@ -71,9 +80,26 @@ const defaultRole = {
   id: '',
   name: '',
   description: '',
+  status: 1,
   routes: []
 }
 export default {
+  filters: {
+    statusFilter(status) {
+      const statusMap = {
+        1: 'success',
+        0: 'info'
+      }
+      return statusMap[status]
+    },
+    statusNameFilter(status) {
+      const statusMap = {
+        1: '启动',
+        0: '停止'
+      }
+      return statusMap[status]
+    }
+  },
   data() {
     return {
       role: Object.assign({}, defaultRole),
@@ -167,12 +193,14 @@ export default {
       }
       this.dialogType = 'new'
       this.dialogVisible = true
+      this.role.status = true
     },
     handleEdit(scope) {
       this.dialogType = 'edit'
       this.dialogVisible = true
       this.checkStrictly = true
       this.role = deepClone(scope.row)
+      this.role.status = (this.role.status === 1) ? true : false
       this.$nextTick(() => {
         const routes = this.generateRoutes(this.role.routes)
         this.$refs.tree.setCheckedNodes(this.generateArr(routes))
@@ -187,7 +215,7 @@ export default {
         type: 'warning'
       })
         .then(async() => {
-          await deleteRole(row.key)
+          await deleteRole({ id: row.id })
           this.rolesList.splice($index, 1)
           this.$message({
             type: 'success',
@@ -223,6 +251,7 @@ export default {
         await updateRole(this.role.id, this.role)
         for (let index = 0; index < this.rolesList.length; index++) {
           if (this.rolesList[index].id === this.role.id) {
+            this.role.status = this.role.status ? 1 : 0
             this.rolesList.splice(index, 1, Object.assign({}, this.role))
             break
           }
@@ -230,6 +259,7 @@ export default {
       } else {
         const { data } = await addRole(this.role)
         this.role.id = data.id
+        this.role.status = data.status === 1 ? 1 : 0
         this.rolesList.push(this.role)
       }
 

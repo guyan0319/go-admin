@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"go-admin/models"
+	"go-admin/modules/request"
 	"go-admin/modules/response"
 	"io/ioutil"
 	"time"
@@ -32,7 +33,11 @@ func UpdateRole(c *gin.Context)  {
 	model.Id=id
 	model.AliasName=data["name"].(string)
 	model.Description=data["description"].(string)
-	fmt.Println(data["routes"].([]interface{}))
+	if _, ok := data["status"]; ok{
+		if data["status"].(bool) {
+			model.Status=1
+		}
+	}
 	var ids []int
 	if _, ok := data["routes"]; ok {
 		ids=TreeRoutes(data["routes"].([]interface{}))
@@ -72,33 +77,42 @@ func AddRole(c *gin.Context)  {
 		response.ShowError(c, "fail")
 		return
 	}
-
 	model.AliasName=data["name"].(string)
 	model.Description=data["description"].(string)
+	if _, ok := data["status"]; ok{
+		if data["status"].(bool) {
+			model.Status=1
+		}
+	}
 	model.Ctime=time.Now()
 	err=model.AddCommit(data["routes"].([]interface{}))
 	if err!=nil {
 		response.ShowError(c, "fail")
 		return
 	}
-	datas:=map[string]int{"key":model.Id}
-	response.ShowData(c,datas)
+	fmt.Println(model)
+	response.ShowData(c,model)
 	return
 }
 func DeleteRole(c *gin.Context) {
-	name := c.Param("name") //通过Param获取
-	if name=="" {
+	data,err:=request.GetJson(c)
+	if err != nil {
 		response.ShowError(c, "fail")
 		return
 	}
-	role:=models.SystemRole{Name:name}
+	if _, ok := data["id"]; !ok {
+		response.ShowError(c, "fail")
+		return
+	}
+	id:=int(data["id"].(float64))
+	role:=models.SystemRole{Id:id}
 	has:=role.GetRow()
 	if !has {
 		response.ShowError(c, "fail")
 		return
 	}
 	roles:=models.SystemRole{Id:role.Id}
-	err:=roles.Delete()
+	err=roles.Delete()
 	if err!=nil {
 		response.ShowError(c, "fail")
 		return
@@ -108,3 +122,9 @@ func DeleteRole(c *gin.Context) {
 	return
 }
 
+func Index(c *gin.Context)  {
+	roles:=models.SystemRole{}
+	list :=roles.GetNameList()
+	response.ShowData(c,list)
+	return
+}

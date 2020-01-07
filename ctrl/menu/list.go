@@ -17,6 +17,7 @@ type Role struct {
 	Id         int        `form:"id" json:"id"`
 	Name        string        `form:"name" json:"name"`
 	Description string        `form:"description" json:"description"`
+	Status      int        `form:"status" json:"status"`
 	Routes      []interface{} `form:"routes" json:"routes"`
 }
 
@@ -264,6 +265,7 @@ func Roles(c *gin.Context) {
 		r := Role{}
 		r.Id = value.Id
 		r.Name = value.Name
+		r.Status = value.Status
 		r.Description = value.Description
 		menuArr := menu.GetRouteByRole(value.Id)
 		if menuArr!=nil {
