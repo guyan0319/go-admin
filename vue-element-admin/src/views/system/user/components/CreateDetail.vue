@@ -49,7 +49,7 @@
           <el-switch v-model="postForm.status" :on-value="true" :off-value="false"></el-switch>
         </el-form-item>
         <el-form-item label="授权">
-          <el-checkbox :indeterminate="postForm.isIndeterminate" v-model="postForm.checkAll" @change="handleCheckAllChange">全选</el-checkbox>
+          <el-checkbox :indeterminate="isIndeterminate" v-model="postForm.checkAll" @change="handleCheckAllChange">全选</el-checkbox>
           <div style="margin: 15px 0;"></div>
           <el-checkbox-group v-model="postForm.checkedRoles" @change="handlecheckedRolesChange">
             <el-checkbox v-for="role in roleOptions" :label="role" :key="role">{{role}}</el-checkbox>
@@ -73,8 +73,7 @@ const defaultForm = {
   id: undefined,
   status: true,
   checkAll: false,
-  checkedRoles: [],
-  isIndeterminate: true
+  checkedRoles: []
 }
 export default {
   name: 'UserDetail',
@@ -111,7 +110,7 @@ export default {
       loading: false,
       userListOptions: [],
       roleOptions: [],
-      checkedCount:0,
+      isIndeterminate: true,
       rules: {
         name: [{ validator: validateRequire }],
         nickname: [{ validator: validateRequire }],
@@ -137,19 +136,20 @@ export default {
     fetchRoleData() {
       getAllRole().then(response => {
         this.roleOptions = response.data
-        console.log(this.roleOptions)
+        // console.log(this.roleOptions)
       }).catch(err => {
         console.log(err)
       })
     },
     handleCheckAllChange(val) {
       this.postForm.checkedRoles = val ? this.roleOptions : []
-      this.postForm.isIndeterminate = false
+      this.isIndeterminate = false
     },
     handlecheckedRolesChange(value) {
       this.checkedCount = value.length
       this.postForm.checkAll = (this.checkedCount === this.roleOptions.length)
-      this.postForm.isIndeterminate = this.checkedCount > 0 && this.checkedCount < this.roleOptions.length
+      this.isIndeterminate = this.checkedCount > 0 && this.checkedCount < this.roleOptions.length
+      //
     },
     submitForm() {
       this.loading = true

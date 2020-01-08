@@ -47,15 +47,97 @@ func (u *SystemUser) GetAllPage(paging *common.Paging)([]SystemUser,error) {
 	return systemusers,err
 }
 
-func (u *SystemUser) Add() (int64 ,error){
-	return  mEngine.Insert(u)
+func (u *SystemUser) Add(roles []interface{}) (int ,error){
+	session := mEngine.NewSession()
+	defer session.Close()
+	// add Begin() before any action
+	if err := session.Begin(); err != nil {
+		// if returned then will rodefer session.Close()llback automatically
+		return 0,err
+	}
+	//var uid int64
+	_,err:=session.Insert(u)
+	if err!=nil {
+		return 0,err
+	}
+	//如果没有设置权限
+	if len(roles)<1 {
+		return u.Id,session.Commit()
+	}
+	for _,k:=range roles{
+		roleModel:=SystemRole{Name:k.(string)}
+		has:=roleModel.GetRow()
+		if !has {
+			continue
+		}
+		if	roleModel.Status==0{
+			continue
+		}
+		userroleModel:=SystemUserRole{SystemRoleId:roleModel.Id,SystemUserId:u.Id}
+		has,err:=session.Get(&userroleModel)
+		if err!=nil {
+			return 0,err
+		}
+		if has {
+			continue
+		}
+		_,err=session.Insert(&userroleModel)
+		if err!=nil {
+			return 0,err
+		}
+	}
+	return u.Id,session.Commit()
 }
-func (u *SystemUser) Update() error {
+func (u *SystemUser) Update(roles []interface{}) error {
+	session := mEngine.NewSession()
+	defer session.Close()
+	// add Begin() before any action
+	if err := session.Begin(); err != nil {
+		// if returned then will rodefer session.Close()llback automatically
+		return err
+	}
+	if _, err := mEngine.Where("id = ?", u.Id).Update(u); err != nil {
+		return err
+	}
+	roleModel:=SystemUserRole{}
+	if _, err := mEngine.Where("system_user_id=?",u.Id).Delete(&roleModel); err != nil {
+		return err
+	}
+	//如果没有设置权限
+	if len(roles)<1 {
+		return session.Commit()
+	}
+	for _,k:=range roles{
+		roleModel:=SystemRole{Name:k.(string)}
+		has:=roleModel.GetRow()
+		if !has {
+			continue
+		}
+		if	roleModel.Status==0{
+			continue
+		}
+		userroleModel:=SystemUserRole{SystemRoleId:roleModel.Id,SystemUserId:u.Id}
+		has,err:=session.Get(&userroleModel)
+		if err!=nil {
+			return err
+		}
+		if has {
+			continue
+		}
+		_,err=session.Insert(&userroleModel)
+		if err!=nil {
+			return err
+		}
+	}
+	return session.Commit()
+}
+func (u *SystemUser) UpdatePasswd() error {
 	if _, err := mEngine.Where("id = ?", u.Id).Update(u); err != nil {
 		return err
 	}
 	return nil
 }
+
 func (u *SystemUser) Delete() error {
 	if _, err := mEngine.Exec("update "+systemuser+" set status=? where id=?",0,u.Id); err != nil {
 		return err

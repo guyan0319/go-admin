@@ -33,12 +33,12 @@ func (r *SystemRole) GetRowByName() bool {
 	}
 	return false
 }
+
 func (r *SystemRole) Update(data []int) error {
 	session := mEngine.NewSession()
-	defer session.Close()
+
 	// add Begin() before any action
 	if err := session.Begin(); err != nil {
-		// if returned then will rollback automatically
 		return err
 	}
 	if _, err := session.Where("id = ?", r.Id).Update(r); err != nil {

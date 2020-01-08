@@ -23,3 +23,19 @@ func(u *SystemUserRole) GetRowByUid() ([]string,error) {
 		Find(&role)
 	return role,err
 }
+func(u *SystemUserRole)Add()(int64 ,error){
+	session := mEngine.NewSession()
+
+	// add Begin() before any action
+	if err := session.Begin(); err != nil {
+		return 0,err
+	}
+	//var uid int64
+	uid,err:=session.Insert(u)
+	if	err!=nil{
+		return 0,err
+	}
+	session.Commit()
+	return uid,err
+}
+

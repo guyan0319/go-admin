@@ -33,6 +33,13 @@
         <el-form-item label="状态">
           <el-switch v-model="postForm.status" :on-value="true" :off-value="false"></el-switch>
         </el-form-item>
+        <el-form-item label="授权">
+          <el-checkbox :indeterminate="isIndeterminate" v-model="postForm.checkAll" @change="handleCheckAllChange">全选</el-checkbox>
+          <div style="margin: 15px 0;"></div>
+          <el-checkbox-group v-model="postForm.checkedRoles" @change="handlecheckedRolesChange">
+            <el-checkbox v-for="role in roleOptions" :label="role" :key="role">{{role}}</el-checkbox>
+          </el-checkbox-group>
+        </el-form-item>
       </div>
     </el-form>
   </div>
@@ -41,13 +48,15 @@
 <script>
 import Sticky from '@/components/Sticky' // 粘性header组件
 import { fetchUser, editUser } from '@/api/user'
+import { getAllRole } from '@/api/role'
 
 const defaultForm = {
   name: '', // 姓名
   nickname: '', // 昵称
   phone: '', // 手机号
   id: undefined,
-  status: false
+  status: false,
+  checkedRoles: []
 }
 
 export default {
@@ -104,6 +113,7 @@ export default {
     }
   },
   created() {
+    this.fetchRoleData()
     if (this.isEdit) {
       const id = this.$route.params && this.$route.params.id
       this.fetchData(id)
@@ -115,6 +125,14 @@ export default {
     this.tempRoute = Object.assign({}, this.$route)
   },
   methods: {
+    fetchRoleData() {
+      getAllRole().then(response => {
+        this.roleOptions = response.data
+        // console.log(this.roleOptions)
+      }).catch(err => {
+        console.log(err)
+      })
+    },
     fetchData(id) {
       fetchUser(id).then(response => {
         this.postForm = response.data

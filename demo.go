@@ -4,8 +4,8 @@ import (
 	"fmt"
 	_ "go-admin/modules/memory" //这里修改成你存放menory.go相应的目录
 	"go-admin/modules/session"  //这里修改成你存放session.go相应的目录
-	"log"
 	"net/http"
+	"unsafe"
 )
 
 var globalSessions *session.Manager
@@ -51,8 +51,13 @@ func loginOut(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	http.HandleFunc("/", sayHelloHandler) //	设置访问路由
-	http.HandleFunc("/login", login)
-	http.HandleFunc("/loginout", loginOut) //销毁
-	log.Fatal(http.ListenAndServe(":8010", nil))
+	//http.HandleFunc("/", sayHelloHandler) //	设置访问路由
+	//http.HandleFunc("/login", login)
+	//http.HandleFunc("/loginout", loginOut) //销毁
+	//log.Fatal(http.ListenAndServe(":8010", nil))
+	// 设置一个 int64 的数据
+	int64_num := int64(6)
+	// 将 int64 转化为 int
+	int_num := *(*int)(unsafe.Pointer(&int64_num))
+	fmt.Println(int_num,int(int64_num))
 }

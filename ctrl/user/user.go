@@ -31,6 +31,10 @@ type Userinfo struct {
 	Avatar string `json:"avatar"`
 	Name string `json:"name"`
 }
+type UserDetail struct {
+	models.SystemUser
+	CheckedRoles []string `json:"checkedRoles"`
+}
 func Info(c *gin.Context){
 	session := sessions.Default(c)
 	v := session.Get(conf.Cfg.Token)
@@ -64,14 +68,20 @@ func Detail(c *gin.Context){
 	user := models.SystemUser{}
 	user.Id,_=strconv.Atoi(id)
 	has=user.GetRow()
-
 	if !has {
 		response.ShowError(c,"user_error")
 		return
 	}
-	user.Password=""
-	user.Salt=""
-	response.ShowData(c, user)
+	userrole :=models.SystemUserRole{SystemUserId:user.Id}
+	role,_ :=userrole.GetRowByUid()
+
+	detail:=UserDetail{CheckedRoles:role}
+	detail.Id=user.Id
+	detail.Name=user.Name
+	detail.Nickname=user.Nickname
+	detail.Phone=user.Phone
+	detail.Status=user.Status
+	response.ShowData(c, detail)
 	return
 }
 func Delete(c *gin.Context){
@@ -113,6 +123,7 @@ func Create(c *gin.Context)  {
 		response.ShowError(c, "fail")
 		return
 	}
+
 	if _, ok := data["name"]; !ok {
 		response.ShowError(c, "fail")
 		return
@@ -133,7 +144,6 @@ func Create(c *gin.Context)  {
 		response.ShowError(c, "fail")
 		return
 	}
-
 	userModel := models.SystemUser{};
 	userModel.Name=data["name"].(string)
 	has:=userModel.GetRow()
@@ -158,14 +168,18 @@ func Create(c *gin.Context)  {
 	}
 	userModel.Avatar="https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif"
 	userModel.Ctime=time.Now()
-	_,err=userModel.Add()
+	if _, ok := data["checkedRoles"]; !ok {
+		response.ShowError(c, "fail")
+		return
+	}
+	roles:=data["checkedRoles"].([]interface{})
+	_,err=userModel.Add(roles)
 	if err!=nil {
 		response.ShowError(c,"fail")
 		return
 	}
 	response.ShowData(c,userModel)
 	return
-
 }
 func Edit(c *gin.Context)  {
 	data,err:=request.GetJson(c)
@@ -201,7 +215,12 @@ func Edit(c *gin.Context)  {
 	if _, ok := data["phone"]; ok {
 		userModel.Phone = data["phone"].(string)
 	}
-	err=userModel.Update()
+	if _, ok := data["checkedRoles"]; !ok {
+		response.ShowError(c, "fail")
+		return
+	}
+	roles:=data["checkedRoles"].([]interface{})
+	err=userModel.Update(roles)
 	if err!=nil {
 		response.ShowError(c,"fail")
 		return
@@ -241,7 +260,7 @@ func Repasswd(c *gin.Context)  {
 	}
 	userModel.Salt =common.GetRandomBoth(4)
 	userModel.Password = common.Sha1En(userModel.Password+userModel.Salt)
-	err=userModel.Update()
+	err=userModel.UpdatePasswd()
 	if err!=nil {
 		response.ShowError(c,"fail")
 		return
