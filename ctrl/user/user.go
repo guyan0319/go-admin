@@ -75,7 +75,7 @@ func Detail(c *gin.Context){
 	userrole :=models.SystemUserRole{SystemUserId:user.Id}
 	role,_ :=userrole.GetRowByUid()
 
-	detail:=UserDetail{CheckedRoles:role}
+	detail:=UserDetail{}
 	detail.CheckedRoles=role
 	detail.Id=user.Id
 	detail.Name=user.Name

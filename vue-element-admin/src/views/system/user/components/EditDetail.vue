@@ -34,12 +34,13 @@
           <el-switch v-model="postForm.status" :on-value="true" :off-value="false"></el-switch>
         </el-form-item>
         <el-form-item label="授权">
-          <el-checkbox :indeterminate="isIndeterminate" v-model="postForm.checkAll" @change="handleCheckAllChange">全选</el-checkbox>
+          <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
           <div style="margin: 15px 0;"></div>
           <el-checkbox-group v-model="postForm.checkedRoles" @change="handlecheckedRolesChange">
             <el-checkbox v-for="role in roleOptions" :label="role" :key="role">{{role}}</el-checkbox>
           </el-checkbox-group>
         </el-form-item>
+
       </div>
     </el-form>
   </div>
@@ -85,9 +86,12 @@ export default {
       postForm: Object.assign({}, defaultForm),
       loading: false,
       userListOptions: [],
+      isIndeterminate: true,
+      roleOptions: [],
+      checkAll: false,
+      // checkedRoles: [],
       rules: {
-        name: [{ validator: validateRequire }],
-        nickname: [{ validator: validateRequire }],
+        nickname: [{ validator: validateRequire }]
       },
       tempRoute: {}
     }
@@ -133,10 +137,22 @@ export default {
         console.log(err)
       })
     },
+    handleCheckAllChange(val) {
+      this.postForm.checkedRoles = val ? this.roleOptions : []
+      this.isIndeterminate = false
+    },
+    handlecheckedRolesChange(value) {
+      this.checkedCount = value.length ? value.length : 0
+      console.log(this.checkedCount)
+      console.log(this.roleOptions.length)
+      this.checkAll = this.checkedCount === this.roleOptions.length
+      this.isIndeterminate = this.checkedCount > 0 && this.checkedCount < this.roleOptions.length
+    },
     fetchData(id) {
       fetchUser(id).then(response => {
         this.postForm = response.data
         this.postForm.status = response.data.status === 1 ? true : false
+        this.postForm.checkedRoles = response.data.CheckedRoles ? response.data.CheckedRoles : []
       }).catch(err => {
         console.log(err)
       })

@@ -74,7 +74,7 @@ const defaultForm = {
   status: true,
   checkAll: false,
   checkedRoles: [],
-  isIndeterminate: true,
+  isIndeterminate: true
 }
 export default {
   name: 'UserDetail',
@@ -148,7 +148,7 @@ export default {
     },
     handlecheckedRolesChange(value) {
       this.checkedCount = value.length
-      this.postForm.checkAll = (this.checkedCount === this.roleOptions.length)
+      this.postForm.checkAll = this.checkedCount === this.roleOptions.length
       this.postForm.isIndeterminate = this.checkedCount > 0 && this.checkedCount < this.roleOptions.length
       //
     },
