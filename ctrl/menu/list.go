@@ -107,7 +107,7 @@ func Dashboard(c *gin.Context) {
 			return
 		}
 	} else {
-		menuArr = menu.GetRouteByUid(uid)
+		menuArr,_ = menu.GetRowByUid(uid)
 	}
 	var menuMap = make(map[int][]models.SystemMenu, 0)
 	for _, value := range menuArr {

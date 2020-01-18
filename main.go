@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/redis"
@@ -68,7 +69,7 @@ func main() {
 }
 func Load() {
 	c := conf.Config{}
-	c.Routes=[]string{"/login"}
+	c.Routes=[]string{"/login",""}
 	conf.Set(c)
 
 }
@@ -86,6 +87,7 @@ func Auth() gin.HandlerFunc{
 		if err != nil {
 			panic(err)
 		}
+		fmt.Println(u.Path)
 		if common.InArrayString(u.Path,&conf.Cfg.Routes) {
 			c.Next()
 			return

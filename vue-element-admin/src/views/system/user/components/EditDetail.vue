@@ -132,7 +132,6 @@ export default {
     fetchRoleData() {
       getAllRole().then(response => {
         this.roleOptions = response.data
-        // console.log(this.roleOptions)
       }).catch(err => {
         console.log(err)
       })
@@ -143,8 +142,6 @@ export default {
     },
     handlecheckedRolesChange(value) {
       this.checkedCount = value.length ? value.length : 0
-      console.log(this.checkedCount)
-      console.log(this.roleOptions.length)
       this.checkAll = this.checkedCount === this.roleOptions.length
       this.isIndeterminate = this.checkedCount > 0 && this.checkedCount < this.roleOptions.length
     },
@@ -152,7 +149,9 @@ export default {
       fetchUser(id).then(response => {
         this.postForm = response.data
         this.postForm.status = response.data.status === 1 ? true : false
-        this.postForm.checkedRoles = response.data.CheckedRoles ? response.data.CheckedRoles : []
+        if (response.data.CheckedRoles === null) {
+          this.postForm.checkedRoles = []
+        }
       }).catch(err => {
         console.log(err)
       })

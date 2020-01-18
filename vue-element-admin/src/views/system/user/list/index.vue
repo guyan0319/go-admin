@@ -16,12 +16,11 @@
           <span>{{ scope.row.nickname }}</span>
         </template>
       </el-table-column>
-            <el-table-column width="120px" align="center" label="phone">
+      <el-table-column width="120px" align="center" label="phone">
         <template slot-scope="scope">
           <span>{{ scope.row.phone }}</span>
         </template>
       </el-table-column>
-
       <el-table-column class-name="status-col" label="状态" width="110">
         <template slot-scope="{row}">
           <el-tag :type="row.status | statusFilter">
@@ -34,25 +33,24 @@
           <span>{{ scope.row.ctime | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="操作" width="320">
+      <el-table-column align="center" label="操作" >
         <template slot-scope="scope">
           <router-link :to="'/system/user/edit/'+scope.row.id">
             <el-button type="primary" size="small" icon="el-icon-edit">
-              Edit
+              编辑
             </el-button>
           </router-link>
-            <router-link :to="'/system/user/repasswd/'+scope.row.id">
+          <router-link :to="'/system/user/repasswd/'+scope.row.id">
             <el-button type="primary" size="small" icon="el-icon-setting">
               重置密码
             </el-button>
           </router-link>
-            <el-button type="danger" size="small" icon="el-icon-delete" @click="handleDelete(scope)">
+          <el-button type="danger" size="small" icon="el-icon-delete" @click="handleDelete(scope)">
               删除
-            </el-button>
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
-
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
   </div>
 </template>

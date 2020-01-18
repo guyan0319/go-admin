@@ -8,6 +8,7 @@ type Config struct {
 	Language string
 	Token string
 	Super string
+	RedisPre string
 	Routes []string
 }
 var (
@@ -18,6 +19,7 @@ var (
 
 func  Set(cfg Config) {
 	mutex.Lock()
+	Cfg.RedisPre=setDefault(cfg.RedisPre,"","go.admin.redis")
 	Cfg.Language=setDefault(cfg.Language,"","cn")
 	Cfg.Token=setDefault(cfg.Token,"","token")
 	Cfg.Super=setDefault(cfg.Super,"","admin")//超级账户

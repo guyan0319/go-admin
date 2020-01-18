@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: 2020-01-05 10:18:02
+-- Generation Time: 2020-01-18 01:29:56
 -- 服务器版本： 5.5.53
 -- PHP Version: 7.2.1
 
@@ -108,7 +108,7 @@ CREATE TABLE `system_role` (
 INSERT INTO `system_role` (`id`, `name`, `alias_name`, `description`, `status`, `type`, `ctime`) VALUES
 (1, 'admin', 'admin', '超级管理员具有所有权限', 1, 1, '2019-11-07 16:22:29'),
 (2, 'editor', 'editor', '运营者', 1, 1, '2019-11-07 16:22:29'),
-(3, 'normal', 'normal', '普通管理员', 0, 0, '0001-01-01 00:00:00');
+(3, 'normal', 'normal', '普通管理员', 1, 0, '0001-01-01 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -127,8 +127,18 @@ CREATE TABLE `system_role_menu` (
 --
 
 INSERT INTO `system_role_menu` (`id`, `system_role_id`, `system_menu_id`) VALUES
-(10, 1, 1),
-(12, 3, 1);
+(40, 1, 1),
+(41, 1, 2),
+(46, 1, 3),
+(42, 1, 27),
+(43, 1, 28),
+(44, 1, 29),
+(45, 1, 34),
+(48, 3, 1),
+(49, 3, 30),
+(50, 3, 31),
+(51, 3, 32),
+(52, 3, 33);
 
 -- --------------------------------------------------------
 
@@ -157,11 +167,7 @@ CREATE TABLE `system_user` (
 --
 
 INSERT INTO `system_user` (`id`, `name`, `nickname`, `password`, `salt`, `phone`, `avatar`, `introduction`, `status`, `utime`, `last_login_time`, `last_login_ip`, `ctime`) VALUES
-(1, 'admin', 'admin1', '297f8efd64f95e37a7d792d926a7b5db47c58403', 'MbBQ', '11111111111', 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif', '', 1, '2019-11-01 07:02:33', '0001-01-01 00:00:00', '', '2019-10-24 20:20:34'),
-(3, 'admin1', 'admin1321', '4e6424236ee08cc1c0713f0aa4dc26457aa2a75d', 'K0Xr', '11111111111', 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif', '', 1, '2020-01-05 03:49:09', '0001-01-01 00:00:00', '', '2019-10-24 20:20:34'),
-(4, 'admin2', 'admin12', '297f8efd64f95e37a7d792d926a7b5db47c58403', 'MbBQ', '11111111111', 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif', '', 1, '2020-01-05 01:44:16', '0000-00-00 00:00:00', '', '2019-10-24 20:20:34'),
-(5, 'admin3', 'admin123', '297f8efd64f95e37a7d792d926a7b5db47c58403', 'MbBQ', '11111111111', 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif', '', 1, '2020-01-05 01:44:19', '0000-00-00 00:00:00', '', '2019-10-24 20:20:34'),
-(6, '测试', '', '9596d59aa09b28e31f57a257c441fc5df1059354', 'lDtc', '', 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif', '', 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00', '', '2020-01-04 16:50:21');
+(1, 'admin', 'admin1', '297f8efd64f95e37a7d792d926a7b5db47c58403', 'MbBQ', '11111111111', 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif', '', 1, '2019-11-01 07:02:33', '0001-01-01 00:00:00', '', '2019-10-24 20:20:34');
 
 -- --------------------------------------------------------
 
@@ -180,9 +186,9 @@ CREATE TABLE `system_user_role` (
 --
 
 INSERT INTO `system_user_role` (`id`, `system_user_id`, `system_role_id`) VALUES
-(1, 1, 1),
-(2, 1, 2),
-(3, 1, 3);
+(13, 1, 1),
+(14, 1, 2),
+(15, 1, 3);
 
 --
 -- Indexes for dumped tables
@@ -235,7 +241,7 @@ ALTER TABLE `system_user`
 --
 ALTER TABLE `system_user_role`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `system_user_id` (`system_user_id`,`system_role_id`);
+  ADD UNIQUE KEY `system_user_id` (`system_user_id`,`system_role_id`) USING BTREE;
 
 --
 -- 在导出的表使用AUTO_INCREMENT
@@ -263,19 +269,19 @@ ALTER TABLE `system_role`
 -- 使用表AUTO_INCREMENT `system_role_menu`
 --
 ALTER TABLE `system_role_menu`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键', AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键', AUTO_INCREMENT=53;
 
 --
 -- 使用表AUTO_INCREMENT `system_user`
 --
 ALTER TABLE `system_user`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键', AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键', AUTO_INCREMENT=15;
 
 --
 -- 使用表AUTO_INCREMENT `system_user_role`
 --
 ALTER TABLE `system_user_role`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键', AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键', AUTO_INCREMENT=16;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
