@@ -1,6 +1,11 @@
 package models
 
 import (
+	"encoding/json"
+	"github.com/garyburd/redigo/redis"
+	"go-admin/conf"
+	"go-admin/modules/cache"
+	"strconv"
 	"time"
 )
 
@@ -24,7 +29,10 @@ type SystemMenu struct {
 	Level       int       `json:"level" xorm:"not null default 0 comment('层级') TINYINT(4)"`
 	Ctime       time.Time `json:"ctime" xorm:"not null default '0000-00-00 00:00:00' comment('时间') DATETIME"`
 }
-
+type SystemMenuRoute struct {
+	Id          int       `json:"id" xorm:"not null pk autoincr comment('主键') INT(11)"`
+	Url         string    `json:"url" xorm:"not null default '' comment('url') VARCHAR(200)"`
+}
 var systemmenu = "system_menu"
 func (m *SystemMenu) GetRow() bool {
 	has, err := mEngine.Get(m)
@@ -57,16 +65,37 @@ func (m *SystemMenu) GetRowByUid(uid interface{})([]SystemMenu,error){
 		Find(&menu)
 	return menu,err
 }
-func (m *SystemMenu) GetRouteByUid(uid interface{})([]SystemMenu){
-	var menu []SystemMenu
-	_ := mEngine.Table(systemmenu).Distinct(systemmenu+".name").
+func (m *SystemMenu) GetRouteByUid(uid interface{})(map[string]int,error){
+	strUid:=strconv.Itoa(uid.(int))
+	rc:=cache.RedisClient.Get()
+	//// 用完后将连接放回连接池
+	defer rc.Close()
+	var menuMap map[string]int
+	menukey:=conf.Cfg.RedisPre+"menu."+strUid
+	ma ,_:=redis.String(rc.Do("GET",menukey))
+	if ma!="" {
+		err := json.Unmarshal([]byte(ma), &menuMap)
+		return menuMap,err
+	}
+	var menu []SystemMenuRoute
+	err := mEngine.Table(systemmenu).Distinct(systemmenu+".url",systemmenu+".id").
 		Join("INNER", systemrolemenu, systemrolemenu+".system_menu_id= "+systemmenu+".id").
 		Join("INNER", systemuserrole, systemrolemenu+".system_role_id= "+systemuserrole+".system_role_id").
 		Where(systemmenu+".status = ?", 1).
 		Where(systemuserrole+".system_user_id = ?", uid).
 		Find(&menu)
-
-	return menu
+	if err!=nil {
+		return menuMap,err
+	}
+	menuMap = make(map[string]int,0)
+	for _,v:=range menu{
+		if _,ok:=menuMap[v.Url] ;!ok{
+			menuMap[v.Url] = v.Id
+		}
+	}
+	jsonStr,_:=json.Marshal(menuMap)
+	_, err=rc.Do("SET",menukey,jsonStr)
+	return menuMap,err
 }
 func (m *SystemMenu) GetRouteByRole(id interface{})([]SystemMenu){
 	var constant []SystemMenu

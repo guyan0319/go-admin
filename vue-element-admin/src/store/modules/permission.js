@@ -84,13 +84,15 @@ const actions = {
         } else {
           data = response.data
           Object.assign(loadMenuData, data)
-          generaMenu(asyncRoutes, loadMenuData)
+          const tempAsyncRoutes = Object.assign([], asyncRoutes)
+          // tempAsyncRoutes = asyncRoutes
+          generaMenu(tempAsyncRoutes, loadMenuData)
           let accessedRoutes
           if (roles.includes('admin')) {
             // alert(JSON.stringify(asyncRoutes))
-            accessedRoutes = asyncRoutes || []
+            accessedRoutes = tempAsyncRoutes || []
           } else {
-            accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
+            accessedRoutes = filterAsyncRoutes(tempAsyncRoutes, roles)
           }
           commit('SET_ROUTES', accessedRoutes)
           resolve(accessedRoutes)

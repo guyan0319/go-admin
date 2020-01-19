@@ -2,6 +2,7 @@ package menu
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"go-admin/conf"
@@ -108,6 +109,7 @@ func Dashboard(c *gin.Context) {
 		}
 	} else {
 		menuArr,_ = menu.GetRowByUid(uid)
+		fmt.Println(menuArr)
 	}
 	var menuMap = make(map[int][]models.SystemMenu, 0)
 	for _, value := range menuArr {

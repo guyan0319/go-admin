@@ -9,4 +9,5 @@ var cn = map[string]string{
 	"user_error":    "用户不存在",
 	"name_exists":    "用户名已存在",
 	"role_error":    "角色不存在",
+	"unauthorized":    "账户未授权",
 }

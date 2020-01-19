@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"go-admin/conf"
 	"go-admin/models"
+	"go-admin/modules/cache"
 	"go-admin/modules/response"
 	"go-admin/public/common"
 	"strconv"
@@ -65,6 +66,17 @@ func Login(c *gin.Context) {
 }
 func Logout (c *gin.Context){
 	session := sessions.Default(c)
+	v := session.Get(conf.Cfg.Token)
+	id := session.Get(v)
+	strId:=strconv.Itoa(id.(int))
+	menukey:=conf.Cfg.RedisPre+"menu."+strId
+	rc:=cache.RedisClient.Get()
+	////// 用完后将连接放回连接池
+	defer rc.Close()
+	_, err:= rc.Do("DEL", menukey)
+	if err != nil {
+		fmt.Println("redis delelte failed:", err)
+	}
 	session.Clear()
 	//清除session
 	_=session.Save()

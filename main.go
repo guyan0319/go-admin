@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/redis"
@@ -69,7 +68,7 @@ func main() {
 }
 func Load() {
 	c := conf.Config{}
-	c.Routes=[]string{"/login",""}
+	c.Routes=[]string{"/login","/role/index","/info","/dashboard","/logout"}
 	conf.Set(c)
 
 }
@@ -87,45 +86,42 @@ func Auth() gin.HandlerFunc{
 		if err != nil {
 			panic(err)
 		}
-		fmt.Println(u.Path)
 		if common.InArrayString(u.Path,&conf.Cfg.Routes) {
-			c.Next()
+			//c.Next()
 			return
 		}
 		session := sessions.Default(c)
 		v := session.Get(conf.Cfg.Token)
 		if v==nil {
+			c.Abort()
 			response.ShowError(c,"nologin")
 			return
 		}
 		uid:=session.Get(v)
-		user := models.SystemUser{Id:uid.(int),Status:1}
-		has:=user.GetRow()
+		users := models.SystemUser{Id:uid.(int),Status:1}
+		has:=users.GetRow()
 		if !has {
+			c.Abort()
 			response.ShowError(c,"user_error")
 			return
 		}
-		constant:=models.SystemMenu{Type:1}
-		constant.GetRow()
-		spcial:=models.SystemMenu{Type:3}
-		spcial.GetRow()
-
 		//特殊账号
-		if user.Name==conf.Cfg.Super {
-
-
-
+		if users.Name==conf.Cfg.Super {
+			c.Next()
+			return
 		}
-
-
-		//t := time.Now()
-		//// Set example variable
-		//c.Set("example", "12345")
-		// before request
-		//c.Next()
-		//// after request
-		//latency := time.Since(t)
-		//log.Print(latency) //时间  0s
+		menuModel:=models.SystemMenu{}
+		menuMap,err:=menuModel.GetRouteByUid(uid)
+		if err!=nil {
+			c.Abort()
+			response.ShowError(c,"unauthorized")
+			return
+		}
+		if _,ok:=menuMap[u.Path] ;!ok{
+			c.Abort()
+			response.ShowError(c,"unauthorized")
+			return
+		}
 		// access the status we are sending
 		status := c.Writer.Status()
 		log.Println(status) //状态 200
