@@ -89,6 +89,12 @@ npm run dev
 
 6、运行结果
 
+登录测试账户信息
+
+账户：admin
+
+密码：111111
+
 ![](https://github.com/guyan0319/golang_development_notes/blob/master/images/10.0.png?raw=true)
 
 ![](https://github.com/guyan0319/golang_development_notes/blob/master/images/10.1.png?raw=true)
