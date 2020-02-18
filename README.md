@@ -21,9 +21,13 @@ golang语言：go1.13.3+ 、
 
 ### 项目地址
 
+github:
+
  <https://github.com/guyan0319/go-admin>
 
-### 安装步骤
+码云（国内）:
+
+<https://gitee.com/jason0319/go-admin>
 
 1、clone项目源代码
 
