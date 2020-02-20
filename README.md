@@ -29,6 +29,8 @@ github:
 
 <https://gitee.com/jason0319/go-admin>
 
+**注意**：由于vue-element-admin项目里node_modules文件太大，这里移除了。
+
 1、clone项目源代码
 
 ```
