@@ -101,18 +101,18 @@ npm run dev
 
 密码：111111
 
-![](https://github.com/guyan0319/golang_development_notes/blob/master/images/10.0.png?raw=true)
+![](https://gitee.com/jason0319/golang_development_notes/raw/master/images/10.0.png)
 
-![](https://github.com/guyan0319/golang_development_notes/blob/master/images/10.1.png?raw=true)
+![](https://gitee.com/jason0319/golang_development_notes/raw/master/images/10.1.png?raw=true)
 
-![](https://github.com/guyan0319/golang_development_notes/blob/master/images/10.2.png?raw=true)
+![](https://gitee.com/jason0319/golang_development_notes/raw/master/images/10.2.png?raw=true)
 
 
-![](https://github.com/guyan0319/golang_development_notes/blob/master/images/10.3.png?raw=true)
+![](https://gitee.com/jason0319/golang_development_notes/raw/master/images/10.3.png?raw=true)
 
-![](https://github.com/guyan0319/golang_development_notes/blob/master/images/10.4.png?raw=true)
+![](https://gitee.com/jason0319/golang_development_notes/raw/master/images/10.4.png?raw=true)
 
-![](https://github.com/guyan0319/golang_development_notes/blob/master/images/10.5.png?raw=true)
+![](https://gitee.com/jason0319/golang_development_notes/raw/master/images/10.5.png?raw=true)
 
 ### 小结：
 
