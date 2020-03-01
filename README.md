@@ -6,7 +6,7 @@ go-admin是一个go语言开发的后台管理系统，该系统以角色为基�
 
 ### 设计原则
 
-1. 采用比较流行开源框架[gin](https://github.com/gin-gonic/gin)、[vue-element-admin](https://github.com/PanJiaChen/vue-element-admin)，这些项目维护和更新比较好。
+1. 采用比较流行开源框架[gin](https://github.com/gin-gonic/gin)、[vue-element-admin](https://github.com/PanJiaChen/vue-element-admin)(这里下载的多语言版[i18n](https://github.com/PanJiaChen/vue-element-admin/tree/i18n)，不是master分支)，这些项目维护和更新比较好。
 2. 尽量少修改vue-element-admin框架的代码，便于以后升级。
 3. 前后端分离，前后端可以独立开发互不影响。
 4. 服务端控制前端菜单显示以及相应权限。
