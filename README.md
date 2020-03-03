@@ -31,6 +31,12 @@ github:
 
 **注意**：由于vue-element-admin项目里node_modules文件太大，这里移除了。
 
+本项目相关源代码分析相关文章如下：
+
+[11.1.1 vue-element-admin 后台动态加载菜单](https://github.com/guyan0319/golang_development_notes/blob/master/zh/11.1.1.md)
+
+### 快速开始
+
 1、clone项目源代码
 
 ```
