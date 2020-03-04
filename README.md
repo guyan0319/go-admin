@@ -2,7 +2,7 @@
 
 # go-admin
 
-go-admin是一个go语言开发的后台管理系统，该系统以角色为基础的权限管理设计（RBAC），完成了系统管理模块功能的开发（其他示例模块后续加上），采用前后端分离实现方式，服务端基于go开源gin框架，前端开源框架[vue-element-admin](https://github.com/PanJiaChen/vue-element-admin)。
+go-admin是一个go语言开发的后台管理系统，该系统以角色为基础的权限管理设计（RBAC），完成了系统管理模块功能的开发（其他示例模块后续加上），采用前后端分离实现方式，服务端基于go开源gin框架，前端开源框架[vue-element-admin](https://github.com/PanJiaChen/vue-element-admin)。使用Swagger 2.0自动生成API文档。
 
 ### 设计原则
 
@@ -17,7 +17,7 @@ golang语言：go1.13.3+ 、
 
 数据库：mysql5.7 
 
-缓存：redis
+缓存：redis3.0
 
 ### 项目地址
 
@@ -42,6 +42,8 @@ github:
 ```
 git clone  https://github.com/guyan0319/go-admin.git
 ```
+
+注意：这里通过依赖管理工具[go mod](https://github.com/guyan0319/golang_development_notes/blob/master/zh/1.10.md)，来管理项目源代码。
 
 2、导入data目录下的数据库文件systemdb.sql至你的数据库
 
@@ -119,6 +121,12 @@ npm run dev
 ![](https://gitee.com/jason0319/golang_development_notes/raw/master/images/10.4.png?raw=true)
 
 ![](https://gitee.com/jason0319/golang_development_notes/raw/master/images/10.5.png?raw=true)
+
+7、服务端接口文档
+
+http://localhost:8090/swagger/index.html
+
+![](https://gitee.com/jason0319/golang_development_notes/raw/master/images/10.6.png?raw=true)
 
 ### 小结：
 

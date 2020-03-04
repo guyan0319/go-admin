@@ -25,4 +25,7 @@ paths:
           description: ok
           schema:
             type: string
+      summary: 登录
+      tags:
+      - user
 swagger: "2.0"

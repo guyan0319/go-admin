@@ -14,6 +14,10 @@
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "user"
+                ],
+                "summary": "登录",
                 "parameters": [
                     {
                         "type": "string",

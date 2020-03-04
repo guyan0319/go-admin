@@ -17,6 +17,8 @@ type User struct {
 	Password   string `form:"password" json:"password" binding:"required"`
 }
 // @登录
+// @Summary 登录
+// @Tags user
 // @Description login
 // @Accept  json
 // @Produce json
@@ -64,6 +66,7 @@ func Login(c *gin.Context) {
 	response.ShowData(c, data)
 	return
 }
+
 func Logout (c *gin.Context){
 	session := sessions.Default(c)
 	v := session.Get(conf.Cfg.Token)
