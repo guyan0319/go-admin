@@ -20,6 +20,10 @@ type SystemUser struct {
 	LastLoginIp   string    `json:"last_login_ip" xorm:"not null default '' comment('最近登录IP') VARCHAR(50)"`
 	Ctime         time.Time `json:"ctime" xorm:"not null comment('注册时间') DATETIME"`
 }
+
+type SearchUser struct  {
+	Name string `json:"name" xorm:"not null comment('姓名') VARCHAR(50)"`
+}
 var systemuser = "system_user"
 
 func(u *SystemUser) GetRow() bool {
@@ -32,6 +36,12 @@ func(u *SystemUser) GetRow() bool {
 func (u *SystemUser) GetAll()([]SystemUser,error) {
 	var systemusers []SystemUser
 	err:=mEngine.Find(&systemusers)
+	return systemusers,err
+}
+func (u *SystemUser) GetAllByName(name string)([]SearchUser,error) {
+	var systemusers []SearchUser
+
+	err:=mEngine.Table(systemuser).Where("name like ?",name+"%").Find(&systemusers)
 	return systemusers,err
 }
 

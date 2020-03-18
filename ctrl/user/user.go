@@ -1,7 +1,6 @@
 package user
 
 import (
-	"fmt"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"go-admin/conf"
@@ -14,10 +13,9 @@ import (
 )
 
 func Reg(c *gin.Context){
-	nickname :=c.PostForm("nickname")
+	name :=c.PostForm("name")
 	passwd :=c.PostForm("passwd")
-	fmt.Println(nickname)
-	if nickname=="" || passwd=="" {
+	if name=="" || passwd=="" {
 		response.ShowError(c,"fail")
 		return
 	}
@@ -57,6 +55,19 @@ func Info(c *gin.Context){
 	info.Avatar=user.Avatar
 	info.Introduction=user.Introduction
 	response.ShowData(c, info)
+	return
+}
+func Search(c *gin.Context)  {
+	name,has:=c.GetQuery("name")
+	if	!has{
+		response.ShowErrorParams(c, "name")
+		return
+	}
+	user := models.SystemUser{}
+	res ,_:=user.GetAllByName(name)
+	nameList :=make(map[string][]models.SearchUser,0)
+	nameList["items"]=res
+	response.ShowData(c, nameList)
 	return
 }
 func Detail(c *gin.Context){

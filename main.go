@@ -48,6 +48,7 @@ func main() {
 	r.DELETE("/menu",menu.Delete)
 	r.GET("/user",user.Index)
 	r.GET("/user/detail",user.Detail)
+	r.GET("/user/search",user.Search)
 	r.POST("/user/create",user.Create)
 	r.POST("/user/edit",user.Edit)
 	r.POST("/user/repasswd",user.Repasswd)
