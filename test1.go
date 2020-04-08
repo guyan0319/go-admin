@@ -1,17 +1,43 @@
 package main
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+	"path/filepath"
+	"strings"
+)
 
-func main()  {
-	var i float32
-	var j float64
+func main() {
+	type  ss struct {
+		a string
+	}
+	type sss struct {
+		ss
+		b string
+	}
+	aa:=sss{}
+	aa.a="afsdf"
+	//bb:=ss{a:"fasf"}
+	//aa.ss=bb
+	fmt.Println(aa)
+}
 
-	i=1.5
-	j=1.5
-	fmt.Println(int(i))   // 1
-	fmt.Println(int64(i)) // 1
-	fmt.Println(int32(i)) // 1
-	fmt.Println(int(j))   // 1
-	fmt.Println(int64(j)) // 1
-	fmt.Println(int32(j)) // 1
+func GetCurrentPath() (string, error) {
+	//file, err := exec.LookPath(os.Args[0])
+	//if err != nil {
+	//	return "", err
+	//}
+	path, err := filepath.Abs("")
+	fmt.Println(path)
+	if err != nil {
+		return "", err
+	}
+	i := strings.LastIndex(path, "/")
+	if i < 0 {
+		i = strings.LastIndex(path, "\\")
+	}
+	if i < 0 {
+		return "", errors.New(`error: Can't find "/" or "\".`)
+	}
+	return string(path[0 : i+1]), nil
 }

@@ -1,10 +1,11 @@
 import request from '@/utils/request'
-
+import { httphost } from '@/utils/global'
 export function fetchList(query) {
   return request({
-    url: '/article/list',
+    url: '',
     method: 'get',
-    params: query
+    params: query,
+    baseURL: httphost + '/article/list'
   })
 }
 
@@ -26,9 +27,13 @@ export function fetchPv(pv) {
 
 export function createArticle(data) {
   return request({
-    url: '/article/create',
+    // url: '/article/create',
+    // method: 'post',
+    // data
+    url: '',
     method: 'post',
-    data
+    data,
+    baseURL: httphost + '/article/create'
   })
 }
 

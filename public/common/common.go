@@ -8,12 +8,14 @@ package common
 import (
 	"crypto/md5"
 	"crypto/sha1"
+	"encoding/base64"
 	"encoding/hex"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
+	"log"
 	"math"
 	"math/rand"
 	"net"
@@ -51,6 +53,13 @@ func GetCurrentDirectory() string {
 	}
 	return strings.Replace(dir, "\\", "/", -1)
 }
+func GetAbsDir() string {
+	dir, err := filepath.Abs("")
+	if err != nil {
+		return ""
+	}
+	return dir
+}
 
 //首字母大写 _后的字母大写
 func StrFirstToUpper(str string) string {
@@ -73,7 +82,7 @@ func StrFirstToUpper(str string) string {
 }
 
 //查找某值是否在数组中
-func InArrayString( v string,m *[]string) bool {
+func InArrayString(v string, m *[]string) bool {
 	for _, value := range *m {
 		if value == v {
 			return true
@@ -81,7 +90,29 @@ func InArrayString( v string,m *[]string) bool {
 	}
 	return false
 }
+func WriteFile(path string, content string) (string, bool) {
+	s := `^data:\s*image\/(\w+);base64,`
+	b, _ := regexp.MatchString(s, content)
+	if !b {
+		return "", false
+	}
+	re, _ := regexp.Compile(`^data:\s*image\/(\w+);base64,`)
+	allData := re.FindAllSubmatch([]byte(content), 2)
+	fileType := string(allData[0][1])
+	base64Str := re.ReplaceAllString(content, "")
+	date := time.Now().Format("20060102")
+	if ok := FileExists(path + "/" + date); !ok {
+		_=os.Mkdir(path+"/"+date, 0666)
+	}
+	relative := date + "/" + GetRandomBoth(32) + "." + fileType
+	buffer, _ := base64.StdEncoding.DecodeString(base64Str)
 
+	err := ioutil.WriteFile(path+"/"+relative, buffer, 0666)
+	if err != nil {
+		log.Println(err)
+	}
+	return relative, true
+}
 func Contain(obj interface{}, target interface{}) (bool, error) {
 	targetValue := reflect.ValueOf(target)
 	switch reflect.TypeOf(target).Kind() {
@@ -290,6 +321,15 @@ func StrToDateime(dates string) int64 {
 	return tm2.Unix()
 }
 
+//字符转时间格式   2020-04-19T16:00:00.000Z
+func StrToTimes(dates string) time.Time {
+	//layout := "2006-01-02T15:04:05.000Z"
+	//t, err := time.Parse(layout, str)
+	t, _:= time.Parse(time.RFC3339, dates)
+	return t
+}
+
+
 //目录是否存在
 func PathExists(path string) (bool, error) {
 	_, err := os.Stat(path)
@@ -344,7 +384,6 @@ func ParseFile(path string) map[string]interface{} {
 	return data
 }
 
-
 //是否是文件
 func IsFile(f string) bool {
 	fi, e := os.Stat(f)
@@ -374,4 +413,3 @@ func LoadPackage(p string) error {
 	}
 	return nil
 }
-

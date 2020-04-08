@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主机： localhost
--- 生成日期： 2020-03-18 23:53:45
+-- 生成日期： 2020-04-08 09:34:31
 -- 服务器版本： 8.0.12
 -- PHP 版本： 7.3.4
 
@@ -32,7 +32,7 @@ CREATE TABLE `system_article` (
   `id` bigint(20) UNSIGNED NOT NULL COMMENT '主键',
   `author` int(10) NOT NULL DEFAULT '0' COMMENT '作者',
   `importance` tinyint(4) UNSIGNED NOT NULL DEFAULT '1' COMMENT '重要级别',
-  `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '状态',
+  `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '状态(0:draft，1:published,10:deleted)',
   `title` varchar(200) NOT NULL DEFAULT '' COMMENT '标题',
   `content` text NOT NULL COMMENT '内容',
   `content_short` varchar(500) NOT NULL DEFAULT '' COMMENT '摘要',
@@ -43,6 +43,14 @@ CREATE TABLE `system_article` (
   `ptime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '发布时间',
   `mtime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间'
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+--
+-- 转存表中的数据 `system_article`
+--
+
+INSERT INTO `system_article` (`id`, `author`, `importance`, `status`, `title`, `content`, `content_short`, `source_url`, `ctime`, `image_url`, `comment_disabled`, `ptime`, `mtime`) VALUES
+(1, 1, 2, 1, 'fasd', '<p>fasdffasdf</p>', 'a', '', 1585670400, '20200407/ftxqfEY9EjWGyHS7CFaDWkYYh2SLYUIY.jpeg', 0, '2020-04-01 00:00:00', '2020-03-31 16:00:00'),
+(2, 1, 2, 1, 'fasd', '<p>fasdffasdf</p>', 'a', 'https://www.baidu.com/', 1585670400, '20200407/jbsW7XXW5nFcj6rNEydZhs9ma4BerLpB.jpeg', 0, '2020-04-01 00:00:00', '2020-03-31 16:00:00');
 
 -- --------------------------------------------------------
 
@@ -262,7 +270,7 @@ ALTER TABLE `system_user_role`
 -- 使用表AUTO_INCREMENT `system_article`
 --
 ALTER TABLE `system_article`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键';
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键', AUTO_INCREMENT=3;
 
 --
 -- 使用表AUTO_INCREMENT `system_log`

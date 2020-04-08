@@ -9,6 +9,7 @@ import (
 	"github.com/swaggo/gin-swagger/swaggerFiles"
 	"go-admin/conf"
 	"go-admin/ctrl"
+	"go-admin/ctrl/article"
 	"go-admin/ctrl/menu"
 	"go-admin/ctrl/role"
 	"go-admin/ctrl/user"
@@ -60,6 +61,8 @@ func main() {
 	r.POST("/logout", user.Logout)
 	r.POST("/login", user.Login)
 	r.POST("/reg", user.Reg)
+	r.POST("/article/create", article.Create)
+	r.GET("/article/list", article.Index)
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"message": "pong",
