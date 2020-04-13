@@ -13,11 +13,11 @@ type SystemArticle struct {
 	Title           string    `json:"title" xorm:"not null default '' comment('标题') VARCHAR(200)"`
 	Content         string    `json:"content" xorm:"not null comment('内容') TEXT"`
 	ContentShort    string    `json:"content_short" xorm:"not null default '' comment('摘要') VARCHAR(500)"`
-	SourceUrl       string    `json:"source_url" xorm:"not null default '' comment('来源') VARCHAR(200)"`
+	SourceUri       string    `json:"source_uri" xorm:"not null default '' comment('来源') VARCHAR(200)"`
 	Ctime           int       `json:"ctime" xorm:"not null default 0 comment('创建时间') INT(11)"`
-	ImageUrl        string    `json:"image_url" xorm:"not null default '' comment('图片') VARCHAR(200)"`
+	ImageUri        string    `json:"image_uri" xorm:"not null default '' comment('图片') VARCHAR(200)"`
 	CommentDisabled int       `json:"comment_disabled" xorm:"not null default 0 comment('是否展示评论') TINYINT(4)"`
-	Ptime           time.Time `json:"ptime" xorm:"not null default 'CURRENT_TIMESTAMP' comment('发布时间') DATETIME"`
+	Display_time           time.Time `json:"display_time" xorm:"not null default 'CURRENT_TIMESTAMP' comment('发布时间') DATETIME"`
 	Mtime           time.Time `json:"mtime" xorm:"not null default 'CURRENT_TIMESTAMP' comment('修改时间') TIMESTAMP"`
 }
 type SystemArticlePage struct {
@@ -50,3 +50,10 @@ func (u *SystemArticle) GetAllPage(paging *common.Paging)([]SystemArticle,error)
 	err=mEngine.Where("status=?",1).Limit(int(paging.PageSize),int(paging.StartNums)).Find(&systemarticles)
 	return systemarticles,err
 }
+func (a *SystemArticle) Update() error {
+	if _, err := mEngine.Where("id = ?", a.Id).Update(a); err != nil {
+		return err
+	}
+	return nil
+}
+

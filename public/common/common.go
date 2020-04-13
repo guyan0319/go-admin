@@ -113,6 +113,19 @@ func WriteFile(path string, content string) (string, bool) {
 	}
 	return relative, true
 }
+func Base64Content(url,path, content string) string {
+	reg := regexp.MustCompile(`data:\s*image\/(\w+);base64,[\w\d+/=]*[=|==]`)
+	imageArr:= reg.FindAllString(content,-1)
+
+	for _,v:=range imageArr{
+		imgPath,res:=WriteFile(path,v)
+		if!res{
+			continue
+		}
+		content = strings.Replace(content, v, url+imgPath, 1)
+	}
+	return content
+}
 func Contain(obj interface{}, target interface{}) (bool, error) {
 	targetValue := reflect.ValueOf(target)
 	switch reflect.TypeOf(target).Kind() {

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主机： localhost
--- 生成日期： 2020-04-08 09:34:31
+-- 生成日期： 2020-04-13 23:20:08
 -- 服务器版本： 8.0.12
 -- PHP 版本： 7.3.4
 
@@ -36,11 +36,11 @@ CREATE TABLE `system_article` (
   `title` varchar(200) NOT NULL DEFAULT '' COMMENT '标题',
   `content` text NOT NULL COMMENT '内容',
   `content_short` varchar(500) NOT NULL DEFAULT '' COMMENT '摘要',
-  `source_url` varchar(200) NOT NULL DEFAULT '' COMMENT '来源',
+  `source_uri` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '来源',
   `ctime` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
-  `image_url` varchar(200) NOT NULL DEFAULT '' COMMENT '图片',
+  `image_uri` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '图片',
   `comment_disabled` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否展示评论',
-  `ptime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '发布时间',
+  `display_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '发布时间',
   `mtime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间'
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -48,9 +48,11 @@ CREATE TABLE `system_article` (
 -- 转存表中的数据 `system_article`
 --
 
-INSERT INTO `system_article` (`id`, `author`, `importance`, `status`, `title`, `content`, `content_short`, `source_url`, `ctime`, `image_url`, `comment_disabled`, `ptime`, `mtime`) VALUES
-(1, 1, 2, 1, 'fasd', '<p>fasdffasdf</p>', 'a', '', 1585670400, '20200407/ftxqfEY9EjWGyHS7CFaDWkYYh2SLYUIY.jpeg', 0, '2020-04-01 00:00:00', '2020-03-31 16:00:00'),
-(2, 1, 2, 1, 'fasd', '<p>fasdffasdf</p>', 'a', 'https://www.baidu.com/', 1585670400, '20200407/jbsW7XXW5nFcj6rNEydZhs9ma4BerLpB.jpeg', 0, '2020-04-01 00:00:00', '2020-03-31 16:00:00');
+INSERT INTO `system_article` (`id`, `author`, `importance`, `status`, `title`, `content`, `content_short`, `source_uri`, `ctime`, `image_uri`, `comment_disabled`, `display_time`, `mtime`) VALUES
+(1, 1, 2, 1, 'fasd', '<p>fasdffasdf</p>', 'a发生的发生', '', 1585670400, '20200407/ftxqfEY9EjWGyHS7CFaDWkYYh2SLYUIY.jpeg', 0, '2020-04-10 00:00:00', '2020-04-09 15:14:31'),
+(2, 1, 2, 1, 'fasd', '<p>fasdffasdf</p>', 'a', 'https://www.baidu.com/', 1585670400, '20200407/jbsW7XXW5nFcj6rNEydZhs9ma4BerLpB.jpeg', 0, '2020-04-01 00:00:00', '2020-03-31 16:00:00'),
+(3, 1, 2, 1, '测试', '<p><img class=\"wscnph\" src=\"http://localhost:8090/showimage?imgname=upload/20200413/8GMq0TEmC7rZcXLrDoSM0gNEYsUcdc6z.png\" />asdfasdf<img class=\"wscnph\" src=\"http://localhost:8090/showimage?imgname=upload/20200413/CBgqld3ZFuR4uBs3w9XJM9xPtQlhjflT.png\" /></p>', 'fasd', '', 1586707200, '20200413/yjJiBlZMs42Ag1YOWxW6PuuBU3Ut9XSe.png', 0, '2020-04-13 00:00:00', '2020-04-13 15:06:59'),
+(4, 1, 2, 1, '测试', '<p><img class=\"wscnph\" src=\"http://localhost:8090/showimage?imgname=upload/20200413/y0hBc2CFylSBcxIFOFhFkloXewmrViVg.png\" />asdfasdf<img class=\"wscnph\" src=\"http://localhost:8090/showimage?imgname=upload/20200413/wXVgmVtr5WLdV6BMR6frCOkqAU5XElW9.png\" /></p>', 'fasd', '', 1586707200, '20200413/SRiwahWF5RqPZWMrRUeT3CmX5Bxveyko.png', 0, '2020-04-13 00:00:00', '2020-04-12 16:00:00');
 
 -- --------------------------------------------------------
 
@@ -270,7 +272,7 @@ ALTER TABLE `system_user_role`
 -- 使用表AUTO_INCREMENT `system_article`
 --
 ALTER TABLE `system_article`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键', AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键', AUTO_INCREMENT=5;
 
 --
 -- 使用表AUTO_INCREMENT `system_log`

@@ -62,7 +62,11 @@ func main() {
 	r.POST("/login", user.Login)
 	r.POST("/reg", user.Reg)
 	r.POST("/article/create", article.Create)
+	r.POST("/article/edit", article.Edit)
 	r.GET("/article/list", article.Index)
+	r.GET("/article/detail", article.Detail)
+	r.GET("/showimage", article.ShowImage)
+
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"message": "pong",

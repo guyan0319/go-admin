@@ -9,7 +9,7 @@
 
       <el-table-column width="180px" align="center" label="Date">
         <template slot-scope="scope">
-          <span>{{ scope.row.ptime | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+          <span>{{ scope.row.display_time | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
         </template>
       </el-table-column>
 

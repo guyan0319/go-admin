@@ -181,11 +181,8 @@ export default {
     fetchData(id) {
       fetchArticle(id).then(response => {
         this.postForm = response.data
-
-        // just for test
-        this.postForm.title += `   Article Id:${this.postForm.id}`
-        this.postForm.content_short += `   Article Id:${this.postForm.id}`
-
+        this.postForm.comment_disabled = response.data.comment_disabled==0?false:true
+        this.postForm.author=response.data.authorname
         // set tagsview title
         this.setTagsViewTitle()
 

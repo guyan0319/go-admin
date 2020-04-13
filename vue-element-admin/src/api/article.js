@@ -11,9 +11,10 @@ export function fetchList(query) {
 
 export function fetchArticle(id) {
   return request({
-    url: '/article/detail',
+    url: '',
     method: 'get',
-    params: { id }
+    params: { id },
+    baseURL: httphost + '/article/detail'
   })
 }
 
@@ -27,9 +28,6 @@ export function fetchPv(pv) {
 
 export function createArticle(data) {
   return request({
-    // url: '/article/create',
-    // method: 'post',
-    // data
     url: '',
     method: 'post',
     data,
@@ -39,8 +37,9 @@ export function createArticle(data) {
 
 export function updateArticle(data) {
   return request({
-    url: '/article/update',
+    url: '',
     method: 'post',
-    data
+    data,
+    baseURL: httphost + '/article/edit'
   })
 }

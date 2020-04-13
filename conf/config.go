@@ -9,6 +9,7 @@ type Config struct {
 	Token string
 	Super string
 	RedisPre string
+	Host string
 	Routes []string
 }
 var (
@@ -23,6 +24,7 @@ func  Set(cfg Config) {
 	Cfg.Language=setDefault(cfg.Language,"","cn")
 	Cfg.Token=setDefault(cfg.Token,"","token")
 	Cfg.Super=setDefault(cfg.Super,"","admin")//超级账户
+	Cfg.Host=setDefault(cfg.Host,"","http://localhost:8090")//域名
 	Cfg.Routes=cfg.Routes
 	mutex.Unlock()
 }
