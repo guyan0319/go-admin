@@ -103,6 +103,8 @@ npm run dev
 
 6、运行结果
 
+<http://localhost:9527/#/login?redirect=%2Fdashboard>
+
 登录测试账户信息
 
 账户：admin
