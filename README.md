@@ -35,6 +35,8 @@ github:
 
 [11.1.1 vue-element-admin 后台动态加载菜单](https://github.com/guyan0319/golang_development_notes/blob/master/zh/11.1.1.md)
 
+[预览地址](https://admin.duiniya.com/)
+
 ### 快速开始
 
 1、clone项目源代码
