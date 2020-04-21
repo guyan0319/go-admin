@@ -76,13 +76,13 @@ func main() {
 }
 func Load() {
 	c := conf.Config{}
-	c.Routes=[]string{"/login","/role/index","/info","/dashboard","/logout"}
+	c.Routes=[]string{"/ping","/login","/role/index","/info","/dashboard","/logout"}
 	conf.Set(c)
 
 }
 func GetCorsConfig() cors.Config {
 	config := cors.DefaultConfig()
-	config.AllowOrigins = []string{"http://localhost:9529","http://localhost:9528","http://localhost:9527","http://localhost"}
+	config.AllowOrigins = []string{"https://admin.duiniya.com","http://localhost:9529","http://localhost:9528","http://localhost:9527","http://localhost"}
 	config.AllowMethods = []string{"POST", "GET", "OPTIONS", "PUT", "DELETE"}
 	config.AllowCredentials = true
 	config.AllowHeaders = []string{"x-requested-with", "Content-Type", "AccessToken", "X-CSRF-Token","X-Token", "Authorization","token"}

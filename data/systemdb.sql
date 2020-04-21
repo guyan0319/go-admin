@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主机： localhost
--- 生成日期： 2020-04-13 23:20:08
+-- 生成日期： 2020-04-21 22:18:48
 -- 服务器版本： 8.0.12
 -- PHP 版本： 7.3.4
 
@@ -28,6 +28,7 @@ SET time_zone = "+00:00";
 -- 表的结构 `system_article`
 --
 
+DROP TABLE IF EXISTS `system_article`;
 CREATE TABLE `system_article` (
   `id` bigint(20) UNSIGNED NOT NULL COMMENT '主键',
   `author` int(10) NOT NULL DEFAULT '0' COMMENT '作者',
@@ -60,6 +61,7 @@ INSERT INTO `system_article` (`id`, `author`, `importance`, `status`, `title`, `
 -- 表的结构 `system_log`
 --
 
+DROP TABLE IF EXISTS `system_log`;
 CREATE TABLE `system_log` (
   `id` bigint(20) NOT NULL COMMENT '主键',
   `system_user_id` int(11) DEFAULT '0' COMMENT '主键',
@@ -78,6 +80,7 @@ CREATE TABLE `system_log` (
 -- 表的结构 `system_menu`
 --
 
+DROP TABLE IF EXISTS `system_menu`;
 CREATE TABLE `system_menu` (
   `id` int(11) NOT NULL COMMENT '主键',
   `name` varchar(100) NOT NULL DEFAULT '' COMMENT '名称',
@@ -122,6 +125,7 @@ INSERT INTO `system_menu` (`id`, `name`, `path`, `component`, `redirect`, `url`,
 -- 表的结构 `system_role`
 --
 
+DROP TABLE IF EXISTS `system_role`;
 CREATE TABLE `system_role` (
   `id` int(11) NOT NULL COMMENT '主键',
   `name` varchar(100) NOT NULL COMMENT '角色名称',
@@ -147,6 +151,7 @@ INSERT INTO `system_role` (`id`, `name`, `alias_name`, `description`, `status`, 
 -- 表的结构 `system_role_menu`
 --
 
+DROP TABLE IF EXISTS `system_role_menu`;
 CREATE TABLE `system_role_menu` (
   `id` int(11) NOT NULL COMMENT '主键',
   `system_role_id` int(11) NOT NULL DEFAULT '0' COMMENT '角色主键',
@@ -159,6 +164,7 @@ CREATE TABLE `system_role_menu` (
 -- 表的结构 `system_user`
 --
 
+DROP TABLE IF EXISTS `system_user`;
 CREATE TABLE `system_user` (
   `id` int(11) NOT NULL COMMENT '主键',
   `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '登录名',
@@ -191,6 +197,7 @@ INSERT INTO `system_user` (`id`, `name`, `nickname`, `password`, `salt`, `phone`
 -- 表的结构 `system_user_role`
 --
 
+DROP TABLE IF EXISTS `system_user_role`;
 CREATE TABLE `system_user_role` (
   `id` int(11) NOT NULL COMMENT '主键',
   `system_user_id` int(11) NOT NULL COMMENT '用户主键',

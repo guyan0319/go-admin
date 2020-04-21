@@ -257,6 +257,10 @@ func Repasswd(c *gin.Context)  {
 		response.ShowError(c,"user_error")
 		return
 	}
+	if userModel.Name=="admin" {
+		response.ShowError(c, "fail")
+		return
+	}
 	if _, ok := data["password"]; !ok {
 		response.ShowError(c, "fail")
 		return
