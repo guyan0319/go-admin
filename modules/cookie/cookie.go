@@ -1,19 +1,21 @@
 package cookie
 
 import (
-	"github.com/garyburd/redigo/redis"
 	"github.com/gin-gonic/gin"
+	"github.com/gomodule/redigo/redis"
 	"go-admin/modules/cache"
 	"go-admin/public/common"
 
 	"strconv"
 	"time"
 )
+
 var CookieName string = "GATOKEN"
 
 var RedisExpire = 86400 * 7
 var RedisExpireRepeat = 1200
 var RedisRepeatSuf = "ga_redis_repeat_"
+
 //获取cookie
 func GetCacheCookie(c *gin.Context) (int64, error) {
 
