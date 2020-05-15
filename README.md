@@ -29,7 +29,17 @@ github:
 
 <https://gitee.com/jason0319/go-admin>
 
-**注意**：由于vue-element-admin项目里node_modules文件太大了，换成了压缩.（node_modules.zip），使用时候解压下。
+**注意**：由于vue-element-admin项目里node_modules文件太大了，将其打包成node_modules.zip（有些同学在更新依赖包遇到很多问题，故将压缩包添加到项目里）,运行项目前，要切记将node_modules.zip，解压到node_modules目录。或者执行以下命令更行依赖包。
+
+需要依赖的可执行，
+
+```bash
+# 进入项目目录
+cd vue-element-admin
+npm install --registry=https://registry.npm.taobao.org
+```
+
+win系统要在doc下vue-element-admin目录里执行命令。
 
 ### 介绍
 
