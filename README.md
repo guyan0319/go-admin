@@ -29,18 +29,6 @@ github:
 
 <https://gitee.com/jason0319/go-admin>
 
-**注意**：由于vue-element-admin项目里node_modules文件太大了，将其打包成node_modules.zip（有些同学在更新依赖包遇到很多问题，故将压缩包添加到项目里）,运行项目前，要切记将node_modules.zip，解压到node_modules目录。或者执行以下命令更行依赖包。
-
-需要依赖的可执行，
-
-```bash
-# 进入项目目录
-cd vue-element-admin
-npm install --registry=https://registry.npm.taobao.org
-```
-
-win系统要在doc下vue-element-admin目录里执行命令。
-
 ### 介绍
 
 [在线预览](https://admin.duiniya.com/)
@@ -59,7 +47,21 @@ git clone  https://github.com/guyan0319/go-admin.git
 
 注意：这里通过依赖管理工具[go mod](https://github.com/guyan0319/golang_development_notes/blob/master/zh/1.10.md)，来管理项目源代码。
 
-2、导入data目录下的数据库文件systemdb.sql至你的数据库
+2、由于vue-element-admin项目里node_modules文件太大了，将其打包成node_modules.zip（有些同学在更新依赖包遇到很多问题，故将压缩包添加到项目里）,运行项目前，要切记将node_modules.zip，解压到node_modules目录。
+
+或者执行以下命令更行依赖包。
+
+需要依赖的可执行，
+
+```bash
+# 进入项目目录
+cd vue-element-admin
+npm install --registry=https://registry.npm.taobao.org
+```
+
+**注意**：win系统要在doc下vue-element-admin目录里执行命令。
+
+3、导入data目录下的数据库文件systemdb.sql至你的数据库
 
 修改数据库配置文件conf/mysql.go
 
@@ -77,7 +79,7 @@ var Db = map[string]DbConfig{
 
 ```
 
-3、修改conf/redis.go文件，设置你自己的redis服务配置信息。
+4、修改conf/redis.go文件，设置你自己的redis服务配置信息。
 
 ```
 var Redis = map[string]string{
@@ -88,7 +90,7 @@ var Redis = map[string]string{
 }
 ```
 
-4、启动服务端
+5、启动服务端
 
 ```
 go run main.go
@@ -107,7 +109,7 @@ func GetCorsConfig() cors.Config {
 }
 ```
 
- 5、运行客户端
+ 6、运行客户端
 
 ```
 npm run dev
@@ -115,7 +117,7 @@ npm run dev
 
 这里我们假定你是开发开发环境，且已经安装node.js。如应用于线上环境，则需要打包前端文件，web服务相关部署工作（这里不再赘述，有需要的可联系我，或issues）。
 
-6、运行结果
+7、运行结果
 
 <http://localhost:9527/#/login?redirect=%2Fdashboard>
 
@@ -138,7 +140,7 @@ npm run dev
 
 ![](https://gitee.com/jason0319/golang_development_notes/raw/master/images/10.5.png?raw=true)
 
-7、服务端接口文档
+8、服务端接口文档
 
 http://localhost:8090/swagger/index.html
 
