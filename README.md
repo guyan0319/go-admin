@@ -29,7 +29,7 @@ github:
 
 <https://gitee.com/jason0319/go-admin>
 
-**注意**：由于vue-element-admin项目里node_modules文件太大，这里移除了。
+**注意**：由于vue-element-admin项目里node_modules文件太大了，换成了压缩.（node_modules.zip），使用时候解压下。
 
 ### 介绍
 
