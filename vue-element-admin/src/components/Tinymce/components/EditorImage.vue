@@ -8,11 +8,12 @@
         :multiple="true"
         :file-list="fileList"
         :show-file-list="true"
+        :with-credentials='true'
         :on-remove="handleRemove"
         :on-success="handleSuccess"
         :before-upload="beforeUpload"
         class="editor-slide-upload"
-        action="https://httpbin.org/post"
+        :action="uploadUrl"
         list-type="picture-card"
       >
         <el-button size="small" type="primary">
@@ -31,7 +32,8 @@
 
 <script>
 // import { getToken } from 'api/qiniu'
-
+import { delImage } from '@/api/article'
+import { httphost } from '@/utils/global'
 export default {
   name: 'EditorSlideUpload',
   props: {
@@ -43,6 +45,7 @@ export default {
   data() {
     return {
       dialogVisible: false,
+      uploadUrl: httphost + '/upload/image',
       listObj: {},
       fileList: []
     }
@@ -67,7 +70,8 @@ export default {
       const objKeyArr = Object.keys(this.listObj)
       for (let i = 0, len = objKeyArr.length; i < len; i++) {
         if (this.listObj[objKeyArr[i]].uid === uid) {
-          this.listObj[objKeyArr[i]].url = response.files.file
+          this.listObj[objKeyArr[i]].url = response.data
+          // this.listObj[objKeyArr[i]].url = response.files.file
           this.listObj[objKeyArr[i]].hasSuccess = true
           return
         }
@@ -78,7 +82,16 @@ export default {
       const objKeyArr = Object.keys(this.listObj)
       for (let i = 0, len = objKeyArr.length; i < len; i++) {
         if (this.listObj[objKeyArr[i]].uid === uid) {
-          delete this.listObj[objKeyArr[i]]
+          delImage(this.listObj[objKeyArr[i]].url).then(response => {
+            if (response.code !== 20000) {
+              this.$message('删除失败')
+              return
+            }
+            delete this.listObj[objKeyArr[i]]
+          }).catch(err => {
+            console.log(err)
+          })
+
           return
         }
       }

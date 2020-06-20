@@ -414,6 +414,7 @@ func ShowMsg(v interface{}) {
 	os.Exit(0)
 	//panic(v)
 }
+//加载包
 func LoadPackage(p string) error {
 	var c *exec.Cmd
 	if runtime.GOOS != "linux" {
@@ -425,4 +426,9 @@ func LoadPackage(p string) error {
 		return err
 	}
 	return nil
+}
+//截取指定字符子串
+func Substr(s,substr string)string{
+	n:=strings.Index(s,substr)
+	return s[n:]
 }

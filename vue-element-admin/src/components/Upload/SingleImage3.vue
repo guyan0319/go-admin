@@ -4,10 +4,11 @@
       :data="dataObj"
       :multiple="false"
       :show-file-list="false"
+      :with-credentials='true'
       :on-success="handleImageSuccess"
       class="image-uploader"
       drag
-      action="https://httpbin.org/post"
+      :action="uploadUrl"
     >
       <i class="el-icon-upload" />
       <div class="el-upload__text">
@@ -35,7 +36,9 @@
 
 <script>
 import { getToken } from '@/api/qiniu'
-
+import { delImage } from '@/api/article'
+import { httphost } from '@/utils/global'
+// import { Cookies } from 'js-cookie'
 export default {
   name: 'SingleImageUpload3',
   props: {
@@ -47,6 +50,7 @@ export default {
   data() {
     return {
       tempUrl: '',
+      uploadUrl: httphost + '/upload/image',
       dataObj: { token: '', key: '' }
     }
   },
@@ -57,13 +61,34 @@ export default {
   },
   methods: {
     rmImage() {
-      this.emitInput('')
+      delImage(this.value).then(response => {
+        if (response.code === 20000){
+          this.emitInput('')
+          return
+        }
+        this.$message({
+          message: '删除失败',
+          type: 'error',
+          showClose: true
+        })
+      }).catch(err => {
+        console.log(err)
+      })
     },
     emitInput(val) {
       this.$emit('input', val)
     },
-    handleImageSuccess(file) {
-      this.emitInput(file.files.file)
+
+    handleImageSuccess(res, file) {
+      if (res.code !== 20000){
+        this.$message({
+          message: '上传失败',
+          type: 'error',
+          showClose: true
+        })
+        return false
+      }
+      this.emitInput(res.data)
     },
     beforeUpload() {
       const _self = this

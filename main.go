@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/redis"
@@ -29,8 +30,8 @@ import (
  */
 func main() {
 	Load() //载入配置
-	//gin.SetMode(gin.DebugMode)//开发环境
-	gin.SetMode(gin.ReleaseMode) //线上环境
+	gin.SetMode(gin.DebugMode)//开发环境
+	//gin.SetMode(gin.ReleaseMode) //线上环境
 	r := gin.Default()
 	store, _ := redis.NewStoreWithPool(cache.RedisClient, []byte("secret"))
 	r.Use(sessions.Sessions("gosession", store))
@@ -39,6 +40,8 @@ func main() {
 	r.Use(Auth())
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	r.GET("/", ctrl.Index)
+	r.POST("/upload/image", ctrl.ImgUpload)
+	r.GET("/del/image", ctrl.DelImage)
 	r.GET("/info", user.Info)
 	r.GET("/routes",menu.List)
 	r.GET("/dashboard",menu.Dashboard)
@@ -67,7 +70,7 @@ func main() {
 	r.GET("/article/detail", article.Detail)
 	r.GET("/showimage", article.ShowImage)
 
-	r.GET("/ping", func(c *gin.Context) {
+	r.GET("/pong", func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"message": "pong",
 		})
@@ -76,9 +79,8 @@ func main() {
 }
 func Load() {
 	c := conf.Config{}
-	c.Routes=[]string{"/ping","/login","/role/index","/info","/dashboard","/logout"}
+	c.Routes=[]string{"/pong","/login","/role/index","/info","/dashboard","/logout"}
 	conf.Set(c)
-
 }
 func GetCorsConfig() cors.Config {
 	config := cors.DefaultConfig()
@@ -102,9 +104,11 @@ func Auth() gin.HandlerFunc{
 		v := session.Get(conf.Cfg.Token)
 		if v==nil {
 			c.Abort()
+			panic("ffff")
 			response.ShowError(c,"nologin")
 			return
 		}
+
 		uid:=session.Get(v)
 		users := models.SystemUser{Id:uid.(int),Status:1}
 		has:=users.GetRow()
@@ -115,7 +119,6 @@ func Auth() gin.HandlerFunc{
 		}
 		//特殊账号
 		if users.Name==conf.Cfg.Super {
-			c.Next()
 			return
 		}
 		menuModel:=models.SystemMenu{}
@@ -132,6 +135,12 @@ func Auth() gin.HandlerFunc{
 		}
 		// access the status we are sending
 		status := c.Writer.Status()
+		c.Next()
 		log.Println(status) //状态 200
 	}
+}
+var count = 0
+func test()  {
+	count++
+	fmt.Println(count)
 }

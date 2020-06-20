@@ -43,3 +43,12 @@ export function updateArticle(data) {
     baseURL: httphost + '/article/edit'
   })
 }
+
+export function delImage(url) {
+  return request({
+    url: '',
+    method: 'get',
+    params: { url },
+    baseURL: httphost + '/del/image'
+  })
+}

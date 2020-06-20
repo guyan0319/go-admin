@@ -1,7 +1,6 @@
 package article
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"go-admin/conf"
 	"go-admin/models"
@@ -230,7 +229,8 @@ func Index(c *gin.Context)  {
 }
 func ShowImage(c *gin.Context){
 	imgName := c.Query("imgname")
-	fmt.Println(imgName)
+	//顾虑危险字符
+	imgName = strings.Replace(imgName,"../","",-1)
 	c.File(imgName)
 }
 func Detail(c *gin.Context){
