@@ -5,7 +5,7 @@ export function fetchList(query) {
     url: '',
     method: 'get',
     params: query,
-    baseURL: httphost + '/article/list'
+    baseURL: httphost + '/articles/list'
   })
 }
 
@@ -14,7 +14,7 @@ export function fetchArticle(id) {
     url: '',
     method: 'get',
     params: { id },
-    baseURL: httphost + '/article/detail'
+    baseURL: httphost + '/articles/detail'
   })
 }
 
@@ -31,7 +31,7 @@ export function createArticle(data) {
     url: '',
     method: 'post',
     data,
-    baseURL: httphost + '/article/create'
+    baseURL: httphost + '/articles/create'
   })
 }
 
@@ -40,7 +40,7 @@ export function updateArticle(data) {
     url: '',
     method: 'post',
     data,
-    baseURL: httphost + '/article/edit'
+    baseURL: httphost + '/articles/edit'
   })
 }
 

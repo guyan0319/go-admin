@@ -68,10 +68,11 @@ func Create(c *gin.Context)  {
 	}
 	//fmt.Println(data)
 	model :=models.SystemArticle{}
-	model.ImageUri,_=common.WriteFile("./upload",data["image_uri"].(string))
+	//model.ImageUri,_=common.WriteFile("./upload",data["image_uri"].(string))
+	model.ImageUri=common.Substr(data["image_uri"].(string),"upload/")
 	model.Title=data["title"].(string)
 	model.Content=data["content"].(string)
-	model.Content=common.Base64Content(conf.Cfg.Host+"/showimage?imgname=upload/","./upload",model.Content)
+	//model.Content=common.Base64Content(conf.Cfg.Host+"/showimage?imgname=upload/","./upload",model.Content)
 	model.ContentShort=data["content_short"].(string)
 	model.SourceUri=data["source_uri"].(string)
 
@@ -166,7 +167,8 @@ func Edit(c *gin.Context)  {
 	}
 	model :=models.SystemArticle{Id:article.Id}
 	if !strings.Contains(data["image_uri"].(string),"http://"){
-		model.ImageUri,_=common.WriteFile("./upload",data["image_uri"].(string))
+		model.ImageUri=common.Substr(data["image_uri"].(string),"upload/")
+		//model.ImageUri,_=common.WriteFile("./upload",data["image_uri"].(string))
 	}
 	model.Title=data["title"].(string)
 	model.Content=data["content"].(string)

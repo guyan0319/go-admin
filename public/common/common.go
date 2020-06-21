@@ -428,7 +428,11 @@ func LoadPackage(p string) error {
 	return nil
 }
 //截取指定字符子串
-func Substr(s,substr string)string{
+func SubstrContains(s,substr string)string{
 	n:=strings.Index(s,substr)
 	return s[n:]
+}
+func Substr(s,substr string)string{
+	n:=strings.Index(s,substr)
+	return s[n+len(substr):]
 }

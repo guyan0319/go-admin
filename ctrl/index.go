@@ -91,7 +91,7 @@ func DelImage(c *gin.Context) {
 		response.ShowErrorParams(c, "url")
 		return
 	}
-	url = common.Substr(url, "upload/")
+	url = common.SubstrContains(url, "upload/")
 	//顾虑危险字符
 	url = strings.Replace(url,"../","",-1)
 	if common.IsFile(url) {
