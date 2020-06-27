@@ -64,10 +64,10 @@ func main() {
 	r.POST("/logout", user.Logout)
 	r.POST("/login", user.Login)
 	r.POST("/reg", user.Reg)
-	r.POST("/article/create", article.Create)
-	r.POST("/article/edit", article.Edit)
-	r.GET("/article/list", article.Index)
-	r.GET("/article/detail", article.Detail)
+	r.POST("/articles/create", article.Create)
+	r.POST("/articles/edit", article.Edit)
+	r.GET("/articles/list", article.Index)
+	r.GET("/articles/detail", article.Detail)
 	r.GET("/showimage", article.ShowImage)
 
 	r.GET("/pong", func(c *gin.Context) {
