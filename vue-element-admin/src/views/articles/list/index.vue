@@ -1,5 +1,20 @@
 <template>
   <div class="app-container">
+    <div class="filter-container">
+      <el-input v-model="listQuery.title" :placeholder="$t('table.title')" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter" />
+      <el-select v-model="listQuery.importance" :placeholder="$t('table.importance')" clearable style="width: 90px" class="filter-item">
+        <el-option v-for="item in importanceOptions" :key="item" :label="item" :value="item" />
+      </el-select>
+      <el-select v-model="listQuery.status" :placeholder="$t('table.status')" clearable class="filter-item" style="width: 130px">
+        <el-option v-for="(item,index) in statusMap" :key="index" :label="item" :value="item" />
+      </el-select>
+      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
+        {{ $t('table.search') }}
+      </el-button>
+      <el-button v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">
+        {{ $t('table.export') }}
+      </el-button>
+    </div>
     <el-table v-loading="listLoading" :data="list" border fit highlight-current-row style="width: 100%">
       <el-table-column align="center" label="ID" width="80">
         <template slot-scope="scope">
@@ -56,10 +71,20 @@
 
 <script>
 import { fetchList } from '@/api/article'
+import waves from '@/directive/waves' // waves directive
+import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
+
+
+const statusMap = {
+  1: '发布',
+  0: '存稿',
+  10: '删除'
+}
 
 export default {
   name: 'ArticleList',
+  directives: { waves },
   components: { Pagination },
   filters: {
     statusFilter(status) {
@@ -71,11 +96,6 @@ export default {
       return statusMap[status]
     },
     statusNameFilter(status) {
-      const statusMap = {
-        1: '发布',
-        0: '存稿',
-        10: '删除',
-      }
       return statusMap[status]
     }
   },
@@ -86,14 +106,74 @@ export default {
       listLoading: true,
       listQuery: {
         page: 1,
-        limit: 20
-      }
+        limit: 20,
+        importance: undefined,
+        title: undefined,
+        status: undefined,
+        sort: '+id'
+      },
+      importanceOptions: [1, 2, 3],
+      statusMap,
+      dialogFormVisible: false,
+      dialogStatus: '',
+      textMap: {
+        update: 'Edit',
+        create: 'Create'
+      },
+      dialogPvVisible: false,
+      downloadLoading: false
     }
   },
   created() {
     this.getList()
   },
   methods: {
+    handleFilter() {
+      this.listQuery.page = 1
+      this.getList()
+    },
+    resetTemp() {
+      this.temp = {
+        id: undefined,
+        importance: 1,
+        remark: '',
+        timestamp: new Date(),
+        title: '',
+        status: 'published',
+        type: ''
+      }
+    },
+    formatJson(filterVal, jsonData) {
+      return jsonData.map(v => filterVal.map(j => {
+        if (j === 'timestamp') {
+          return parseTime(v[j])
+        } else {
+          return v[j]
+        }
+      }))
+    },
+    handleCreate() {
+      this.resetTemp()
+      this.dialogStatus = 'create'
+      this.dialogFormVisible = true
+      this.$nextTick(() => {
+        this.$refs['dataForm'].clearValidate()
+      })
+    },
+    handleDownload() {
+      this.downloadLoading = true
+      import('@/vendor/Export2Excel').then(excel => {
+        const tHeader = ['timestamp', 'title', 'type', 'importance', 'status']
+        const filterVal = ['timestamp', 'title', 'type', 'importance', 'status']
+        const data = this.formatJson(filterVal, this.list)
+        excel.export_json_to_excel({
+          header: tHeader,
+          data,
+          filename: 'table-list'
+        })
+        this.downloadLoading = false
+      })
+    },
     getList() {
       this.listLoading = true
       fetchList(this.listQuery).then(response => {
