@@ -41,7 +41,7 @@ CREATE TABLE `system_article` (
   `ctime` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
   `image_uri` varchar(200) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '图片',
   `comment_disabled` tinyint(4) NOT NULL DEFAULT '0' COMMENT '是否展示评论',
-  `display_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '发布时间',
+  `display_time` datetime NOT NULL COMMENT '发布时间',
   `mtime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间'
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
@@ -73,7 +73,7 @@ CREATE TABLE `system_log` (
   `ip` varchar(50) NOT NULL DEFAULT '' COMMENT 'ip',
   `url` varchar(500) NOT NULL DEFAULT '',
   `ctime` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '时间'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='操作日志';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='操作日志';
 
 -- --------------------------------------------------------
 
@@ -101,7 +101,7 @@ CREATE TABLE `system_menu` (
   `status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '状态（0禁止1启动）',
   `level` tinyint(4) NOT NULL DEFAULT '0' COMMENT '层级',
   `ctime` datetime NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '时间'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='权限';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='权限';
 
 --
 -- 转存表中的数据 `system_menu`
@@ -137,7 +137,7 @@ CREATE TABLE `system_role` (
   `status` tinyint(4) NOT NULL DEFAULT '1' COMMENT '角色状态（0无效1有效）',
   `type` int(4) NOT NULL DEFAULT '1' COMMENT '属于哪个应用',
   `ctime` datetime NOT NULL COMMENT '创建时间'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='角色';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色';
 
 --
 -- 转存表中的数据 `system_role`
@@ -159,7 +159,7 @@ CREATE TABLE `system_role_menu` (
   `id` int(11) NOT NULL COMMENT '主键',
   `system_role_id` int(11) NOT NULL DEFAULT '0' COMMENT '角色主键',
   `system_menu_id` int(11) NOT NULL DEFAULT '0' COMMENT '菜单主键'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='角色与菜单关联表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='角色与菜单关联表';
 
 --
 -- 转存表中的数据 `system_role_menu`
@@ -189,8 +189,8 @@ INSERT INTO `system_role_menu` (`id`, `system_role_id`, `system_menu_id`) VALUES
 DROP TABLE IF EXISTS `system_user`;
 CREATE TABLE `system_user` (
   `id` int(11) NOT NULL COMMENT '主键',
-  `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '登录名',
-  `nickname` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '' COMMENT '用户昵称',
+  `name` varchar(50) CHARACTER SET utf8mb4  NOT NULL COMMENT '登录名',
+  `nickname` varchar(50) CHARACTER SET utf8mb4  NOT NULL DEFAULT '' COMMENT '用户昵称',
   `password` varchar(50) NOT NULL COMMENT '密码',
   `salt` varchar(4) NOT NULL COMMENT '盐',
   `phone` varchar(11) NOT NULL DEFAULT '' COMMENT '手机号',
@@ -201,7 +201,7 @@ CREATE TABLE `system_user` (
   `last_login_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '上次登录时间',
   `last_login_ip` varchar(50) NOT NULL DEFAULT '' COMMENT '最近登录IP',
   `ctime` datetime NOT NULL COMMENT '注册时间'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='管理账户表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='管理账户表';
 
 --
 -- 转存表中的数据 `system_user`
@@ -224,7 +224,7 @@ CREATE TABLE `system_user_role` (
   `id` int(11) NOT NULL COMMENT '主键',
   `system_user_id` int(11) NOT NULL COMMENT '用户主键',
   `system_role_id` int(11) NOT NULL COMMENT '角色主键'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='账户和角色关联表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='账户和角色关联表';
 
 --
 -- 转存表中的数据 `system_user_role`
