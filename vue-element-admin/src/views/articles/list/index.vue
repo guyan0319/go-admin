@@ -8,6 +8,14 @@
       <el-select v-model="listQuery.status" :placeholder="$t('table.status')" clearable class="filter-item" style="width: 130px">
         <el-option v-for="(item,index) in statusMap" :key="index" :label="item" :value="item" />
       </el-select>
+      <el-date-picker
+        v-model="listQuery.dateValue"
+        class="filter-item"
+        type="datetimerange"
+        start-placeholder="开始日期"
+        end-placeholder="结束日期"
+        :default-time="['00:00:00','23:59:59']"
+      />
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         {{ $t('table.search') }}
       </el-button>
@@ -42,7 +50,7 @@
       <el-table-column class-name="status-col" label="Status" width="110">
         <template slot-scope="{row}">
           <el-tag :type="row.status | statusFilter">
-            {{ row.status | statusNameFilter}}
+            {{ row.status | statusNameFilter }}
           </el-tag>
         </template>
       </el-table-column>
@@ -74,7 +82,6 @@ import { fetchList } from '@/api/article'
 import waves from '@/directive/waves' // waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
-
 
 const statusMap = {
   1: '发布',
@@ -110,7 +117,7 @@ export default {
         importance: undefined,
         title: undefined,
         status: undefined,
-        sort: '+id'
+        dateValue: ''
       },
       importanceOptions: [1, 2, 3],
       statusMap,
@@ -129,6 +136,7 @@ export default {
   },
   methods: {
     handleFilter() {
+      console.log(this.listQuery.dateValue)
       this.listQuery.page = 1
       this.getList()
     },

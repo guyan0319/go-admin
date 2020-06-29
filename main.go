@@ -97,18 +97,16 @@ func Auth() gin.HandlerFunc{
 			panic(err)
 		}
 		if common.InArrayString(u.Path,&conf.Cfg.Routes) {
-			//c.Next()
+			c.Next()
 			return
 		}
 		session := sessions.Default(c)
 		v := session.Get(conf.Cfg.Token)
 		if v==nil {
 			c.Abort()
-			panic("ffff")
 			response.ShowError(c,"nologin")
 			return
 		}
-
 		uid:=session.Get(v)
 		users := models.SystemUser{Id:uid.(int),Status:1}
 		has:=users.GetRow()
