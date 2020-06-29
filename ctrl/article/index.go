@@ -9,6 +9,7 @@ import (
 	"go-admin/public/common"
 	"strconv"
 	"strings"
+	"time"
 )
 
 func Create(c *gin.Context)  {
@@ -204,6 +205,28 @@ func Edit(c *gin.Context)  {
 func Index(c *gin.Context)  {
 	page, _ := strconv.ParseInt(c.Query("page"), 10, 64)
 	limit, _ := strconv.ParseInt(c.Query("limit"), 10, 64)
+	type filters struct {
+		Status int
+		Title string
+		Importance int
+		StartTime time.Time
+		EndTime time.Time
+	}
+    filter:=filters{}
+	dateValues:=c.QueryArray("dateValue[]")
+	if len(dateValues)==2 {
+		filter.StartTime =  common.StrToTimes(dateValues[0])
+		filter.EndTime =  common.StrToTimes(dateValues[1])
+	}
+	status :=c.Query("status")
+	if status!="" {
+		filter.Status,_=strconv.Atoi(status)
+	}
+	importance :=c.Query("importance")
+	if importance!="" {
+		filter.Importance,_=strconv.Atoi(importance)
+	}
+	filter.Title = c.Query("title")
 
 	paging:=&common.Paging{Page:page,PageSize:limit}
 	articleModel:=models.SystemArticle{}

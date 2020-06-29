@@ -6,7 +6,7 @@
         <el-option v-for="item in importanceOptions" :key="item" :label="item" :value="item" />
       </el-select>
       <el-select v-model="listQuery.status" :placeholder="$t('table.status')" clearable class="filter-item" style="width: 130px">
-        <el-option v-for="(item,index) in statusMap" :key="index" :label="item" :value="item" />
+        <el-option v-for="(item,index) in statusMap" :key="index" :label="item" :value="index" />
       </el-select>
       <el-date-picker
         v-model="listQuery.dateValue"
