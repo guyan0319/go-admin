@@ -19,7 +19,6 @@ import (
 	"go-admin/modules/cache"
 	"go-admin/modules/response"
 	"go-admin/public/common"
-	"log"
 	"net/url"
 )
 
@@ -132,9 +131,9 @@ func Auth() gin.HandlerFunc{
 			return
 		}
 		// access the status we are sending
-		status := c.Writer.Status()
+		//status := c.Writer.Status()
 		c.Next()
-		log.Println(status) //状态 200
+		//log.Println(status) //状态 200
 	}
 }
 var count = 0

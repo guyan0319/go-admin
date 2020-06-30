@@ -17,8 +17,7 @@ type Paging struct {
 	//NumsCount int64   `json:"numscount" form:"numscount"` //总页序数
 }
 //获取分页信息
-func( p *Paging)GetPages() *Paging {
-
+func( p *Paging)GetPages() {
 	if p.Page < 1 {
 		p.Page = 1
 	}
@@ -26,12 +25,7 @@ func( p *Paging)GetPages() *Paging {
 		p.PageSize = 10
 	}
 	page_count := math.Ceil(float64(p.Total) / float64(p.PageSize))
-	paging := new(Paging)
-	paging.Page=p.Page
-	paging.PageSize=p.PageSize
-	paging.StartNums = p.PageSize*(p.Page-1)
-	paging.Total = p.Total
-	paging.PageCount = int64(page_count)
-	return paging
+	p.StartNums = p.PageSize*(p.Page-1)
+	p.PageCount=int64(page_count)
 }
 

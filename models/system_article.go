@@ -39,15 +39,29 @@ func (m *SystemArticle) Add() (int64 ,error){
 func (m *SystemArticle) AddBatch(beans ...interface{}) (int64 ,error){
 	return mEngine.Insert(beans...)
 }
-func (u *SystemArticle) GetAllPage(paging *common.Paging)([]SystemArticle,error) {
+func (u *SystemArticle) GetAllPage(paging *common.Paging,filters map[string]string)([]SystemArticle,error) {
 	var systemarticles []SystemArticle
 	var err error
-	paging.Total,err=mEngine.Where("status=?",1).Count(u)
+	session:=mEngine.Where("1=1")
+	if filters["status"]!="" {
+		session.Where("status=?",filters["status"])
+	}
+	if filters["importance"]!="" {
+		session.Where("importance=?", filters["importance"])
+	}
+	if filters["title"]!="" {
+		session.Where("title like ?","%"+filters["title"]+"%")
+	}
+	if  filters["start_time"]!="" &&  filters["end_time"]!="" {
+		session.Where("mtime>=?",common.StrToTimes(filters["start_time"])).Where("mtime<=?",common.StrToTimes(filters["end_time"]))
+	}
+	sessionRows:=*session
+	paging.Total,err=session.Count(u)
 	paging.GetPages()
 	if paging.Total<1 {
 		return systemarticles,err
 	}
-	err=mEngine.Where("status=?",1).Limit(int(paging.PageSize),int(paging.StartNums)).Find(&systemarticles)
+	err=sessionRows.Limit(int(paging.PageSize),int(paging.StartNums)).Find(&systemarticles)
 	return systemarticles,err
 }
 func (a *SystemArticle) Update() error {

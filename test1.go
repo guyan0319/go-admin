@@ -2,12 +2,15 @@ package main
 
 import (
 	"fmt"
+	"go-admin/public/common"
 	"strings"
 )
 
 func main() {
-	var strs ="hello 你好 hello world"
-	fmt.Println(Substr(strs,"好"))
+	paging:=&common.Paging{Page:1,PageSize:10}
+	paging.Total=100
+	paging.GetPages()
+	fmt.Println(paging)
 }
 
 func Substr(s,substr string)string{

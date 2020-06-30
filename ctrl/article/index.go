@@ -9,7 +9,6 @@ import (
 	"go-admin/public/common"
 	"strconv"
 	"strings"
-	"time"
 )
 
 func Create(c *gin.Context)  {
@@ -205,32 +204,19 @@ func Edit(c *gin.Context)  {
 func Index(c *gin.Context)  {
 	page, _ := strconv.ParseInt(c.Query("page"), 10, 64)
 	limit, _ := strconv.ParseInt(c.Query("limit"), 10, 64)
-	type filters struct {
-		Status int
-		Title string
-		Importance int
-		StartTime time.Time
-		EndTime time.Time
-	}
-    filter:=filters{}
+	var filters =map[string]string{"status":"","title":"","importance":"","start_time":"","end_time":""}
+
 	dateValues:=c.QueryArray("dateValue[]")
 	if len(dateValues)==2 {
-		filter.StartTime =  common.StrToTimes(dateValues[0])
-		filter.EndTime =  common.StrToTimes(dateValues[1])
+		filters["start_time"] =  dateValues[0]
+		filters["end_time"] =  dateValues[1]
 	}
-	status :=c.Query("status")
-	if status!="" {
-		filter.Status,_=strconv.Atoi(status)
-	}
-	importance :=c.Query("importance")
-	if importance!="" {
-		filter.Importance,_=strconv.Atoi(importance)
-	}
-	filter.Title = c.Query("title")
-
+	filters["status"] =c.Query("status")
+	filters["importance"] =c.Query("importance")
+	filters["title"] = c.Query("title")
 	paging:=&common.Paging{Page:page,PageSize:limit}
 	articleModel:=models.SystemArticle{}
-	articleArr, err := articleModel.GetAllPage(paging)
+	articleArr, err := articleModel.GetAllPage(paging,filters)
 	var articlePageArr []models.SystemArticlePage
 
 	for _,v :=range articleArr{

@@ -50,7 +50,7 @@ func Login(c *gin.Context) {
 	session := sessions.Default(c)
 	var data = make(map[string]interface{}, 0)
 	v := session.Get(conf.Cfg.Token)
-	fmt.Println(v)
+
 	if v == nil {
 		cur := time.Now()
 		//纳秒
