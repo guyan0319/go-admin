@@ -6,6 +6,7 @@
 package common
 
 import (
+	"bytes"
 	"crypto/md5"
 	"crypto/sha1"
 	"encoding/base64"
@@ -29,7 +30,14 @@ import (
 	"strings"
 	"time"
 )
-
+func StrJoin(args ...string) string {
+	var buffer bytes.Buffer
+	//接受的参数放在args数组中
+	for _, e := range args {
+		buffer.WriteString(e)
+	}
+	return buffer.String()
+}
 //截取字符
 func substr(s string, pos, length int) string {
 	runes := []rune(s)
