@@ -149,3 +149,10 @@ http://localhost:8090/swagger/index.html
 ### 小结：
 
 目前只是完成系统管理模块开发，其他功能后续补上，如在使用过程中遇到任何问题或任何建议欢迎回复留言，您的支持的是我前进的动力。
+
+## Community
+
+
+
+![](https://gitee.com/jason0319/golang_development_notes/raw/master/images/qq.png)
+
