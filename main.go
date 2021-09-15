@@ -32,9 +32,10 @@ func main() {
 	gin.SetMode(gin.DebugMode)//开发环境
 	//gin.SetMode(gin.ReleaseMode) //线上环境
 	r := gin.Default()
+	r.Use(cors.New(GetCorsConfig()))//跨域
 	store, _ := redis.NewStoreWithPool(cache.RedisClient, []byte("secret"))
 	r.Use(sessions.Sessions("gosession", store))
-	r.Use(cors.New(GetCorsConfig()))//跨域
+
 	//r.Use(cors.Default())//默认跨域
 	r.Use(Auth())
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
@@ -83,7 +84,7 @@ func Load() {
 }
 func GetCorsConfig() cors.Config {
 	config := cors.DefaultConfig()
-	config.AllowOrigins = []string{"https://admin.duiniya.com","http://localhost:9529","http://localhost:9528","http://localhost:9527","http://localhost"}
+	config.AllowOrigins = []string{"https://admin.duiniya.com","https://admin.gzqiang.cn","http://localhost:9529","http://localhost:9528","http://localhost:9527","http://localhost"}
 	config.AllowMethods = []string{"POST", "GET", "OPTIONS", "PUT", "DELETE"}
 	config.AllowCredentials = true
 	config.AllowHeaders = []string{"x-requested-with", "Content-Type", "AccessToken", "X-CSRF-Token","X-Token", "Authorization","token"}
