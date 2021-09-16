@@ -31,7 +31,7 @@ github:
 
 ### 介绍
 
-[在线预览](https://admin.duiniya.com/)
+[在线预览](https://admin.gzqiang.cn)
 
 本项目相关源代码分析相关文章如下：
 
