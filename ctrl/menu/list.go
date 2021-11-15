@@ -144,9 +144,9 @@ func TreeMenuNew(menuMap map[int][]models.SystemMenu ,pid int,mrArr map[int][]st
 			if value.Redirect != "" {
 				item["redirect"] = value.Redirect
 			}
-			if value.Alwaysshow == 1 {
-				item["alwaysShow"] = true
-			}
+			//if value.Alwaysshow == 1 {
+			//	item["alwaysShow"] = true
+			//}
 			if value.Hidden == 1 {
 				item["hidden"] = true
 			} else {
