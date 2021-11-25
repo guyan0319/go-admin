@@ -12,28 +12,32 @@ import (
 )
 
 func Create(c *gin.Context)  {
-
 	data,err:=request.GetJson(c)
 	if err != nil {
 		response.ShowError(c, "fail")
 		return
 	}
+
 	if _, ok := data["status"]; !ok {
 		response.ShowError(c, "fail")
 		return
 	}
+
 	if _, ok := data["title"]; !ok {
 		response.ShowError(c, "fail")
 		return
 	}
+
 	if _, ok := data["content"]; !ok {
 		response.ShowError(c, "fail")
 		return
 	}
+
 	if _, ok := data["content_short"]; !ok {
 		response.ShowError(c, "fail")
 		return
 	}
+
 	if _, ok := data["source_uri"]; !ok {
 		response.ShowError(c, "fail")
 		return
@@ -66,6 +70,7 @@ func Create(c *gin.Context)  {
 		response.ShowErrorParams(c, "image_uri")
 		return
 	}
+
 	//fmt.Println(data)
 	model :=models.SystemArticle{}
 	//model.ImageUri,_=common.WriteFile("./upload",data["image_uri"].(string))
