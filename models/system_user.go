@@ -98,6 +98,7 @@ func (u *SystemUser) Add(roles []interface{}) (int ,error){
 	}
 	return u.Id,session.Commit()
 }
+
 func (u *SystemUser) Update(roles []interface{}) error {
 	session := mEngine.NewSession()
 	defer session.Close()

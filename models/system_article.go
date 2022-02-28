@@ -39,6 +39,7 @@ func (m *SystemArticle) Add() (int64 ,error){
 func (m *SystemArticle) AddBatch(beans ...interface{}) (int64 ,error){
 	return mEngine.Insert(beans...)
 }
+
 func (u *SystemArticle) GetAllPage(paging *common.Paging,filters map[string]string)([]SystemArticle,error) {
 	var systemarticles []SystemArticle
 	var err error
