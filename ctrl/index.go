@@ -104,3 +104,7 @@ func DelImage(c *gin.Context) {
 	response.ShowData(c, "success")
 	return
 }
+//根据layout 20060102150405  或 "2006-01-02 15:04:05"
+func GetDateByLayout(layout string) string {
+	return time.Now().Format(layout)
+}
