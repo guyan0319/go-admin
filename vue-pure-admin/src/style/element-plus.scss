@@ -1,0 +1,71 @@
+.el-breadcrumb__inner,
+.el-breadcrumb__inner a {
+  font-weight: 400 !important;
+}
+
+.el-upload {
+  input[type="file"] {
+    display: none !important;
+  }
+}
+
+.el-upload__input {
+  display: none;
+}
+
+.upload-container {
+  .el-upload {
+    width: 100%;
+
+    .el-upload-dragger {
+      width: 100%;
+      height: 200px;
+    }
+  }
+}
+
+.el-dropdown-menu {
+  padding: 2px 0 !important;
+}
+
+.el-range-separator {
+  box-sizing: content-box;
+}
+
+.is-dark {
+  z-index: 99999 !important;
+}
+
+// 自定义popover的类名
+.pure-popper {
+  padding: 0 !important;
+}
+
+/* 动态改变cssvar 用于主题切换 https://github.com/element-plus/element-plus/issues/4856#issuecomment-1000174357 */
+.el-button--primary {
+  --el-button-active-bg-color: var(--el-color-primary-active) !important;
+  --el-button-active-border-color: var(--el-color-primary-active) !important;
+}
+
+/* button--primary plain */
+.el-button--primary.is-plain {
+  --el-button-active-bg-color: var(--el-color-primary) !important;
+  --el-button-active-border-color: var(--el-color-primary) !important;
+}
+
+/* nprogress适配ep的primary */
+#nprogress {
+  & .bar {
+    background-color: var(--el-color-primary) !important;
+  }
+
+  & .peg {
+    box-shadow: 0 0 10px var(--el-color-primary),
+      0 0 5px var(--el-color-primary) !important;
+  }
+
+  & .spinner-icon {
+    border-top-color: var(--el-color-primary);
+    border-left-color: var(--el-color-primary);
+  }
+}
