@@ -5,8 +5,8 @@ import (
 	"github.com/gomodule/redigo/redis"
 	"strconv"
 	"time"
-	"web-demo/lib/cache"
-	"web-demo/lib/common"
+	"go-admin/lib/cache"
+	"go-admin/lib/common"
 )
 
 var CookieName string = "GATOKEN"

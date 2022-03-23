@@ -9,7 +9,7 @@ import (
 	"strconv"
 	"strings"
 	"text/template"
-	"web-demo/lib/common"
+	"go-admin/lib/common"
 )
 
 const (

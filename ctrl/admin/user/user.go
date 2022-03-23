@@ -5,10 +5,10 @@ import (
 	"github.com/gin-gonic/gin"
 	"strconv"
 	"time"
-	"web-demo/lib/common"
-	"web-demo/lib/request"
-	"web-demo/lib/response"
-	"web-demo/models/systemdb"
+	"go-admin/lib/common"
+	"go-admin/lib/request"
+	"go-admin/lib/response"
+	"go-admin/models/systemnewdb"
 )
 
 func Reg(c *gin.Context) {
@@ -30,7 +30,7 @@ type Userinfo struct {
 	Name         string   `json:"name"`
 }
 type UserDetail struct {
-	systemdb.SystemUser
+	systemnewdb.SystemUser
 	CheckedRoles []string `json:"checkedRoles"`
 }
 
@@ -42,11 +42,11 @@ func Info(c *gin.Context) {
 		return
 	}
 	uid := session.Get(v)
-	db := systemdb.GetDb()
+	db := systemnewdb.GetDb()
 
-	user := systemdb.SystemUser{ID: uid.(int)}
+	user := systemnewdb.SystemUser{ID: uid.(int)}
 	db.First(&user)
-	userrole := systemdb.SystemUserRole{SystemUserID: uid.(int)}
+	userrole := systemnewdb.SystemUserRole{SystemUserID: uid.(int)}
 	role := userrole.GetRowByUid()
 	var info Userinfo
 	info.Roles = role
@@ -64,9 +64,9 @@ func Search(c *gin.Context) {
 		response.ShowErrorParams(c, "name")
 		return
 	}
-	user := systemdb.SystemUser{Name: name}
+	user := systemnewdb.SystemUser{Name: name}
 	res, _ := user.GetAllByName()
-	nameList := make(map[string][]systemdb.SearchUser, 0)
+	nameList := make(map[string][]systemnewdb.SearchUser, 0)
 	nameList["items"] = res
 	response.ShowData(c, nameList)
 	return
@@ -77,14 +77,14 @@ func Detail(c *gin.Context) {
 		response.ShowErrorParams(c, "id")
 		return
 	}
-	user := systemdb.SystemUser{}
+	user := systemnewdb.SystemUser{}
 	user.ID, _ = strconv.Atoi(id)
 	res, _ := user.GetRow()
 	if res < 1 {
 		response.ShowError(c, "user_error")
 		return
 	}
-	userrole := systemdb.SystemUserRole{SystemUserID: user.ID}
+	userrole := systemnewdb.SystemUserRole{SystemUserID: user.ID}
 	role := userrole.GetRowByUid()
 
 	detail := UserDetail{}
@@ -103,7 +103,7 @@ func Delete(c *gin.Context) {
 		response.ShowErrorParams(c, "id")
 		return
 	}
-	user := systemdb.SystemUser{}
+	user := systemnewdb.SystemUser{}
 	user.ID, _ = strconv.Atoi(id)
 	err := user.Delete()
 	if err != nil {
@@ -118,7 +118,7 @@ func Index(c *gin.Context) {
 	limit, _ := strconv.ParseInt(c.Query("limit"), 10, 64)
 
 	paging := &common.Paging{Page: page, PageSize: limit}
-	userModel := systemdb.SystemUser{}
+	userModel := systemnewdb.SystemUser{}
 	userArr, err := userModel.GetAllPage(paging)
 	if err != nil {
 		response.ShowError(c, "fail")
@@ -157,7 +157,7 @@ func Create(c *gin.Context) {
 		response.ShowError(c, "fail")
 		return
 	}
-	userModel := systemdb.SystemUser{}
+	userModel := systemnewdb.SystemUser{}
 	userModel.Name = data["name"].(string)
 	has, _ := userModel.GetRow()
 	if has > 0 {
@@ -205,7 +205,7 @@ func Edit(c *gin.Context) {
 		response.ShowError(c, "fail")
 		return
 	}
-	userModel := systemdb.SystemUser{}
+	userModel := systemnewdb.SystemUser{}
 	userModel.ID = int(data["id"].(float64))
 	has, _ := userModel.GetRow()
 	if has < 1 {
@@ -252,7 +252,7 @@ func Repasswd(c *gin.Context) {
 		response.ShowError(c, "fail")
 		return
 	}
-	userModel := systemdb.SystemUser{}
+	userModel := systemnewdb.SystemUser{}
 	userModel.ID = int(data["id"].(float64))
 	has, _ := userModel.GetRow()
 	if has < 1 {

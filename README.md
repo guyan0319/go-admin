@@ -61,7 +61,7 @@ npm install --registry=https://registry.npm.taobao.org
 
 **注意**：win系统要在doc下vue-element-admin目录里执行命令。
 
-3、导入data目录下的数据库文件systemdb.sql至你的数据库
+3、导入data目录下的数据库文件systemnewdb.sql至你的数据库
 
 修改数据库配置文件conf/mysql.go
 
@@ -69,7 +69,7 @@ npm install --registry=https://registry.npm.taobao.org
 var Db = map[string]DbConfig{
 	"db1": {
 		DriverName: "mysql",
-		Dsn:        "root:123456@tcp(127.0.0.1:3306)/systemdb?charset=utf8mb4&parseTime=true&loc=Local",
+		Dsn:        "root:123456@tcp(127.0.0.1:3306)/systemnewdb?charset=utf8mb4&parseTime=true&loc=Local",
 		ShowSql:    true,
 		ShowExecTime:    false,
 		MaxIdle:    10,

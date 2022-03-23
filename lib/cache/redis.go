@@ -4,7 +4,7 @@ import (
 	"github.com/gomodule/redigo/redis"
 
 	"time"
-	"web-demo/lib/common"
+	"go-admin/lib/common"
 )
 
 var RedisClient *redis.Pool

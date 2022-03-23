@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"go-admin/lib/request"
 	"go-admin/lib/response"
+	"go-admin/models/systemnewdb"
 	"io/ioutil"
 	"strconv"
 	"time"
@@ -30,19 +31,19 @@ func List(c *gin.Context) {
 		return
 	}
 	uid := session.Get(v)
-	db := systemdb.GetDb()
+	db := systemnewdb.GetDb()
 
-	user := systemdb.SystemUser{ID: uid.(int)}
+	user := systemnewdb.SystemUser{ID: uid.(int)}
 	db.First(&user)
 
-	menu := systemdb.SystemMenu{}
+	menu := systemnewdb.SystemMenu{}
 	menuArr, err := menu.GetAll()
 	if err != nil {
 		response.ShowError(c, "fail")
 		return
 	}
-	var menuMap = make(map[int][]systemdb.SystemMenu, 0)
-	role := systemdb.SystemRole{}
+	var menuMap = make(map[int][]systemnewdb.SystemMenu, 0)
+	role := systemnewdb.SystemRole{}
 	mrArr := role.GetRowMenu()
 	for _, value := range menuArr {
 		value.Hidden = 0
@@ -54,8 +55,8 @@ func List(c *gin.Context) {
 }
 
 func Roles(c *gin.Context) {
-	model := systemdb.SystemRole{}
-	menu := systemdb.SystemMenu{}
+	model := systemnewdb.SystemRole{}
+	menu := systemnewdb.SystemMenu{}
 	roleArr, err := model.GetAll()
 	if err != nil {
 		response.ShowError(c, "fail")
@@ -70,12 +71,12 @@ func Roles(c *gin.Context) {
 		r.Description = value.Description
 		menuArr := menu.GetRouteByRole(value.ID)
 		if menuArr != nil {
-			var menuMap = make(map[int][]systemdb.SystemMenu, 0)
+			var menuMap = make(map[int][]systemnewdb.SystemMenu, 0)
 			for _, value := range menuArr {
 				value.Hidden = 0
 				menuMap[value.Pid] = append(menuMap[value.Pid], value)
 			}
-			role := systemdb.SystemRole{}
+			role := systemnewdb.SystemRole{}
 			mrArr := role.GetRowMenu()
 			jsonStr := TreeMenuNew(menuMap, 0, mrArr)
 			if jsonStr != nil {
@@ -96,10 +97,10 @@ func Dashboard(c *gin.Context) {
 		return
 	}
 	uid := session.Get(v)
-	user := systemdb.SystemUser{ID: uid.(int)}
+	user := systemnewdb.SystemUser{ID: uid.(int)}
 	_, _ = user.GetRow()
-	menu := systemdb.SystemMenu{State: 1}
-	var menuArr []systemdb.SystemMenu
+	menu := systemnewdb.SystemMenu{State: 1}
+	var menuArr []systemnewdb.SystemMenu
 	var err error
 	if user.Name == "admin" {
 		menuArr, err = menu.GetAll()
@@ -111,11 +112,11 @@ func Dashboard(c *gin.Context) {
 		menuArr = menu.GetRowByUid(uid)
 		fmt.Println(menuArr)
 	}
-	var menuMap = make(map[int][]systemdb.SystemMenu, 0)
+	var menuMap = make(map[int][]systemnewdb.SystemMenu, 0)
 	for _, value := range menuArr {
 		menuMap[value.Pid] = append(menuMap[value.Pid], value)
 	}
-	role := systemdb.SystemRole{}
+	role := systemnewdb.SystemRole{}
 	mrArr := role.GetRowMenu()
 	jsonStr := TreeMenuNew(menuMap, 0, mrArr)
 	response.ShowData(c, jsonStr)
@@ -134,7 +135,7 @@ func Dashboard(c *gin.Context) {
 	//})
 	//return
 }
-func TreeMenuNew(menuMap map[int][]systemdb.SystemMenu, pid int, mrArr map[int][]string) []interface{} {
+func TreeMenuNew(menuMap map[int][]systemnewdb.SystemMenu, pid int, mrArr map[int][]string) []interface{} {
 	var menuNewArr []interface{}
 	if _, ok := menuMap[pid]; ok {
 		for _, value := range menuMap[pid] {
@@ -190,24 +191,24 @@ func TreeMenuNew(menuMap map[int][]systemdb.SystemMenu, pid int, mrArr map[int][
 }
 
 func Index(c *gin.Context) {
-	menu := systemdb.SystemMenu{}
+	menu := systemnewdb.SystemMenu{}
 	menuArr, err := menu.GetAll()
 	if err != nil {
 		response.ShowError(c, "fail")
 		return
 	}
 	fmt.Println(menuArr)
-	var menuMap = make(map[int][]systemdb.SystemMenu, 0)
+	var menuMap = make(map[int][]systemnewdb.SystemMenu, 0)
 	for _, value := range menuArr {
 		menuMap[value.Pid] = append(menuMap[value.Pid], value)
 	}
-	var menuNewArr []systemdb.SystemMenu
+	var menuNewArr []systemnewdb.SystemMenu
 	menuNewArr = TreeNode(menuMap, 0)
 	response.ShowData(c, menuNewArr)
 	return
 }
-func TreeNode(menuMap map[int][]systemdb.SystemMenu, pid int) []systemdb.SystemMenu {
-	var menuNewArr []systemdb.SystemMenu
+func TreeNode(menuMap map[int][]systemnewdb.SystemMenu, pid int) []systemnewdb.SystemMenu {
+	var menuNewArr []systemnewdb.SystemMenu
 	if _, ok := menuMap[pid]; ok {
 		for _, v := range menuMap[pid] {
 			menuNewArr = append(menuNewArr, v)
@@ -242,7 +243,7 @@ func Create(c *gin.Context) {
 		return
 	}
 
-	menus := systemdb.SystemMenu{}
+	menus := systemnewdb.SystemMenu{}
 	menus.Path = data["path"].(string)
 	if menus.Path == "" {
 		response.ShowError(c, "fail")
@@ -253,7 +254,7 @@ func Create(c *gin.Context) {
 		response.ShowError(c, "path不可重复")
 		return
 	}
-	menu := systemdb.SystemMenu{}
+	menu := systemnewdb.SystemMenu{}
 	menu.Name = data["name"].(string)
 	menu.Path = data["path"].(string)
 	menu.MetaTitle = data["name"].(string)
@@ -277,11 +278,11 @@ func Create(c *gin.Context) {
 	if menu.Pid == 0 {
 		menu.Level = int8(menu.Pid)
 	} else {
-		pidMenuModel := systemdb.SystemMenu{ID: menu.Pid}
+		pidMenuModel := systemnewdb.SystemMenu{ID: menu.Pid}
 		_ = pidMenuModel.GetRow()
 		menu.Level = pidMenuModel.Level + 1
 	}
-	db := systemdb.GetDb()
+	db := systemnewdb.GetDb()
 	result := db.Create(&menu)
 	if result.Error != nil {
 		response.ShowError(c, "fail")
@@ -300,7 +301,7 @@ func Edit(c *gin.Context) {
 		response.ShowError(c, "fail")
 		return
 	}
-	menu := systemdb.SystemMenu{}
+	menu := systemnewdb.SystemMenu{}
 	menu.ID = int(data["id"].(float64))
 	has := menu.GetRow()
 	if has > 0 {
@@ -323,7 +324,7 @@ func Edit(c *gin.Context) {
 		response.ShowError(c, "fail")
 		return
 	}
-	menuModel := systemdb.SystemMenu{}
+	menuModel := systemnewdb.SystemMenu{}
 	menuModel.Path = data["path"].(string)
 	if menuModel.Path == "" {
 		response.ShowError(c, "fail")
@@ -356,7 +357,7 @@ func Edit(c *gin.Context) {
 	}
 	menu.Sort, _ = strconv.Atoi(data["sort"].(string))
 	menu.Pid = int(data["pid"].(float64))
-	db := systemdb.GetDb()
+	db := systemnewdb.GetDb()
 	result := db.Save(&menu)
 	if result.Error != nil {
 		response.ShowError(c, "fail")
@@ -376,7 +377,7 @@ func Delete(c *gin.Context) {
 		response.ShowError(c, "fail")
 		return
 	}
-	menu := systemdb.SystemMenu{}
+	menu := systemnewdb.SystemMenu{}
 	menu.ID, _ = strconv.Atoi(id)
 
 	err = menu.Delete()

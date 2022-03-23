@@ -7,7 +7,7 @@ import (
 	"log"
 	"os"
 	"os/signal"
-	"web-demo/lib/common"
+	"go-admin/lib/common"
 )
 
 var conf = common.Conf

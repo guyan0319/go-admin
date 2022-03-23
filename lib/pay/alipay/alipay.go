@@ -6,7 +6,7 @@ import (
 	"github.com/go-pay/gopay/alipay"
 	"github.com/go-pay/gopay/pkg/xlog"
 	"log"
-	"web-demo/lib/common"
+	"go-admin/lib/common"
 )
 
 type AlipayMap struct {

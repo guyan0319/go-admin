@@ -6,7 +6,7 @@ import (
 	"github.com/streadway/amqp"
 	"log"
 	"time"
-	"web-demo/lib/common"
+	"go-admin/lib/common"
 )
 
 // 定义RabbitMQ对象

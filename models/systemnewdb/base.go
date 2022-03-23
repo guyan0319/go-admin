@@ -36,8 +36,8 @@ func init() {
 		log.Fatalf("error: database connect  %s", err.Error())
 	}
 	db.Use(dbresolver.Register(dbresolver.Config{
-		Replicas: []gorm.Dialector{mysql.Open(c.Db["systemdb"].Dsn)},
-	}, "systemdb").
+		Replicas: []gorm.Dialector{mysql.Open(c.Db["systemnewdb"].Dsn)},
+	}, "systemnewdb").
 		SetConnMaxIdleTime(time.Hour).
 		SetConnMaxLifetime(24 * time.Hour).
 		SetMaxIdleConns(100).

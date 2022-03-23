@@ -7,7 +7,7 @@ import (
 
 func Index(c *gin.Context) {
 
-	//menu:=systemdb.SystemMenu{}
+	//menu:=systemnewdb.SystemMenu{}
 	//menuArr ,_:=menu.GetRouteByUid(15)
 	//menuMap :=make(map[int]string,0)
 	//for _,v:=range menuArr{
@@ -38,7 +38,7 @@ func Index(c *gin.Context) {
 	////
 	//fmt.Println(ma,"aaa")
 	//fmt.Println(err)
-	//user := systemdb.SystemUser{Id:2}
+	//user := systemnewdb.SystemUser{Id:2}
 	//has:=user.GetRowById()
 	//fmt.Println(has)
 	//response.ShowData(c, menuArr)

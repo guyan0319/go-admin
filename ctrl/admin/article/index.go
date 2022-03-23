@@ -5,10 +5,10 @@ import (
 	"github.com/gin-gonic/gin"
 	"strconv"
 	"strings"
-	"web-demo/lib/common"
-	"web-demo/lib/request"
-	"web-demo/lib/response"
-	"web-demo/models/systemdb"
+	"go-admin/lib/common"
+	"go-admin/lib/request"
+	"go-admin/lib/response"
+	"go-admin/models/systemnewdb"
 )
 
 func Create(c *gin.Context) {
@@ -71,7 +71,7 @@ func Create(c *gin.Context) {
 		return
 	}
 	//fmt.Println(data)
-	model := systemdb.SystemArticle{}
+	model := systemnewdb.SystemArticle{}
 	//model.ImageUri,_=common.WriteFile("./upload",data["imageUri"].(string))
 	model.ImageURI = common.SubstrPos(data["imageUri"].(string), "upload/")
 	model.Title = data["title"].(string)
@@ -91,14 +91,14 @@ func Create(c *gin.Context) {
 	model.DisplayTime = common.StrToTimes(data["displayTime"].(string))
 	model.Ctime = int(model.DisplayTime.Unix())
 	model.Mtime = model.DisplayTime
-	user := systemdb.SystemUser{Name: data["author"].(string)}
+	user := systemnewdb.SystemUser{Name: data["author"].(string)}
 	has, _ := user.GetRow()
 	if has < 1 {
 		common.ShowMsg("fail")
 		return
 	}
 	model.Author = user.ID
-	db := systemdb.GetDb()
+	db := systemnewdb.GetDb()
 	res := db.Create(&model)
 	if res.Error != nil {
 		fmt.Println(res.Error)
@@ -119,7 +119,7 @@ func Edit(c *gin.Context) {
 		response.ShowError(c, "fail")
 		return
 	}
-	article := systemdb.SystemArticle{}
+	article := systemnewdb.SystemArticle{}
 	article.ID = uint64(data["id"].(float64))
 	has, _ := article.GetRow()
 	if has < 1 {
@@ -171,7 +171,7 @@ func Edit(c *gin.Context) {
 		response.ShowErrorParams(c, "imageUri")
 		return
 	}
-	model := systemdb.SystemArticle{ID: article.ID}
+	model := systemnewdb.SystemArticle{ID: article.ID}
 	if !strings.Contains(data["imageUri"].(string), "http://") {
 		model.ImageURI = common.SubstrPos(data["imageUri"].(string), "upload/")
 		//model.ImageUri,_=common.WriteFile("./upload",data["imageUri"].(string))
@@ -191,7 +191,7 @@ func Edit(c *gin.Context) {
 	}
 	model.DisplayTime = common.StrToTimes(data["displayTime"].(string))
 
-	user := systemdb.SystemUser{Name: data["author"].(string)}
+	user := systemnewdb.SystemUser{Name: data["author"].(string)}
 	has, _ = user.GetRow()
 	if has < 1 {
 		common.ShowMsg("fail")
@@ -221,18 +221,18 @@ func Index(c *gin.Context) {
 	filters["importance"] = c.Query("importance")
 	filters["title"] = c.Query("title")
 	paging := &common.Paging{Page: page, PageSize: limit}
-	articleModel := systemdb.SystemArticle{}
+	articleModel := systemnewdb.SystemArticle{}
 	articleArr, err := articleModel.GetAllPage(paging, filters)
-	var articlePageArr []systemdb.SystemArticlePage
+	var articlePageArr []systemnewdb.SystemArticlePage
 
 	for _, v := range articleArr {
-		userModel := systemdb.SystemUser{}
+		userModel := systemnewdb.SystemUser{}
 		userModel.ID = v.Author
 		has, _ := userModel.GetRow()
 		if has < 1 {
 			continue
 		}
-		articlePageArr = append(articlePageArr, systemdb.SystemArticlePage{SystemArticle: v, AuthorName: userModel.Name})
+		articlePageArr = append(articlePageArr, systemnewdb.SystemArticlePage{SystemArticle: v, AuthorName: userModel.Name})
 	}
 	if err != nil {
 		response.ShowError(c, "fail")
@@ -257,7 +257,7 @@ func Detail(c *gin.Context) {
 		response.ShowErrorParams(c, "id")
 		return
 	}
-	model := systemdb.SystemArticle{}
+	model := systemnewdb.SystemArticle{}
 	idint64, _ := strconv.ParseInt(id, 10, 64)
 	model.ID = uint64(idint64)
 	res, _ := model.GetRow()
@@ -265,9 +265,9 @@ func Detail(c *gin.Context) {
 		response.ShowError(c, "article_error")
 		return
 	}
-	articles := systemdb.SystemArticlePage{}
+	articles := systemnewdb.SystemArticlePage{}
 	articles.SystemArticle = model
-	userModel := systemdb.SystemUser{}
+	userModel := systemnewdb.SystemUser{}
 	userModel.ID = model.Author
 	r, _ := userModel.GetRow()
 	if r > 0 {

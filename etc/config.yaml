@@ -1,9 +1,9 @@
-Name: web-demo
+Name: go-admin
 Host: 127.0.0.1
 Port: 8090
 Token: token
 Db:
-  Systemdb:
+  systemnewdb:
     Dsn: root:Myyd@159@tcp(127.0.0.1:3306)/systemnewdb?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
 CacheRedis:
   Default:

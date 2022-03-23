@@ -5,9 +5,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"io/ioutil"
 	"time"
-	"web-demo/lib/request"
-	"web-demo/lib/response"
-	"web-demo/models/systemdb"
+	"go-admin/lib/request"
+	"go-admin/lib/response"
+	"go-admin/models/systemnewdb"
 )
 
 func UpdateRole(c *gin.Context) {
@@ -23,7 +23,7 @@ func UpdateRole(c *gin.Context) {
 		return
 	}
 	id := int(data["id"].(float64))
-	model := systemdb.SystemRole{Name: data["name"].(string)}
+	model := systemnewdb.SystemRole{Name: data["name"].(string)}
 	has, _ := model.GetRow()
 	if has > 0 && model.ID != id {
 		response.ShowError(c, "role_error")
@@ -70,7 +70,7 @@ func AddRole(c *gin.Context) {
 		response.ShowError(c, "fail")
 		return
 	}
-	model := systemdb.SystemRole{Name: data["name"].(string)}
+	model := systemnewdb.SystemRole{Name: data["name"].(string)}
 	has, _ := model.GetRow()
 	if has > 0 {
 		response.ShowError(c, "fail")
@@ -103,13 +103,13 @@ func DeleteRole(c *gin.Context) {
 		return
 	}
 	id := int(data["id"].(float64))
-	role := systemdb.SystemRole{ID: id}
+	role := systemnewdb.SystemRole{ID: id}
 	has, _ := role.GetRow()
 	if has < 1 {
 		response.ShowError(c, "fail")
 		return
 	}
-	roles := systemdb.SystemRole{ID: role.ID}
+	roles := systemnewdb.SystemRole{ID: role.ID}
 	err = roles.Delete()
 	if err != nil {
 		response.ShowError(c, "fail")
@@ -121,7 +121,7 @@ func DeleteRole(c *gin.Context) {
 }
 
 func Index(c *gin.Context) {
-	roles := systemdb.SystemRole{}
+	roles := systemnewdb.SystemRole{}
 	list := roles.GetNameList()
 	response.ShowData(c, list)
 	return

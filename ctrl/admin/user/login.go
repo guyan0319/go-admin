@@ -6,10 +6,10 @@ import (
 	"github.com/gin-gonic/gin"
 	"strconv"
 	"time"
-	"web-demo/lib/cache"
-	"web-demo/lib/common"
-	"web-demo/lib/response"
-	"web-demo/models/systemdb"
+	"go-admin/lib/cache"
+	"go-admin/lib/common"
+	"go-admin/lib/response"
+	"go-admin/models/systemnewdb"
 )
 
 type User struct {
@@ -60,7 +60,7 @@ func Login(c *gin.Context) {
 		response.ShowError(c, "fail")
 		return
 	}
-	user := systemdb.SystemUser{Name: u.Username}
+	user := systemnewdb.SystemUser{Name: u.Username}
 	has, _ := user.GetRow()
 	if has < 1 {
 		response.ShowError(c, "fail")

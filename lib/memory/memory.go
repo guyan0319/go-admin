@@ -2,7 +2,7 @@ package memory
 
 import (
 	"container/list"
-	"web-demo/lib/session"
+	"go-admin/lib/session"
 
 	"sync"
 	"time"

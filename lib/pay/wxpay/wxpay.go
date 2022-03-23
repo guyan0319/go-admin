@@ -5,7 +5,7 @@ import (
 	"github.com/go-pay/gopay/pkg/xlog"
 	"github.com/go-pay/gopay/wechat/v3"
 	"log"
-	"web-demo/lib/common"
+	"go-admin/lib/common"
 )
 
 type WxpayMap struct {
