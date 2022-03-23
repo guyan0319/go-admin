@@ -7,8 +7,8 @@ const systemRouter = {
   redirect: "/system/user/index",
   meta: {
     icon: "setting",
-    title: "系统管理1",
-    // title: "menus.hssysManagement",
+    // title: "系统管理1",
+    title: "menus.hssysManagement",
     i18n: true,
     rank: 6
   },
@@ -26,6 +26,15 @@ const systemRouter = {
       name: "dict",
       meta: {
         title: "menus.hsDict",
+        i18n: true,
+        keepAlive: true
+      }
+    },
+    {
+      path: "/system/menu/index",
+      name: "menu",
+      meta: {
+        title: "menus.hsMenu",
         i18n: true,
         keepAlive: true
       }
