@@ -1,0 +1,29 @@
+Name: web-demo
+Host: 127.0.0.1
+Port: 8090
+Token: token
+Db:
+  Systemdb:
+    Dsn: root:Myyd@159@tcp(127.0.0.1:3306)/systemnewdb?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
+CacheRedis:
+  Default:
+    Host:
+      - 127.0.0.1:6379
+    Pass:
+    Type: tcp
+    Tls:
+RedisPre: web.cache
+Auth:
+  AccessSecret: sfaiofqwkfksdakf
+  AccessExpire: 36000
+Rpc:
+  Addr: localhost:8972
+Kafka:
+  - 127.0.0.1:9092
+Rabbit:
+  - amqp://guest:guest@localhost:5672/
+Es:
+  Addresses:
+  - http://localhost:9200
+  Username:
+  Password:
