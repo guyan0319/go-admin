@@ -16,6 +16,7 @@ import (
 	"go-admin/ctrl/index"
 	"go-admin/lib/cache"
 )
+var routes=[]string{}
 
 func Start() {
 	gin.SetMode(gin.DebugMode) //开发环境
@@ -50,7 +51,7 @@ func AdminStart() {
 	store, _ := redis.NewStoreWithPool(cache.RedisClient, []byte("secret"))
 	r.Use(sessions.Sessions("gosession", store))
 
-	//r.Use(cors.Default())//默认跨域
+	r.Use(cors.Default())//默认跨域
 	r.Use(Auth())
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
@@ -94,7 +95,7 @@ func AdminStart() {
 
 func GetCorsConfig() cors.Config {
 	config := cors.DefaultConfig()
-	config.AllowOrigins = []string{"http://localhost:9529", "http://localhost:9528", "http://localhost:9527", "http://localhost"}
+	config.AllowOrigins = []string{"http://localhost:8848"}
 	config.AllowMethods = []string{"POST", "GET", "OPTIONS", "PUT", "DELETE"}
 	config.AllowCredentials = true
 	config.AllowHeaders = []string{"x-requested-with", "Content-Type", "AccessToken", "X-CSRF-Token", "X-Token", "Authorization", "token"}
