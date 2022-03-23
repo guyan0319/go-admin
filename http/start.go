@@ -16,7 +16,7 @@ import (
 	"go-admin/ctrl/index"
 	"go-admin/lib/cache"
 )
-var routes=[]string{}
+var routes=[]string{"/pong","/login","/role/index","/info","/dashboard","/logout"}
 
 func Start() {
 	gin.SetMode(gin.DebugMode) //开发环境
