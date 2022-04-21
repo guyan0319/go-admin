@@ -18,7 +18,7 @@ type SystemArticle struct {
 	ImageURI        string    `gorm:"column:image_uri;type:varchar(200);not null;default:''" json:"imageUri"`         // 图片
 	CommentDisabled int8      `gorm:"column:comment_disabled;type:tinyint;not null;default:0" json:"commentDisabled"` // 是否展示评论
 	DisplayTime     time.Time `gorm:"column:display_time;type:datetime;not null" json:"displayTime"`                  // 发布时间
-	Mtime           time.Time `gorm:"column:mtime;type:timestamp;not null;default:CURRENT_TIMESTAMP" json:"mtime"`    // 修改时间
+	Mtime           time.Time `gorm:"column:mtime;type:timestamp;not null" json:"mtime"`                              // 修改时间
 }
 
 // SystemArticleColumns get sql column name.获取数据库列名
@@ -115,7 +115,7 @@ type SystemMenu struct {
 	Pid             int       `gorm:"column:pid;type:int;not null;default:0" json:"pid"`                                   // 父ID
 	State           int8      `gorm:"column:state;type:tinyint;not null;default:1" json:"state"`                           // 状态（0禁止1启动）
 	Level           int8      `gorm:"column:level;type:tinyint;not null;default:0" json:"level"`                           // 层级
-	Ctime           time.Time `gorm:"column:ctime;type:datetime;not null;default:CURRENT_TIMESTAMP" json:"ctime"`          // 时间
+	Ctime           time.Time `gorm:"column:ctime;type:datetime;not null" json:"ctime"`                                    // 时间
 }
 
 // SystemMenuColumns get sql column name.获取数据库列名
@@ -225,19 +225,19 @@ var SystemRoleMenuColumns = struct {
 
 // SystemUser 管理账户表
 type SystemUser struct {
-	ID            int       `gorm:"primaryKey;column:id;type:int;not null" json:"id"`                                             // 主键
-	Name          string    `gorm:"column:name;type:varchar(50);not null" json:"name"`                                            // 登录名
-	Nickname      string    `gorm:"unique;column:nickname;type:varchar(50);not null;default:''" json:"nickname"`                  // 用户昵称
-	Password      string    `gorm:"index:PASSWORD;column:password;type:varchar(50);not null" json:"password"`                     // 密码
-	Salt          string    `gorm:"column:salt;type:varchar(4);not null" json:"salt"`                                             // 盐
-	Phone         string    `gorm:"column:phone;type:varchar(11);not null;default:''" json:"phone"`                               // 手机号
-	Avatar        string    `gorm:"column:avatar;type:varchar(300);not null;default:''" json:"avatar"`                            // 头像
-	Introduction  string    `gorm:"column:introduction;type:varchar(300);not null;default:''" json:"introduction"`                // 简介
-	State         int8      `gorm:"column:state;type:tinyint;not null;default:1" json:"state"`                                    // 状态（0 停止1启动）
-	Utime         time.Time `gorm:"column:utime;type:timestamp;not null;default:CURRENT_TIMESTAMP" json:"utime"`                  // 更新时间
-	LastLoginTime time.Time `gorm:"column:last_login_time;type:datetime;not null;default:CURRENT_TIMESTAMP" json:"lastLoginTime"` // 上次登录时间
-	LastLoginIP   string    `gorm:"column:last_login_ip;type:varchar(50);not null;default:''" json:"lastLoginIp"`                 // 最近登录IP
-	Ctime         time.Time `gorm:"column:ctime;type:datetime;not null" json:"ctime"`                                             // 注册时间
+	ID            int       `gorm:"primaryKey;column:id;type:int;not null" json:"id"`                              // 主键
+	Name          string    `gorm:"column:name;type:varchar(50);not null" json:"name"`                             // 登录名
+	Nickname      string    `gorm:"unique;column:nickname;type:varchar(50);not null;default:''" json:"nickname"`   // 用户昵称
+	Password      string    `gorm:"index:PASSWORD;column:password;type:varchar(50);not null" json:"password"`      // 密码
+	Salt          string    `gorm:"column:salt;type:varchar(4);not null" json:"salt"`                              // 盐
+	Phone         string    `gorm:"column:phone;type:varchar(11);not null;default:''" json:"phone"`                // 手机号
+	Avatar        string    `gorm:"column:avatar;type:varchar(300);not null;default:''" json:"avatar"`             // 头像
+	Introduction  string    `gorm:"column:introduction;type:varchar(300);not null;default:''" json:"introduction"` // 简介
+	State         int8      `gorm:"column:state;type:tinyint;not null;default:1" json:"state"`                     // 状态（0 停止1启动）
+	Utime         time.Time `gorm:"column:utime;type:timestamp;not null" json:"utime"`                             // 更新时间
+	LastLoginTime time.Time `gorm:"column:last_login_time;type:datetime;not null" json:"lastLoginTime"`            // 上次登录时间
+	LastLoginIP   string    `gorm:"column:last_login_ip;type:varchar(50);not null;default:''" json:"lastLoginIp"`  // 最近登录IP
+	Ctime         time.Time `gorm:"column:ctime;type:datetime;not null" json:"ctime"`                              // 注册时间
 }
 
 // SystemUserColumns get sql column name.获取数据库列名

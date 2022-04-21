@@ -5,14 +5,13 @@ import (
 	"fmt"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
+	"go-admin/lib/common"
 	"go-admin/lib/request"
 	"go-admin/lib/response"
 	"go-admin/models/systemnewdb"
 	"io/ioutil"
 	"strconv"
 	"time"
-	"go-admin/lib/common"
-
 )
 
 type Role struct {
@@ -46,7 +45,7 @@ func List(c *gin.Context) {
 	role := systemnewdb.SystemRole{}
 	mrArr := role.GetRowMenu()
 	for _, value := range menuArr {
-		value.Hidden = 0
+
 		menuMap[value.Pid] = append(menuMap[value.Pid], value)
 	}
 	jsonArr := TreeMenuNew(menuMap, 0, mrArr)
@@ -73,7 +72,6 @@ func Roles(c *gin.Context) {
 		if menuArr != nil {
 			var menuMap = make(map[int][]systemnewdb.SystemMenu, 0)
 			for _, value := range menuArr {
-				value.Hidden = 0
 				menuMap[value.Pid] = append(menuMap[value.Pid], value)
 			}
 			role := systemnewdb.SystemRole{}
@@ -135,40 +133,90 @@ func Dashboard(c *gin.Context) {
 	//})
 	//return
 }
+func GetAsyncRoutes(c *gin.Context) {
+	//session := sessions.Default(c)
+	//v := session.Get(common.Conf.Token)
+	//if v == nil {
+	//	response.ShowError(c, "fail")
+	//	return
+	//}
+	//uid := session.Get(v)
+	uid:=1
+	user := systemnewdb.SystemUser{ID: uid}
+	//user := systemnewdb.SystemUser{ID: uid.(int)}
+	_, _ = user.GetRow()
+	fmt.Println(user)
+	menu := systemnewdb.SystemMenu{State: 1}
+	var menuArr []systemnewdb.SystemMenu
+	var err error
+	if user.Name == "admin" {
+		menuArr, err = menu.GetAll()
+		if err != nil {
+			response.ShowError(c, "fail")
+			return
+		}
+		fmt.Println(menuArr)
+	} else {
+		menuArr = menu.GetRowByUid(uid)
+		fmt.Println(menuArr)
+	}
+	var menuMap = make(map[int][]systemnewdb.SystemMenu, 0)
+	for _, value := range menuArr {
+		menuMap[value.Pid] = append(menuMap[value.Pid], value)
+	}
+	role := systemnewdb.SystemRole{}
+	mrArr := role.GetRowMenu()
+	jsonStr := TreeMenuNew(menuMap, 0, mrArr)
+	response.ShowData(c, jsonStr)
+	return
+	//roleMenu:="{\"menuList\":[{\"create_time\":\"2018-03-1611:33:00\",\"menu_type\":\"M\",\"children\":[{\"create_time\":\"2018-03-1611:33:00\",\"menu_type\":\"C\",\"children\":[],\"parent_id\":1,\"menu_name\":\"用户管理\",\"icon\":\"#\",\"perms\":\"system:user:index\",\"order_num\":1,\"menu_id\":4,\"url\":\"/system/user\"},{\"create_time\":\"2018-12-2810:36:20\",\"menu_type\":\"M\",\"children\":[{\"create_time\":\"2018-12-2810:50:28\",\"menu_type\":\"C\",\"parent_id\":73,\"menu_name\":\"人员通讯录\",\"icon\":null,\"perms\":\"system:person:index\",\"order_num\":1,\"menu_id\":74,\"url\":\"/system/book/person\"}],\"parent_id\":1,\"menu_name\":\"通讯录管理\",\"icon\":\"fafa-address-book-o\",\"perms\":null,\"order_num\":1,\"menu_id\":73,\"url\":\"/system\"}],\"parent_id\":0,\"menu_name\":\"系统管理\",\"icon\":\"fafa-adjust\",\"perms\":null,\"order_num\":2,\"menu_id\":1,\"url\":\"#\"},{\"create_time\":\"2018-03-1611:33:00\",\"menu_type\":\"M\",\"children\":[{\"create_time\":\"2018-03-1611:33:00\",\"menu_type\":\"C\",\"parent_id\":2,\"menu_name\":\"数据监控\",\"icon\":\"#\",\"perms\":\"monitor:data:view\",\"order_num\":3,\"menu_id\":15,\"url\":\"/system/druid/monitor\"}],\"parent_id\":0,\"menu_name\":\"系统监控\",\"icon\":\"fafa-video-camera\",\"perms\":null,\"order_num\":5,\"menu_id\":2,\"url\":\"#\"}],\"user\":{\"login_name\":\"admin\",\"user_id\":1,\"user_name\":\"管理员\",\"dept_id\":1}}"
+	////roleMenu:="{\"menuList\": [{ 		\"children\": [{ 			\"menu_type\": \"M\", 			\"children\": [{ 				\"menu_type\": \"C\", 				\"parent_id\": 73, 				\"menu_name\": \"人员通讯录\", 				\"icon\": null, 				\"order_num\": 1, 				\"menu_id\": 74, 				\"url\": \"/system/book/person\" 			}], 			\"parent_id\": 1, 			\"menu_name\": \"通讯录管理\", 			\"icon\": \"fafa-address-book-o\", 			\"perms\": null, 			\"order_num\": 1, 			\"menu_id\": 73, 			\"url\": \"#\" 		}], 		\"parent_id\": 0, 		\"menu_name\": \"系统管理\", 		\"icon\": \"fafa-adjust\", 		\"perms\": null, 		\"order_num\": 2, 		\"menu_id\": 1, 		\"url\": \"#\" 	}], 	\"user\": { 		\"login_name\": \"admin1\", 		\"user_id\": 1, 		\"user_name\": \"管理员\", 		\"dept_id\": 1 	} }"
+	//var data map[string]interface{}
+	//err := json.Unmarshal([]byte(roleMenu), &data)
+	//if err != nil {
+	//	fmt.Println(err)
+	//}
+
+	//c.JSON(http.StatusOK, gin.H{
+	//	"code": 20000,
+	//	"data":  data,
+	//})
+	//return
+}
+
 func TreeMenuNew(menuMap map[int][]systemnewdb.SystemMenu, pid int, mrArr map[int][]string) []interface{} {
 	var menuNewArr []interface{}
-	if _, ok := menuMap[pid]; ok {
+	if _, ok := menuMap[pid]; ok {//父节点存在
 		for _, value := range menuMap[pid] {
 			var item = make(map[string]interface{})
 			item["path"] = value.Path
-			item["component"] = value.Component
+			if value.Component!="" {
+				item["component"] = value.Component
+			}
 			if value.Redirect != "" {
 				item["redirect"] = value.Redirect
 			}
-			//if value.Alwaysshow == 1 {
-			//	item["alwaysShow"] = true
-			//}
-			if value.Hidden == 1 {
-				item["hidden"] = true
-			} else {
-				item["hidden"] = false
-			}
 			var meta = make(map[string]interface{})
 			if _, ok := mrArr[value.ID]; ok {
-				meta["roles"] = mrArr[value.ID]
+				meta["authority"] = mrArr[value.ID]
 			}
-			if value.MetaTitle != "" {
+			if value.MetaTitle != "" {//菜单名称
 				meta["title"] = value.MetaTitle
 			}
 			if value.MetaIcon != "" {
 				meta["icon"] = value.MetaIcon
 			}
-			if value.MetaAffix == 1 {
-				meta["affix"] = true
+
+			if value.MetaI18n == 1 {
+				meta["i18n"] = true
 			}
-			if value.MetaNocache == 1 {
-				meta["noCache"] = true
+			if value.MetaShowlink == 1 {
+				meta["showLink"] = true
 			}
+			if value.sh == 1 {
+				meta["showLink"] = true
+			}
+
 			if value.State == 1 {
 				meta["status"] = true
 			}
@@ -262,18 +310,12 @@ func Create(c *gin.Context) {
 	menu.URL = data["url"].(string)
 	menu.Redirect = data["redirect"].(string)
 	menu.MetaIcon = data["meta_icon"].(string)
-	if data["alwaysshow"].(bool) {
-		menu.Alwaysshow = 1
-	}
-	if data["hidden"].(bool) {
-		menu.Hidden = 1
-	}
+
 	if data["state"].(bool) {
 		menu.State = 1
 	}
 	menu.Ctime = time.Now()
 
-	menu.Sort, _ = strconv.Atoi(data["sort"].(string))
 	menu.Pid = int(data["pid"].(float64))
 	if menu.Pid == 0 {
 		menu.Level = int8(menu.Pid)
@@ -342,20 +384,10 @@ func Edit(c *gin.Context) {
 	menu.URL = data["url"].(string)
 	menu.Redirect = data["redirect"].(string)
 	menu.MetaIcon = data["meta_icon"].(string)
-	if data["meta_nocache"].(bool) {
-		menu.MetaNocache = 1
-	}
-	if data["hidden"].(bool) {
-		menu.Hidden = 1
-	}
-	if data["alwaysshow"].(bool) {
-		menu.Alwaysshow = 1
-	}
 
 	if data["state"].(bool) {
 		menu.State = 1
 	}
-	menu.Sort, _ = strconv.Atoi(data["sort"].(string))
 	menu.Pid = int(data["pid"].(float64))
 	db := systemnewdb.GetDb()
 	result := db.Save(&menu)

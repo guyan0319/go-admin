@@ -2,13 +2,12 @@ package admin
 
 import (
 	"github.com/gin-gonic/gin"
-	"net/http"
+	"go-admin/lib/common"
+	"go-admin/lib/response"
 	"os"
 	"path"
 	"strings"
 	"time"
-	"go-admin/lib/common"
-	"go-admin/lib/response"
 )
 
 func Index(c *gin.Context) {
@@ -49,7 +48,14 @@ func Index(c *gin.Context) {
 	//fmt.Println(has)
 	//response.ShowData(c, menuArr)
 	//return
-	c.String(http.StatusOK, "hello world")
+	str:=`[{path:"/system",redirect:"/system/user/index",meta:{icon:"setting",//title:"系统管理1",title:"menus.hssysManagement",i18n:true,rank:6},children:[{path:"/system/user/index",name:"user",meta:{title:"menus.hsBaseinfo",i18n:true}},{path:"/system/dict/index",name:"dict",meta:{title:"menus.hsDict",i18n:true,keepAlive:true}},{path:"/system/menu/index",name:"menu",meta:{title:"menus.hsMenu",i18n:true,keepAlive:true}}]},{path:"/permission",redirect:"/permission/page/index",meta:{title:"menus.permission",icon:"lollipop",i18n:true,rank:7},children:[{path:"/permission/page/index",name:"permissionPage",meta:{title:"menus.permissionPage",i18n:true}},{path:"/permission/button/index",name:"permissionButton",meta:{title:"menus.permissionButton",i18n:true,authority:[]}}]}]`
+	//c.String(http.StatusOK, str)
+	//type MenuArr struct {
+	//	Name string
+	//}
+	//menuArr:=MenuArr{Name: "aadfadf"}
+	response.ShowData(c, str)
+
 	return
 }
 
