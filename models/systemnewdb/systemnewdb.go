@@ -101,11 +101,12 @@ type SystemMenu struct {
 	MetaIcon        string    `gorm:"column:meta_icon;type:varchar(50);not null;default:''" json:"metaIcon"`               // meta icon
 	MetaI18n        int8      `gorm:"column:meta_i18n;type:tinyint;not null;default:0" json:"metaI18n"`                    // 是否国家化（1:是 0:否）
 	MetaShowlink    int8      `gorm:"column:meta_showlink;type:tinyint;not null;default:0" json:"metaShowlink"`            // 是否总是显示（1:是0：否）
+	MetaShowparent  int8      `gorm:"column:meta_showparent;type:tinyint;not null;default:0" json:"metaShowparent"`        // 是否显示父级菜单1是0否
 	MetaRank        int8      `gorm:"column:meta_rank;type:tinyint;not null;default:0" json:"metaRank"`                    // 排序
 	MetaKeepalive   int8      `gorm:"column:meta_keepalive;type:tinyint;not null;default:0" json:"metaKeepalive"`          // 是否开启缓存（1开启0关闭)
 	Type            int8      `gorm:"column:type;type:tinyint;not null;default:2" json:"type"`                             // 类型(1:固定,2:权限配置3特殊)
-	MetaFramesrc    string    `gorm:"column:meta_framesrc;type:varchar(300);not null;default:0" json:"metaFramesrc"`       // 内嵌的iframe链接
-	TransitionName  int8      `gorm:"column:transition_name;type:tinyint;not null;default:0" json:"transitionName"`        // 是否显示动画（1是0否）
+	MetaFramesrc    string    `gorm:"column:meta_framesrc;type:varchar(300);not null;default:''" json:"metaFramesrc"`      // 内嵌的iframe链接
+	TransitionName  string    `gorm:"column:transition_name;type:varchar(30);not null;default:''" json:"transitionName"`   // 当前路由动画效果,当前路由动画效果
 	TransitionEnter string    `gorm:"column:transition_enter;type:varchar(50);not null;default:''" json:"transitionEnter"` // 进入动画
 	TransitionLeave string    `gorm:"column:transition_leave;type:varchar(50);not null;default:''" json:"transitionLeave"` // 离开动画
 	Dynamiclevel    int8      `gorm:"column:dynamiclevel;type:tinyint;not null;default:3" json:"dynamiclevel"`             // 动态路由可打开的最大数量
@@ -131,6 +132,7 @@ var SystemMenuColumns = struct {
 	MetaIcon        string
 	MetaI18n        string
 	MetaShowlink    string
+	MetaShowparent  string
 	MetaRank        string
 	MetaKeepalive   string
 	Type            string
@@ -158,6 +160,7 @@ var SystemMenuColumns = struct {
 	MetaIcon:        "meta_icon",
 	MetaI18n:        "meta_i18n",
 	MetaShowlink:    "meta_showlink",
+	MetaShowparent:  "meta_showparent",
 	MetaRank:        "meta_rank",
 	MetaKeepalive:   "meta_keepalive",
 	Type:            "type",

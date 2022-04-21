@@ -206,27 +206,56 @@ func TreeMenuNew(menuMap map[int][]systemnewdb.SystemMenu, pid int, mrArr map[in
 			if value.MetaIcon != "" {
 				meta["icon"] = value.MetaIcon
 			}
-
 			if value.MetaI18n == 1 {
 				meta["i18n"] = true
 			}
 			if value.MetaShowlink == 1 {
 				meta["showLink"] = true
 			}
-			if value.sh == 1 {
-				meta["showLink"] = true
+			if value.MetaShowparent == 1 {
+				meta["showParent"] = true
 			}
-
-			if value.State == 1 {
-				meta["status"] = true
+			if value.MetaKeepalive == 1 {
+				meta["keepAlive"] = true
+			}
+			if value.MetaFramesrc!="" {
+				meta["frameSrc"] = value.MetaFramesrc
 			}
 
 			if len(meta) > 0 {
 				item["meta"] = meta
 			}
+			var transition = make(map[string]interface{})
+			if value.TransitionName!="" {
+				transition["name"]=value.TransitionName
+			}
+			if value.TransitionEnter!="" {
+				transition["enterTransition"]=value.TransitionEnter
+			}
+			if value.TransitionLeave!="" {
+				transition["leaveTransition"]=value.TransitionLeave
+			}
+			if len(transition) > 0 {
+				item["transition"] = transition
+			}
+			if	value.Dynamiclevel>0{
+				item["dynamicLevel"] = value.Dynamiclevel
+			}
+			if value.Refreshredirect!="" {
+				item["refreshRedirect"] = value.Refreshredirect
+			}
+			var extraIcon =  make(map[string]interface{})
+			if value.ExtraiconSvg==1 {
+				extraIcon["svg"] = true
+			}
+			if value.ExtraiconName!="" {
+				extraIcon["name"] = value.ExtraiconName
+			}
+			if len(extraIcon) > 0 {
+				item["extraIcon"] = extraIcon
+			}
 			item["pid"] = value.Pid
 			item["id"] = value.ID
-			item["url"] = value.URL
 			item["name"] = value.Name
 			children := TreeMenuNew(menuMap, value.ID, mrArr)
 			if children != nil {

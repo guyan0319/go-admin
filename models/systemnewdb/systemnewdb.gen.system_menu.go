@@ -103,6 +103,11 @@ func (obj *_SystemMenuMgr) WithMetaShowlink(metaShowlink int8) Option {
 	return optionFunc(func(o *options) { o.query["meta_showlink"] = metaShowlink })
 }
 
+// WithMetaShowparent meta_showparent获取 是否显示父级菜单1是0否
+func (obj *_SystemMenuMgr) WithMetaShowparent(metaShowparent int8) Option {
+	return optionFunc(func(o *options) { o.query["meta_showparent"] = metaShowparent })
+}
+
 // WithMetaRank meta_rank获取 排序
 func (obj *_SystemMenuMgr) WithMetaRank(metaRank int8) Option {
 	return optionFunc(func(o *options) { o.query["meta_rank"] = metaRank })
@@ -123,8 +128,9 @@ func (obj *_SystemMenuMgr) WithMetaFramesrc(metaFramesrc string) Option {
 	return optionFunc(func(o *options) { o.query["meta_framesrc"] = metaFramesrc })
 }
 
-// WithTransitionName transition_name获取 是否显示动画（1是0否）
-func (obj *_SystemMenuMgr) WithTransitionName(transitionName int8) Option {
+// WithTransitionName transition_name获取 当前路由动画效果
+//当前路由动画效果
+func (obj *_SystemMenuMgr) WithTransitionName(transitionName string) Option {
 	return optionFunc(func(o *options) { o.query["transition_name"] = transitionName })
 }
 
@@ -362,6 +368,20 @@ func (obj *_SystemMenuMgr) GetBatchFromMetaShowlink(metaShowlinks []int8) (resul
 	return
 }
 
+// GetFromMetaShowparent 通过meta_showparent获取内容 是否显示父级菜单1是0否
+func (obj *_SystemMenuMgr) GetFromMetaShowparent(metaShowparent int8) (results []*SystemMenu, err error) {
+	err = obj.DB.WithContext(obj.ctx).Model(SystemMenu{}).Where("`meta_showparent` = ?", metaShowparent).Find(&results).Error
+
+	return
+}
+
+// GetBatchFromMetaShowparent 批量查找 是否显示父级菜单1是0否
+func (obj *_SystemMenuMgr) GetBatchFromMetaShowparent(metaShowparents []int8) (results []*SystemMenu, err error) {
+	err = obj.DB.WithContext(obj.ctx).Model(SystemMenu{}).Where("`meta_showparent` IN (?)", metaShowparents).Find(&results).Error
+
+	return
+}
+
 // GetFromMetaRank 通过meta_rank获取内容 排序
 func (obj *_SystemMenuMgr) GetFromMetaRank(metaRank int8) (results []*SystemMenu, err error) {
 	err = obj.DB.WithContext(obj.ctx).Model(SystemMenu{}).Where("`meta_rank` = ?", metaRank).Find(&results).Error
@@ -418,15 +438,17 @@ func (obj *_SystemMenuMgr) GetBatchFromMetaFramesrc(metaFramesrcs []string) (res
 	return
 }
 
-// GetFromTransitionName 通过transition_name获取内容 是否显示动画（1是0否）
-func (obj *_SystemMenuMgr) GetFromTransitionName(transitionName int8) (results []*SystemMenu, err error) {
+// GetFromTransitionName 通过transition_name获取内容 当前路由动画效果
+//当前路由动画效果
+func (obj *_SystemMenuMgr) GetFromTransitionName(transitionName string) (results []*SystemMenu, err error) {
 	err = obj.DB.WithContext(obj.ctx).Model(SystemMenu{}).Where("`transition_name` = ?", transitionName).Find(&results).Error
 
 	return
 }
 
-// GetBatchFromTransitionName 批量查找 是否显示动画（1是0否）
-func (obj *_SystemMenuMgr) GetBatchFromTransitionName(transitionNames []int8) (results []*SystemMenu, err error) {
+// GetBatchFromTransitionName 批量查找 当前路由动画效果
+//当前路由动画效果
+func (obj *_SystemMenuMgr) GetBatchFromTransitionName(transitionNames []string) (results []*SystemMenu, err error) {
 	err = obj.DB.WithContext(obj.ctx).Model(SystemMenu{}).Where("`transition_name` IN (?)", transitionNames).Find(&results).Error
 
 	return
