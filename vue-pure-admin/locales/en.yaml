@@ -53,6 +53,7 @@ menus:
   permissionPage: Page Permission
   permissionButton: Button Permission
   hstabs: Tabs Operate
+  hstabsDetail: Tabs Detail
   hsguide: Guide
   hsAble: Able
   hsMenuTree: Menu Tree
