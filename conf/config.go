@@ -1,39 +1,36 @@
 package conf
 
-type Config struct {
-	Name     string
-	Host     string
-	Port     string
-	Token    string
-	RedisPre string
-	Auth     struct {
-		AccessSecret string
-		AccessExpire int64
-	}
-	Db         map[string]MysqlConf
-	CacheRedis map[string]RedisConf
-	Rpc        struct {
-		Addr string
-	}
-	Kafka  []string
-	Rabbit []string
-	Es     struct {
-		Addresses []string
-		Username  string
-		Password  string
-	}
-}
-
-type (
-	// A RedisConf is a redis config.
-	RedisConf struct {
-		Host []string
-		Type string `json:",default=node,options=node|cluster"`
-		Pass string `json:",optional"`
-		Tls  bool   `json:",default=false,options=true|false"`
-	}
-
-	MysqlConf struct {
-		Dsn string
-	}
+import (
+	"sync"
 )
+
+type Config struct {
+	Language string
+	Token string
+	Super string
+	RedisPre string
+	Host string
+	Routes []string
+}
+var (
+	Cfg  Config
+	mutex   sync.Mutex
+	declare sync.Once
+)
+
+func  Set(cfg Config) {
+	mutex.Lock()
+	Cfg.RedisPre=setDefault(cfg.RedisPre,"","go.admin.redis")
+	Cfg.Language=setDefault(cfg.Language,"","cn")
+	Cfg.Token=setDefault(cfg.Token,"","token")
+	Cfg.Super=setDefault(cfg.Super,"","admin")//超级账户
+	Cfg.Host=setDefault(cfg.Host,"","http://localhost:8090")//域名
+	Cfg.Routes=cfg.Routes
+	mutex.Unlock()
+}
+func setDefault( value,def ,defValue string) string {
+	if value==def {
+		return defValue
+	}
+	return value
+}

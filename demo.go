@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	_ "go-admin/lib/memory" //这里修改成你存放menory.go相应的目录
-	"go-admin/lib/session"  //这里修改成你存放session.go相应的目录
+	_ "go-admin/modules/memory" //这里修改成你存放menory.go相应的目录
+	"go-admin/modules/session"  //这里修改成你存放session.go相应的目录
 	"net/http"
 	"unsafe"
 )
