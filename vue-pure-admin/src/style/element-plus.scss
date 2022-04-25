@@ -36,18 +36,18 @@
   z-index: 99999 !important;
 }
 
-// 自定义popover的类名
+/* 重置button中icon的margin */
+.reset-margin [class*="el-icon"] + span {
+  margin-left: 2px !important;
+}
+
+/* 自定义popover的类名 */
 .pure-popper {
   padding: 0 !important;
 }
 
 /* 动态改变cssvar 用于主题切换 https://github.com/element-plus/element-plus/issues/4856#issuecomment-1000174357 */
-.el-button--primary {
-  --el-button-active-bg-color: var(--el-color-primary-active) !important;
-  --el-button-active-border-color: var(--el-color-primary-active) !important;
-}
-
-/* button--primary plain */
+.el-button--primary,
 .el-button--primary.is-plain {
   --el-button-active-bg-color: var(--el-color-primary) !important;
   --el-button-active-border-color: var(--el-color-primary) !important;

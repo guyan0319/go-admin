@@ -22,8 +22,10 @@ menus:
   hshome: Home
   hslogin: Login
   hssysManagement: System Manage
-  hsBaseinfo: Base Info
+  hsUser: User Manage
   hsDict: Dict Manage
+  hsRole: Role Manage
+  hsDept: Dept Manage
   hseditor: Editor
   hserror: Error Page
   hsfourZeroFour: "404"
@@ -53,7 +55,6 @@ menus:
   permissionPage: Page Permission
   permissionButton: Button Permission
   hstabs: Tabs Operate
-  hstabsDetail: Tabs Detail
   hsguide: Guide
   hsAble: Able
   hsMenuTree: Menu Tree
@@ -73,3 +74,7 @@ menus:
   hsAntTabs: Imitate Antdv Tabs
   hsAntAnchor: Imitate Antdv Anchor
   hsAntTreeSelect: Imitate Antdv TreeSelector
+  hsList: List Page
+  hsListCard: Card List Page
+  hsDebounce: Debounce & Throttle
+  hsFormDesign: Form Design

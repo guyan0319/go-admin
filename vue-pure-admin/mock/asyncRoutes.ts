@@ -7,34 +7,45 @@ const systemRouter = {
   redirect: "/system/user/index",
   meta: {
     icon: "setting",
-    // title: "系统管理1",
     title: "menus.hssysManagement",
     i18n: true,
-    rank: 6
+    rank: 11
   },
   children: [
     {
       path: "/system/user/index",
       name: "user",
       meta: {
-        title: "menus.hsBaseinfo",
+        icon: "flUser",
+        title: "menus.hsUser",
         i18n: true
       }
     },
     {
-      path: "/system/dict/index",
-      name: "dict",
+      path: "/system/role/index",
+      name: "role",
       meta: {
-        title: "menus.hsDict",
-        i18n: true,
-        keepAlive: true
+        icon: "role",
+        title: "menus.hsRole",
+        i18n: true
       }
     },
     {
-      path: "/system/menu/index",
-      name: "menu",
+      path: "/system/dept/index",
+      name: "dept",
       meta: {
-        title: "menus.hsMenu",
+        icon: "dept",
+        title: "menus.hsDept",
+        i18n: true
+      }
+    },
+    {
+      path: "/system/dict",
+      component: "/system/dict/index",
+      name: "dict",
+      meta: {
+        icon: "dict",
+        title: "menus.hsDict",
         i18n: true,
         keepAlive: true
       }
@@ -118,7 +129,7 @@ const tabsRouter = {
     icon: "IF-team-icontabs",
     title: "menus.hstabs",
     i18n: true,
-    rank: 12
+    rank: 13
   },
   children: [
     {
