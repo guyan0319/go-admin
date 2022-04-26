@@ -26,6 +26,7 @@ menus:
   hsDict: 字典管理
   hsRole: 角色管理
   hsDept: 部门管理
+  hsMenu: 菜单管理
   hseditor: 编辑器
   hserror: 错误页面
   hsfourZeroFour: "404"

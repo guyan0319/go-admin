@@ -3,6 +3,11 @@ package systemnewdb
 var menuStateOk = 1
 var menuStateNo = 0
 
+type SystemMenuList struct {
+	SystemMenu
+	parentId int  `gorm:"column:parentId;type:int;not null;default:0" json:"parentId"`
+}
+
 func (m *SystemMenu) GetAll() ([]SystemMenu, error) {
 	var systemmenus []SystemMenu
 	result := db.Find(&systemmenus)

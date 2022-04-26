@@ -10,6 +10,7 @@ import (
 	"go-admin/lib/response"
 	"go-admin/models/systemnewdb"
 	"io/ioutil"
+	"net/http"
 	"strconv"
 	"time"
 )
@@ -23,16 +24,16 @@ type Role struct {
 }
 
 func List(c *gin.Context) {
-	session := sessions.Default(c)
-	v := session.Get(common.Conf.Token)
-	if v == nil {
-		response.ShowError(c, "fail")
-		return
-	}
-	uid := session.Get(v)
+	//session := sessions.Default(c)
+	//v := session.Get(common.Conf.Token)
+	//if v == nil {
+	//	response.ShowError(c, "fail")
+	//	return
+	//}
+	//uid := session.Get(v)
 	db := systemnewdb.GetDb()
-
-	user := systemnewdb.SystemUser{ID: uid.(int)}
+	user := systemnewdb.SystemUser{ID: 1}
+	//user := systemnewdb.SystemUser{ID: uid.(int)}
 	db.First(&user)
 
 	menu := systemnewdb.SystemMenu{}
@@ -45,9 +46,10 @@ func List(c *gin.Context) {
 	role := systemnewdb.SystemRole{}
 	mrArr := role.GetRowMenu()
 	for _, value := range menuArr {
-
 		menuMap[value.Pid] = append(menuMap[value.Pid], value)
 	}
+	fmt.Println(mrArr)
+
 	jsonArr := TreeMenuNew(menuMap, 0, mrArr)
 	response.ShowData(c, jsonArr)
 	return
@@ -167,7 +169,10 @@ func GetAsyncRoutes(c *gin.Context) {
 	role := systemnewdb.SystemRole{}
 	mrArr := role.GetRowMenu()
 	jsonStr := TreeMenuNew(menuMap, 0, mrArr)
-	response.ShowData(c, jsonStr)
+	c.JSON(http.StatusOK, gin.H{
+		"code": 200,
+		"info": jsonStr,
+	})
 	return
 	//roleMenu:="{\"menuList\":[{\"create_time\":\"2018-03-1611:33:00\",\"menu_type\":\"M\",\"children\":[{\"create_time\":\"2018-03-1611:33:00\",\"menu_type\":\"C\",\"children\":[],\"parent_id\":1,\"menu_name\":\"用户管理\",\"icon\":\"#\",\"perms\":\"system:user:index\",\"order_num\":1,\"menu_id\":4,\"url\":\"/system/user\"},{\"create_time\":\"2018-12-2810:36:20\",\"menu_type\":\"M\",\"children\":[{\"create_time\":\"2018-12-2810:50:28\",\"menu_type\":\"C\",\"parent_id\":73,\"menu_name\":\"人员通讯录\",\"icon\":null,\"perms\":\"system:person:index\",\"order_num\":1,\"menu_id\":74,\"url\":\"/system/book/person\"}],\"parent_id\":1,\"menu_name\":\"通讯录管理\",\"icon\":\"fafa-address-book-o\",\"perms\":null,\"order_num\":1,\"menu_id\":73,\"url\":\"/system\"}],\"parent_id\":0,\"menu_name\":\"系统管理\",\"icon\":\"fafa-adjust\",\"perms\":null,\"order_num\":2,\"menu_id\":1,\"url\":\"#\"},{\"create_time\":\"2018-03-1611:33:00\",\"menu_type\":\"M\",\"children\":[{\"create_time\":\"2018-03-1611:33:00\",\"menu_type\":\"C\",\"parent_id\":2,\"menu_name\":\"数据监控\",\"icon\":\"#\",\"perms\":\"monitor:data:view\",\"order_num\":3,\"menu_id\":15,\"url\":\"/system/druid/monitor\"}],\"parent_id\":0,\"menu_name\":\"系统监控\",\"icon\":\"fafa-video-camera\",\"perms\":null,\"order_num\":5,\"menu_id\":2,\"url\":\"#\"}],\"user\":{\"login_name\":\"admin\",\"user_id\":1,\"user_name\":\"管理员\",\"dept_id\":1}}"
 	////roleMenu:="{\"menuList\": [{ 		\"children\": [{ 			\"menu_type\": \"M\", 			\"children\": [{ 				\"menu_type\": \"C\", 				\"parent_id\": 73, 				\"menu_name\": \"人员通讯录\", 				\"icon\": null, 				\"order_num\": 1, 				\"menu_id\": 74, 				\"url\": \"/system/book/person\" 			}], 			\"parent_id\": 1, 			\"menu_name\": \"通讯录管理\", 			\"icon\": \"fafa-address-book-o\", 			\"perms\": null, 			\"order_num\": 1, 			\"menu_id\": 73, 			\"url\": \"#\" 		}], 		\"parent_id\": 0, 		\"menu_name\": \"系统管理\", 		\"icon\": \"fafa-adjust\", 		\"perms\": null, 		\"order_num\": 2, 		\"menu_id\": 1, 		\"url\": \"#\" 	}], 	\"user\": { 		\"login_name\": \"admin1\", 		\"user_id\": 1, 		\"user_name\": \"管理员\", 		\"dept_id\": 1 	} }"

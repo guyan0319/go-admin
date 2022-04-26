@@ -506,3 +506,58 @@ func LogWriter(name string, con ...interface{}) {
 func GetDateByLayout(layout string) string {
 	return time.Now().Format(layout)
 }
+//将结构体source复制给dst，只复制相同名称和相同类型的
+func CopyStruct(source ,dst interface{}) interface{} {
+	st := reflect.TypeOf(source)
+	sv := reflect.ValueOf(source)
+	dt := reflect.TypeOf(dst)
+	dv := reflect.ValueOf(dst)
+	if st.Kind()==reflect.Ptr {//处理指针
+		st=st.Elem()
+	}
+	if dt.Kind()==reflect.Ptr { //处理指针
+		dt=dt.Elem()
+	}
+
+
+
+	fmt.Println("aa",st.Elem().Kind())
+	fmt.Println(reflect.Struct)
+	fmt.Println(reflect.Ptr)
+	st=st.Elem()
+	fmt.Println("cc",st.Kind())
+
+	// 简单判断是否是
+	if st.Kind() != reflect.Struct  {
+		fmt.Println("bb")
+		return dst
+	}
+	sv = reflect.ValueOf(sv.Interface())
+	// 要复制哪些字段
+	_fields := make([]string, 0)
+
+	//if len(fields) > 0 {
+	//	_fields = fields
+	//} else {
+	//	for i := 0; i < dv.NumField(); i++ {
+	//		_fields = append(_fields, dt.Field(i).Name)
+	//	}
+	//}
+	if len(_fields) == 0 {
+		fmt.Println("no fields to copy")
+		return dst
+	}
+	// 复制
+	for i := 0; i < len(_fields); i++ {
+		name := _fields[i]
+		f := sv.Elem().FieldByName(name)
+		bValue := dv.FieldByName(name)
+		// a中有同名的字段并且类型一致才复制
+		if f.IsValid() && f.Kind() == bValue.Kind() {
+			f.Set(bValue)
+		} else {
+			fmt.Printf("no such field or different kind, fieldName: %s\n", name)
+		}
+	}
+	return dst
+}
