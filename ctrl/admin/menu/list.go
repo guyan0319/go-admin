@@ -37,21 +37,12 @@ func List(c *gin.Context) {
 	db.First(&user)
 
 	menu := systemnewdb.SystemMenu{}
-	menuArr, err := menu.GetAll()
+	menuArr, err := menu.GetAllList()
 	if err != nil {
 		response.ShowError(c, "fail")
 		return
 	}
-	var menuMap = make(map[int][]systemnewdb.SystemMenu, 0)
-	role := systemnewdb.SystemRole{}
-	mrArr := role.GetRowMenu()
-	for _, value := range menuArr {
-		menuMap[value.Pid] = append(menuMap[value.Pid], value)
-	}
-	fmt.Println(mrArr)
-
-	jsonArr := TreeMenuNew(menuMap, 0, mrArr)
-	response.ShowData(c, jsonArr)
+	response.ShowData(c, menuArr)
 	return
 }
 

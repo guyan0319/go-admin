@@ -5,13 +5,26 @@ var menuStateNo = 0
 
 type SystemMenuList struct {
 	SystemMenu
-	parentId int  `gorm:"column:parentId;type:int;not null;default:0" json:"parentId"`
+	ParentId int  `gorm:"column:parentId;type:int;not null;default:0" json:"parentId"`
 }
 
 func (m *SystemMenu) GetAll() ([]SystemMenu, error) {
 	var systemmenus []SystemMenu
 	result := db.Find(&systemmenus)
 	return systemmenus, result.Error
+}
+//获取菜单列表
+func (m *SystemMenu) GetAllList() ([]SystemMenuList, error) {
+	var systemmenus []SystemMenu
+	var list []SystemMenuList
+	result := db.Find(&systemmenus)
+	for _,val:=range systemmenus{
+		menu:=&SystemMenuList{}
+		menu.SystemMenu=val
+		menu.ParentId=val.Pid
+		list =append(list,*menu)
+	}
+	return list, result.Error
 }
 func (m *SystemMenu) GetRowByUid(uid interface{}) []SystemMenu {
 	var menu []SystemMenu

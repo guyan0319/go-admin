@@ -507,56 +507,33 @@ func GetDateByLayout(layout string) string {
 	return time.Now().Format(layout)
 }
 //将结构体source复制给dst，只复制相同名称和相同类型的
-func CopyStruct(source ,dst interface{}) interface{} {
-	st := reflect.TypeOf(source)
-	sv := reflect.ValueOf(source)
+//CopyStruct(a,b)  a可以传值，引用，b只能引用，且
+func CopyStruct(src ,dst interface{}) interface{} {
+	st := reflect.TypeOf(src)
+	sv := reflect.ValueOf(src)
 	dt := reflect.TypeOf(dst)
 	dv := reflect.ValueOf(dst)
 	if st.Kind()==reflect.Ptr {//处理指针
 		st=st.Elem()
+		sv=sv.Elem()
 	}
 	if dt.Kind()==reflect.Ptr { //处理指针
 		dt=dt.Elem()
 	}
-
-
-
-	fmt.Println("aa",st.Elem().Kind())
-	fmt.Println(reflect.Struct)
-	fmt.Println(reflect.Ptr)
-	st=st.Elem()
-	fmt.Println("cc",st.Kind())
-
-	// 简单判断是否是
-	if st.Kind() != reflect.Struct  {
-		fmt.Println("bb")
+	if st.Kind()!=reflect.Struct||dt.Kind()!=reflect.Struct {//如果不是struct类型，直接返回dst
 		return dst
 	}
-	sv = reflect.ValueOf(sv.Interface())
-	// 要复制哪些字段
-	_fields := make([]string, 0)
 
-	//if len(fields) > 0 {
-	//	_fields = fields
-	//} else {
-	//	for i := 0; i < dv.NumField(); i++ {
-	//		_fields = append(_fields, dt.Field(i).Name)
-	//	}
-	//}
-	if len(_fields) == 0 {
-		fmt.Println("no fields to copy")
-		return dst
-	}
-	// 复制
-	for i := 0; i < len(_fields); i++ {
-		name := _fields[i]
-		f := sv.Elem().FieldByName(name)
-		bValue := dv.FieldByName(name)
-		// a中有同名的字段并且类型一致才复制
-		if f.IsValid() && f.Kind() == bValue.Kind() {
-			f.Set(bValue)
-		} else {
-			fmt.Printf("no such field or different kind, fieldName: %s\n", name)
+	dv = reflect.ValueOf(dv.Interface())
+	// 遍历TypeOf 类型
+	for i := 0; i < dt.NumField(); i++ { //通过索引来取得它的所有字段，这里通过t.NumField来获取它多拥有的字段数量，同时来决定循环的次数
+		f := dt.Field(i)               //通过这个i作为它的索引，从0开始来取得它的字段
+		dVal := dv.Elem().Field(i)
+		sVal:=sv.FieldByName(f.Name)
+		//fmt.Println(dVal.CanSet())
+		//src数据有效，且dst字段能赋值,类型一致
+		if sVal.IsValid() && dVal.CanSet() && f.Type.Kind()==sVal.Type().Kind() {
+			dVal.Set(sVal)
 		}
 	}
 	return dst
