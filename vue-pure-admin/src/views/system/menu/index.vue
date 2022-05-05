@@ -116,8 +116,10 @@ const dictData = reactive({
       title: "是否国际化",
       span: 24,
       itemRender: {
-        name: "$radio",
-      }
+        name: "$select",
+
+        // props: { name: "请输入字典名称",label:1 }
+      },
     },
 
     {
