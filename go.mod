@@ -18,9 +18,7 @@ require (
 	github.com/mattn/go-isatty v0.0.10 // indirect
 	github.com/swaggo/gin-swagger v1.2.0
 	github.com/swaggo/swag v1.6.5
-	golang.org/x/net v0.0.0-20191126235420-ef20fe5d7933 // indirect
-	golang.org/x/sys v0.0.0-20200420163511-1957bb5e6d1f // indirect
-	golang.org/x/tools v0.0.0-20191127201027-ecd32218bd7f // indirect
+	golang.org/x/net v0.7.0 // indirect
 	gopkg.in/go-playground/validator.v9 v9.30.2 // indirect
 	gopkg.in/yaml.v2 v2.2.7 // indirect
 )
