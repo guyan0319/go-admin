@@ -245,8 +245,14 @@ func Index(c *gin.Context)  {
 }
 func ShowImage(c *gin.Context){
 	imgName := c.Query("imgname")
+	pathName:=[]byte(imgName)
+	preDir := string(pathName[:7])
+	if  preDir!="upload/"{
+		response.ShowError(c, "fail")
+		return
+	}
 	//顾虑危险字符
-	imgName = strings.Replace(imgName,"../","",-1)
+	imgName = strings.Replace(imgName,"..","",-1)
 	c.File(imgName)
 }
 func Detail(c *gin.Context){
