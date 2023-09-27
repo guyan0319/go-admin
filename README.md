@@ -3,6 +3,7 @@
 # go-admin
 
 go-admin是一个go语言开发的后台管理系统，该系统以角色为基础的权限管理设计（RBAC），完成了系统管理模块功能的开发（其他示例模块后续加上），采用前后端分离实现方式，服务端基于go开源gin框架，前端开源框架[vue-element-admin](https://github.com/PanJiaChen/vue-element-admin)。使用Swagger 2.0自动生成API文档。
+本项目前端用的vue2，如想用vue3，请移步 https://github.com/guyan0319/go-vue-admin
 
 ### 设计原则
 
